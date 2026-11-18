@@ -102,6 +102,12 @@ export const TOPIC_CATEGORIES: TopicCategory[] = [
       '៧ វិធីគ្រប់គ្រងលុយឱ្យមានប្រសិទ្ធភាព',
       'ហេតុអ្វីអ្នកមានប្រើលុយធ្វើការឱ្យខ្លួន មិនមែនធ្វើការដើម្បីលុយ?',
       'ក្បួនបែងចែកកែវលុយទាំង ៦ សម្រាប់គ្រួសារសម័យថ្មី',
+      '៥ កំហុសធ្ងន់ធ្ងរដែលធ្វើឱ្យអ្នកចាប់ផ្ដើមរកស៊ីខាតដើមទុន',
+      'វិធីសន្សំលុយសម្រាប់អ្នកមានប្រាក់ខែតិចឱ្យសល់ប្រាក់រាល់ខែ',
+      'ភាពខុសគ្នារវាង «ទ្រព្យសកម្ម» និង «បំណុល» ពន្យល់ងាយយល់',
+      'របៀបចាប់ផ្ដើមអាជីវកម្មតូចមួយដោយប្រើដើមទុនតិចនៅកម្ពុជា',
+      'អំណាចនៃការប្រាក់សមាស (Compound Interest) ដែលអ្នកគួរដឹងពីក្មេង',
+      '៧ ទម្លាប់ចាយវាយដែលធ្វើឱ្យមនុស្សមិនអាចសល់ប្រាក់បាន',
     ],
   },
   {
@@ -115,19 +121,30 @@ export const TOPIC_CATEGORIES: TopicCategory[] = [
       'មេរៀនជីវិតទាំង ៥ ដែលមនុស្សភាគច្រើនដឹងយឺតពេល',
       'រឿងសត្វទីទុយចាស់ និងចាបតូច៖ អំណាចនៃការអត់ធ្មត់',
       'របៀបងើបឡើងវិញបន្ទាប់ពីបរាជ័យធ្ងន់ធ្ងរ',
+      'រឿងដើមឫស្សីចិន៖ ហេតុអ្វីការអត់ធ្មត់ ៥ ឆ្នាំមានតម្លៃមហាសាល?',
+      'មេរៀនពីកែវទឹកមួយកែវ៖ របៀបដាក់ចុះនូវទុក្ខព្រួយក្នុងចិត្ត',
+      'ហេតុអ្វីការជ្រើសរើសមិត្តភក្តិល្អ កំណត់អនាគតជីវិតអ្នក?',
+      'រឿងថ្មធំ ក្រួស និងខ្សាច់៖ របៀបរៀបចំអាទិភាពក្នុងជីវិត',
+      '៧ រឿងដែលមនុស្សមានសុភមង្គលមិនដែលធ្វើ',
+      'តម្លៃនៃពាក្យសម្ដី៖ មេរៀនពីរឿងដំដែកគោលលើរបងឈើ',
     ],
   },
   {
     id: 'history',
     code: '03',
     nameEn: 'History',
-    nameKh: 'ប្រវត្តិសាស្ត្រ',
-    descriptionKh: 'ប្រវត្តិបុគ្គលល្បីៗ ប្រវត្តិសាស្ត្រខ្មែរ អរិយធម៌ និងព្រឹត្តិការណ៍សំខាន់ៗ',
+    nameKh: 'ប្រវត្តិសាស្ត្រខ្មែរ និងពិភពលោក',
+    descriptionKh: 'ប្រវត្តិសាស្ត្រខ្មែរ អាណាចក្រអង្គរ អរិយធម៌បុរាណ និងព្រឹត្តិការណ៍សំខាន់ៗ',
     accent: '#b45309',
     sampleTopics: [
       'ប្រព័ន្ធធារាសាស្ត្រអស្ចារ្យនៃអាណាចក្រអង្គរ',
+      'ប្រវត្តិនៃការកសាងប្រាសាទអង្គរវត្ត និងស្ថាបត្យកម្មដ៏អច្ឆរិយៈ',
+      'របៀបដែលបុព្វបុរសខ្មែរដឹកជញ្ជូនថ្មភក់រាប់លានតោនមកសាងសង់ប្រាសាទ',
+      'អាណាចក្រហ្វូណន៖ ដើមកំណើតពាណិជ្ជកម្មសមុទ្រដ៏រុងរឿងរបស់ខ្មែរ',
       'របៀបដែលផ្លូវសូត្របុរាណផ្លាស់ប្តូរពិភពលោក',
       'ប្រវត្តិនៃការបង្កើតលុយក្រដាសដំបូងលើពិភពលោក',
+      'អរិយធម៌អេហ្ស៊ីបបុរាណ និងអាថ៌កំបាំងពីរ៉ាមីត',
+      'ប្រវត្តិនៃការបង្កើតអក្សរសាស្ត្រ និងសិលាចារឹកបុរាណ',
     ],
   },
   {
@@ -135,12 +152,18 @@ export const TOPIC_CATEGORIES: TopicCategory[] = [
     code: '04',
     nameEn: 'Science & Knowledge',
     nameKh: 'វិទ្យាសាស្ត្រ និងចំណេះដឹង',
-    descriptionKh: 'ចំណេះដឹងទូទៅ បច្ចេកវិទ្យា រាងកាយមនុស្ស លំហ និងធម្មជាតិ',
+    descriptionKh: 'ចំណេះដឹងទូទៅ រាងកាយមនុស្ស ធម្មជាតិ រូបវិទ្យា និងគីមីវិទ្យាប្រចាំថ្ងៃ',
     accent: '#0284c7',
     sampleTopics: [
-      'អ្វីកើតឡើងក្នុងខួរក្បាលពេលយើងគេងលក់?',
       'ហេតុអ្វីមេឃមានពណ៌ខៀវ ហើយថ្ងៃលិចមានពណ៌ក្រហម?',
+      'អ្វីកើតឡើងក្នុងខួរក្បាលពេលយើងគេងលក់?',
       'ដំណើរនៃដំណក់ទឹកមួយដំណក់ជុំវិញភពផែនដី',
+      'ហេតុអ្វីទឹកសមុទ្រមានរសជាតិប្រៃ ឯទឹកទន្លេមានរសជាតិសាប?',
+      'តើភ្លៀងផ្គររន្ទះកើតឡើងដោយវិធីណា? ពន្យល់ងាយយល់',
+      'ហេតុអ្វីយន្តហោះដែកធ្ងន់រាប់រយតោនអាចហោះលើអាកាសបាន?',
+      'ប្រព័ន្ធភាពស៊ាំក្នុងរាងកាយមនុស្សការពារយើងពីមេរោគយ៉ាងដូចម្តេច?',
+      'ហេតុអ្វីស្លឹកឈើមានពណ៌បៃតង និងបង្កើតអុកស៊ីសែនឱ្យយើងដកដង្ហើម?',
+      'អគ្គិសនីដំណើរការយ៉ាងដូចម្តេច ពីរោងចក្រមកដល់ផ្ទះយើង?',
     ],
   },
   {
@@ -154,19 +177,29 @@ export const TOPIC_CATEGORIES: TopicCategory[] = [
       'ចិត្តវិទ្យានៃការបង្កើតទម្លាប់ល្អក្នុងរយៈពេល ២១ ថ្ងៃ',
       'ហេតុអ្វីមនុស្សយើងចូលចិត្តពន្យារពេល ហើយវិធីកែខៃ',
       'របៀបគ្រប់គ្រងអារម្មណ៍ខឹង និងស្ត្រេសដោយវិទ្យាសាស្ត្រ',
+      'ចិត្តវិទ្យានៃការបង្កើតទំនុកចិត្តលើខ្លួនឯងពីសូន្យ',
+      'ហេតុអ្វីការប្រៀបធៀបខ្លួនឯងជាមួយអ្នកដទៃបំផ្លាញសុភមង្គល?',
+      'បាតុភូត Dunning-Kruger៖ ហេតុអ្វីមនុស្សខ្លះគិតថាខ្លួនដឹងគ្រប់យ៉ាង?',
+      'របៀបយកឈ្នះការគិតច្រើនហួសហេតុ (Overthinking)',
+      'ភាសាកាយវិការទាំង ៧ ដែលជួយឱ្យអ្នកយល់ពីអារម្មណ៍អ្នកដទៃ',
     ],
   },
   {
     id: 'education',
     code: '06',
     nameEn: 'Education',
-    nameKh: 'ការអប់រំ',
-    descriptionKh: 'ចំណេះដឹងសម្រាប់សិស្ស ការរៀនភាសា ជំនាញ និងការអភិវឌ្ឍខ្លួន',
+    nameKh: 'ការអប់រំ និងការសិក្សា',
+    descriptionKh: 'វិធីសាស្ត្ររៀនពូកែ ការរៀនភាសា ជំនាញ និងការអភិវឌ្ឍខ្លួន',
     accent: '#2563eb',
     sampleTopics: [
       'វិធីសាស្ត្ររៀនឱ្យចាំបានយូរដោយបច្ចេកទេស Feynman',
       '៥ ជំនាញសំខាន់បំផុតសម្រាប់យុវជនក្នុងសតវត្សទី ២១',
       'របៀបអានសៀវភៅឱ្យទទួលបានប្រយោជន៍ពិតប្រាកដ',
+      'វិធីរៀនភាសាអង់គ្លេសដោយខ្លួនឯងឱ្យឆាប់ចេះនិយាយ',
+      'បច្ចេកទេស Pomodoro៖ រៀន ២៥ នាទី ផ្ដោតអារម្មណ៍បានខ្ពស់បំផុត',
+      'របៀបកត់ត្រាមេរៀនតាមវិធី Cornell Notes របស់សិស្សពូកែ',
+      'វិធីត្រៀមប្រឡងបាក់ឌុបដោយមិនស្ត្រេស និងទទួលបាននិទ្ទេសល្អ',
+      'ហេតុអ្វីការសួរសំណួរសំខាន់ជាងការទន្ទេញចាំមាត់?',
     ],
   },
   {
@@ -174,12 +207,17 @@ export const TOPIC_CATEGORIES: TopicCategory[] = [
     code: '07',
     nameEn: 'Motivation',
     nameKh: 'ការលើកទឹកចិត្ត',
-    descriptionKh: 'រឿងអ្នកជោគជ័យ មេរៀនពីអ្នកមាន និងការផ្លាស់ប្តូរជីវិត',
+    descriptionKh: 'រឿងអ្នកជោគជ័យ វិន័យផ្ទាល់ខ្លួន និងការផ្លាស់ប្តូរជីវិត',
     accent: '#e11d48',
     sampleTopics: [
       'ដំណើរពីជីវិតលំបាក ទៅកាន់ជីវិតមានឯករាជ្យភាពហិរញ្ញវត្ថុ',
       'អំណាចនៃការខិតខំ ១% ជារៀងរាល់ថ្ងៃ',
       'ហេតុអ្វីវិន័យសំខាន់ជាងការលើកទឹកចិត្តបណ្ដោះអាសន្ន?',
+      'ក្បួន ៥ វិនាទី៖ វិធីបញ្ឈប់ភាពខ្ជិល ហើយចាប់ផ្ដើមធ្វើភ្លាមៗ',
+      'ជីវិតយុវជនជនបទម្នាក់ដែលផ្លាស់ប្តូរគ្រួសារតាមរយៈការសិក្សា',
+      'កុំបោះបង់ពេលជួបព្យុះ៖ មេរៀនពីសត្វឥន្ទ្រី',
+      'របៀបកំណត់គោលដៅជីវិតឱ្យច្បាស់ និងសម្រេចបានពិតប្រាកដ',
+      'ហេតុអ្វីការចាប់ផ្ដើមតូច ល្អជាងការរង់ចាំភាពល្អឥតខ្ចោះ?',
     ],
   },
   {
@@ -187,24 +225,33 @@ export const TOPIC_CATEGORIES: TopicCategory[] = [
     code: '08',
     nameEn: 'Mystery & Knowledge',
     nameKh: 'អាថ៌កំបាំង និងចំណេះដឹង',
-    descriptionKh: 'អាថ៌កំបាំងប្រវត្តិសាស្ត្រ ការរកឃើញ និងរឿងគួរឱ្យចាប់អារម្មណ៍',
+    descriptionKh: 'អាថ៌កំបាំងប្រវត្តិសាស្ត្រ ការរកឃើញបុរាណវិទ្យា និងរឿងគួរឱ្យចាប់អារម្មណ៍',
     accent: '#4f46e5',
     sampleTopics: [
       'អាថ៌កំបាំងនៃមហាសមុទ្រជ្រៅដែលមនុស្សមិនទាន់រកឃើញ',
       'ការរកឃើញបុរាណវិទ្យាដ៏អស្ចារ្យទាំង ៥ លើពិភពលោក',
       'អាថ៌កំបាំងពីក្រោយបណ្ណាល័យបុរាណ Alexandria',
+      'ទីក្រុងបុរាណ មហិន្ទ្របព៌ត លើភ្នំគូលែនដែលរកឃើញដោយបច្ចេកវិទ្យា LiDAR',
+      'អាថ៌កំបាំងត្រីកោណ Bermuda៖ វិទ្យាសាស្ត្រពន្យល់យ៉ាងដូចម្តេច?',
+      'រុក្ខជាតិ និងសត្វចម្លែកបំផុតទាំង ៧ នៅលើភពផែនដី',
+      'អាថ៌កំបាំងនៃក្តីសុបិន៖ ហេតុអ្វីយើងសុបិនឃើញរឿងចម្លែកៗ?',
     ],
   },
   {
     id: 'technology',
     code: '09',
-    nameEn: 'Technology',
-    nameKh: 'បច្ចេកវិទ្យា',
-    descriptionKh: 'AI បញ្ញាសិប្បនិម្មិត ប្រវត្តិកុំព្យូទ័រ និងអនាគតឌីជីថល',
+    nameEn: 'Technology & AI',
+    nameKh: 'បច្ចេកវិទ្យា និង AI',
+    descriptionKh: 'AI បញ្ញាសិប្បនិម្មិត អ៊ីនធឺណិត ទូរស័ព្ទ និងអនាគតឌីជីថល',
     accent: '#0891b2',
     sampleTopics: [
       'បញ្ញាសិប្បនិម្មិត (AI) ដំណើរការយ៉ាងដូចម្តេច? ពន្យល់ងាយយល់',
-      'របៀបប្រើបច្ចេកវិទ្យាជួយការងារ និងការសិក្សាប្រចាំថ្ងៃ',
+      'របៀបប្រើ AI ជួយការងារ និងការសិក្សាប្រចាំថ្ងៃឱ្យលឿនជាងមុន ៥ ដង',
+      'អ៊ីនធឺណិត និង Wi-Fi បញ្ជូនទិន្នន័យឆ្លងទ្វីបដោយវិធីណា?',
+      'សុវត្ថិភាពអនឡាញ៖ ៥ វិធីការពារគណនី និងលុយពីជនឆបោក',
+      'អនាគតការងារក្នុងយុគសម័យ AI៖ ជំនាញណាដែលមនុស្សនៅតែឈ្នះ?',
+      'ប្រវត្តិទូរស័ព្ទដៃពីទំហំប៉ុនឥដ្ឋ ដល់ស្មាតហ្វូនសម័យទំនើប',
+      'តើរថយន្តអគ្គិសនី (EV) ដំណើរការខុសពីរថយន្តសាំងយ៉ាងដូចម្តេច?',
     ],
   },
   {
@@ -217,6 +264,11 @@ export const TOPIC_CATEGORIES: TopicCategory[] = [
     sampleTopics: [
       'ទម្លាប់ពេលព្រឹកទាំង ៥ ដែលជួយឱ្យខួរក្បាលស្រឡះ និងមានថាមពល',
       'ហេតុអ្វីការគេងគ្រប់គ្រាន់ជាថ្នាំវិសេសបំផុតសម្រាប់រាងកាយ?',
+      'អ្វីកើតឡើងចំពោះរាងកាយ ពេលអ្នកផឹកទឹកគ្រប់គ្រាន់រាល់ថ្ងៃ?',
+      'គ្រោះថ្នាក់នៃការញ៉ាំស្ករ និងភេសជ្ជៈផ្អែមច្រើនពេកចំពោះសុខភាព',
+      'អត្ថប្រយោជន៍ដ៏អស្ចារ្យនៃការដើរហាត់ប្រាណ ៣០ នាទីរៀងរាល់ថ្ងៃ',
+      'ផលប៉ះពាល់នៃការមើលទូរស័ព្ទមុនពេលចូលគេង និងវិធីកែខៃ',
+      'អាហារសុខភាពងាយរកនៅផ្សារខ្មែរ ដែលជួយពង្រឹងខួរក្បាល',
     ],
   },
   {
@@ -227,8 +279,13 @@ export const TOPIC_CATEGORIES: TopicCategory[] = [
     descriptionKh: 'ភូមិសាស្ត្រ វប្បធម៌ សេដ្ឋកិច្ចសកល និងអច្ឆរិយវត្ថុពិភពលោក',
     accent: '#ea580c',
     sampleTopics: [
-      'ហេតុអ្វីប្រទេសតូចៗមួយចំនួនអាចអភិវឌ្ឍសេដ្ឋកិច្ចបានយ៉ាងលឿន?',
-      'វប្បធម៌នៃការអប់រំដ៏គួរឱ្យចាប់អារម្មណ៍នៅប្រទេសជប៉ុន',
+      'ហេតុអ្វីប្រទេសតូចៗមួយចំនួនដូចជា សិង្ហបុរី អាចអភិវឌ្ឍសេដ្ឋកិច្ចបានយ៉ាងលឿន?',
+      'វប្បធម៌នៃការអប់រំ និងវិន័យដ៏គួរឱ្យចាប់អារម្មណ៍នៅប្រទេសជប៉ុន',
+      'ប្រទេសដែលមានតំបន់ពេលវេលាច្រើនបំផុត និងមូលហេតុដែលម៉ោងខុសគ្នា',
+      'របៀបដែលកប៉ាល់ដឹកទំនិញឆ្លងកាត់ព្រែកជីកប៉ាណាម៉ា',
+      'អច្ឆរិយវត្ថុទាំង ៧ នៃពិភពលោកសម័យថ្មី និងប្រវត្តិសង្ខេប',
+      'ហេតុអ្វីប្រទេសខ្លះមាន ៤ រដូវ ឯប្រទេសកម្ពុជាមាន ២ រដូវ?',
+      'របៀបដែលប្រព័ន្ធដឹកជញ្ជូនរថភ្លើងល្បឿនលឿនផ្លាស់ប្តូរសេដ្ឋកិច្ច',
     ],
   },
   {
@@ -241,11 +298,221 @@ export const TOPIC_CATEGORIES: TopicCategory[] = [
     sampleTopics: [
       'មេរៀនពី Thomas Edison៖ ការតស៊ូពីភាពបរាជ័យរាប់ពាន់ដង',
       'Marie Curie៖ ស្ត្រីដំបូងដែលឈ្នះពានរង្វាន់ណូបែលពីរដង',
+      'Albert Einstein៖ ពីក្មេងចូលចិត្តសួរសំណួរ ដល់អ្នកវិទ្យាសាស្ត្រដ៏អស្ចារ្យ',
+      'វណ្ណ ម៉ូលីវណ្ណ៖ បិតាស្ថាបត្យកម្មសម័យទំនើបដ៏ល្បីល្បាញរបស់កម្ពុជា',
+      'ព្រះបាទជ័យវរ្ម័នទី៧៖ មេដឹកនាំដែលកសាងមន្ទីរពេទ្យ និងសាលាសំណាក់រាប់រយ',
+      'Leonardo da Vinci៖ ទេពកោសល្យទាំងសិល្បៈ និងវិទ្យាសាស្ត្រ',
+      'បណ្ឌិត ជួន ណាត៖ វីរជនអ្នកថែរក្សា និងបង្កើតវចនានុក្រមខ្មែរ',
+    ],
+  },
+  {
+    id: 'khmer-culture',
+    code: '13',
+    nameEn: 'Khmer Culture & Heritage',
+    nameKh: 'វប្បធម៌ និងបេតិកភណ្ឌខ្មែរ',
+    descriptionKh: 'ប្រពៃណីខ្មែរ ពិធីបុណ្យជាតិ ក្រមា សិល្បៈ ល្បែងប្រជាប្រិយ និងម្ហូបខ្មែរ',
+    accent: '#c2410c',
+    sampleTopics: [
+      'ប្រវត្តិ និងអត្ថន័យដ៏ជ្រាលជ្រៅនៃ «ក្រមាខ្មែរ» ក្នុងជីវភាពប្រចាំថ្ងៃ',
+      'អត្ថន័យនៃពិធីបុណ្យចូលឆ្នាំថ្មីប្រពៃណីជាតិខ្មែរ និងល្បែងប្រជាប្រិយ',
+      'ប្រវត្តិពិធីបុណ្យអុំទូក បណ្ដែតប្រទីប អកអំបុក និងសំពះព្រះខែ',
+      'ស្ថាបត្យកម្ម «ផ្ទះឈើខ្មែរ»៖ បញ្ញាញាណដូនតាទប់ទល់នឹងអាកាសធាតុក្ដៅ និងទឹកជំនន់',
+      'ល្ខោនស្បែកធំ និងរបាំអប្សរា៖ មរតកវប្បធម៌អរូបីនៃមនុស្សជាតិ',
+      'ដើមត្នោតខ្មែរ៖ រុក្ខជាតិអត្តសញ្ញាណជាតិដែលមានប្រយោជន៍ពីឫសដល់ចុង',
+      'អត្ថន័យនៃការសំពះទាំង ៥ បែបក្នុងវប្បធម៌គោរពគ្នារបស់ខ្មែរ',
+      'ប្រវត្តិ និងប្រយោជន៍នៃម្ហូបខ្មែរបុរាណ (សម្លកកូរ អាម៉ុក ប្រហុក)',
+    ],
+  },
+  {
+    id: 'folktales',
+    code: '14',
+    nameEn: 'Folktales & Fables',
+    nameKh: 'រឿងព្រេង និងនិទានអប់រំ',
+    descriptionKh: 'រឿងព្រេងខ្មែរ រឿងនិទានសត្វ គតិបណ្ឌិត និងសុភាសិតខ្មែរ',
+    accent: '#b91c1c',
+    sampleTopics: [
+      'រឿងសុភាទន្សាយ និងសត្វខ្លា៖ ប្រើបញ្ញាឈ្នះកម្លាំងបាយ',
+      'រឿងអណ្ដើក និងទន្សាយ៖ មេរៀនកុំមើលងាយគូប្រជែង និងការតស៊ូជាប់លាប់',
+      'រឿងក្អែកឆ្លាត និងក្អមទឹក៖ បញ្ញាដោះស្រាយបញ្ហាពេលជួបភាពទាល់ច្រក',
+      'រឿងកសិករ និងកូនប្រុសទាំងបី៖ ទ្រព្យសម្បត្តិពិតប្រាកដនៅក្នុងដីស្រែ',
+      'រឿងស្រមោច និងកណ្ដូប៖ មេរៀននៃការត្រៀមខ្លួនទុកមុនសម្រាប់អនាគត',
+      'អត្ថន័យសុភាសិតខ្មែរ «តក់ៗពេញបំពង់» តាមរយៈរឿងនិទានសម័យថ្មី',
+      'រឿងសត្វចាប និងព្រៃឈើ៖ កម្លាំងនៃសាមគ្គីភាពជួយឱ្យរួចផុតពីគ្រោះថ្នាក់',
+      'អត្ថន័យសុភាសិត «ចំណេះវិជ្ជាជាទ្រព្យដែលចោរលួចមិនបាន»',
+    ],
+  },
+  {
+    id: 'family-parenting',
+    code: '15',
+    nameEn: 'Family & Parenting',
+    nameKh: 'គ្រួសារ និងការអប់រំកូន',
+    descriptionKh: 'ទំនាក់ទំនងគ្រួសារ ការចិញ្ចឹមអប់រំកូន ការស្ដាប់គ្នា និងសុភមង្គលក្នុងផ្ទះ',
+    accent: '#db2777',
+    sampleTopics: [
+      '៥ វិធីបង្ហាត់កូនឱ្យចេះសន្សំលុយ និងស្គាល់តម្លៃប្រាក់តាំងពីតូច',
+      'របៀបនិយាយជាមួយកូនដោយមិនចាំបាច់ស្រែកសម្លុត តែកូនស្ដាប់បង្គាប់',
+      'ហេតុអ្វីពេលវេលាញ៉ាំបាយជុំគ្រួសារសំខាន់សម្រាប់ការលូតលាស់ផ្លូវចិត្តកូន?',
+      'វិធីជួយកូនឱ្យស្រឡាញ់ការអានសៀវភៅជាជាងលេងទូរស័ព្ទ',
+      '៧ ទម្លាប់តូចៗដែលធ្វើឱ្យជីវិតប្ដីប្រពន្ធកាន់តែកក់ក្ដៅ និងយូរអង្វែង',
+      'របៀបបង្ហាញការដឹងគុណចំពោះឪពុកម្ដាយក្នុងជីវិតប្រចាំថ្ងៃ',
+      'វិធីបង្រៀនកូនឱ្យមានទំនុកចិត្ត និងហ៊ានបញ្ចេញមតិ',
+    ],
+  },
+  {
+    id: 'communication',
+    code: '16',
+    nameEn: 'Communication & Soft Skills',
+    nameKh: 'ជំនាញទំនាក់ទំនង',
+    descriptionKh: 'សិល្បៈនៃការនិយាយ ការស្ដាប់ ការចរចា និងការធ្វើការជាក្រុម',
+    accent: '#0d9488',
+    sampleTopics: [
+      '៥ តិចនិកនិយាយជាសាធារណៈដោយមិនភ័យញ័រ',
+      'សិល្បៈនៃការស្ដាប់៖ ហេតុអ្វីអ្នកពូកែស្ដាប់តែងមានមនុស្សស្រឡាញ់ច្រើន?',
+      'របៀបបដិសេធអ្នកដទៃដោយសុភាពរាបសារ មិនឱ្យអន់ចិត្ត',
+      'វិធីចាប់ផ្ដើមការសន្ទនាជាមួយមនុស្សថ្មីឱ្យមានភាពស្និទ្ធស្នាល',
+      'របៀបចរចាដំឡើងប្រាក់ខែ ឬតម្លៃការងារដោយវិជ្ជាជីវៈ',
+      '៦ ពាក្យសម្ដីដែលអ្នកដឹកនាំឆ្លាតតែងប្រើដើម្បីលើកទឹកចិត្តក្រុមការងារ',
+      'របៀបដោះស្រាយជម្លោះនៅកន្លែងធ្វើការដោយសន្តិវិធី',
+    ],
+  },
+  {
+    id: 'agriculture-rural',
+    code: '17',
+    nameEn: 'Agriculture & Rural Life',
+    nameKh: 'កសិកម្ម និងជីវិតស្រុកស្រែ',
+    descriptionKh: 'កសិកម្មសម័យថ្មី បច្ចេកទេសដាំដុះ កែច្នៃកសិផល និងសហគ្រិនភាពជនបទ',
+    accent: '#65a30d',
+    sampleTopics: [
+      'កសិកម្មឆ្លាតវៃ៖ របៀបកសិករខ្មែរសម័យថ្មីបង្កើនចំណូលលើដីតូច',
+      'អត្ថប្រយោជន៍នៃដំណាំសរីរាង្គ និងជីកំប៉ុសធម្មជាតិជួយដីឱ្យមានជីជាតិ',
+      'របៀបកែច្នៃកសិផលក្នុងស្រុក (ស្វាយ ស្ករត្នោត ចេក) ឱ្យមានតម្លៃខ្ពស់ជាងមុន',
+      'ប្រព័ន្ធស្រោចស្រពតំណក់ទឹក៖ ដំណោះស្រាយសន្សំទឹកសម្រាប់កសិករ',
+      'ជីវិតកសិករសម័យឌីជីថល៖ លក់បន្លែផ្លែឈើស្រស់ផ្ទាល់ពីចម្ការតាមអនឡាញ',
+      'ហេតុអ្វីអង្ករផ្ការំដួលខ្មែរមានក្លិនក្រអូប និងល្បីល្បាញលើពិភពលោក?',
+      'គំរូចិញ្ចឹមត្រី និងដាំបន្លែរួមគ្នា (Aquaponics) នៅតាមផ្ទះ',
+    ],
+  },
+  {
+    id: 'environment-nature',
+    code: '18',
+    nameEn: 'Environment & Nature',
+    nameKh: 'បរិស្ថាន និងធម្មជាតិ',
+    descriptionKh: 'ទន្លេមេគង្គ បឹងទន្លេសាប ព្រៃឈើ សត្វព្រៃ និងការការពារបរិស្ថាន',
+    accent: '#15803d',
+    sampleTopics: [
+      'អច្ឆរិយភាពនៃ «បឹងទន្លេសាប»៖ ហេតុអ្វីទឹកទន្លេសាបហូរចូល និងហូរចេញប្រចាំឆ្នាំ?',
+      'ផលប៉ះពាល់នៃថង់ប្លាស្ទិកចំពោះទន្លេ សមុទ្រ និងសុខភាពមនុស្ស',
+      'ហេតុអ្វីសត្វឃ្មុំតូចៗមានសារៈសំខាន់ខ្លាំងណាស់ចំពោះអាហារមនុស្សជាតិ?',
+      'សត្វផ្សោតទន្លេមេគង្គ៖ មរតកធម្មជាតិដ៏កម្រដែលយើងត្រូវរួមគ្នាការពារ',
+      'បម្រែបម្រួលអាកាសធាតុ និងមូលហេតុដែលផែនដីកាន់តែក្ដៅឡើង',
+      '៥ ទម្លាប់ងាយៗប្រចាំថ្ងៃដែលជួយការពារបរិស្ថានកម្ពុជាឱ្យស្អាត',
+      'ព្រៃកោងកាង៖ ជញ្ជាំងធម្មជាតិការពារឆ្នេរសមុទ្រ និងជម្រកត្រីសមុទ្រ',
+    ],
+  },
+  {
+    id: 'space-universe',
+    code: '19',
+    nameEn: 'Space & Universe',
+    nameKh: 'លំហអាកាស និងចក្រវាល',
+    descriptionKh: 'ប្រព័ន្ធព្រះអាទិត្យ ភព ផ្កាយ ប្រហោងខ្មៅ និងការរុករកអវកាស',
+    accent: '#3730a3',
+    sampleTopics: [
+      'ដំណើរផ្សងព្រេងឆ្លងកាត់ភពទាំង ៨ ក្នុងប្រព័ន្ធព្រះអាទិត្យ',
+      'តើប្រហោងខ្មៅ (Black Hole) គឺជាអ្វី? អ្វីកើតឡើងបើធ្លាក់ចូល?',
+      'ហេតុអ្វីផែនដីជាភពតែមួយគត់ដែលយើងស្គាល់ថាមានជីវិតរស់នៅ?',
+      'តើសូរ្យគ្រាស និងចន្ទគ្រាសកើតឡើងដោយវិធីណា?',
+      'ជីវិតអវកាសយានិកលើស្ថានីយអវកាសអន្តរជាតិ (ISS)៖ ញ៉ាំ និងគេងយ៉ាងម៉េច?',
+      'អ្វីនឹងកើតឡើងបើព្រះច័ន្ទស្រាប់តែបាត់ខ្លួនពីផែនដី?',
+      'ផ្កាយដុះកន្ទុយ និងផ្កាយធ្លាក់ មានប្រភពមកពីណា?',
+    ],
+  },
+  {
+    id: 'career-productivity',
+    code: '20',
+    nameEn: 'Career & Productivity',
+    nameKh: 'ការងារ និងការគ្រប់គ្រងពេលវេលា',
+    descriptionKh: 'ប្រសិទ្ធភាពការងារ រៀបចំកាលវិភាគ ស្វែងរកការងារ និងការរីកចម្រើនអាជីព',
+    accent: '#0369a1',
+    sampleTopics: [
+      'ក្បួន 80/20 (Pareto Principle)៖ ធ្វើការតិច តែទទួលបានលទ្ធផលធំ',
+      'របៀបរៀបចំកាលវិភាគប្រចាំថ្ងៃឱ្យមានពេលសម្រាប់ការងារ គ្រួសារ និងសុខភាព',
+      'តារាង Eisenhower Matrix៖ វិធីបែងចែកការងារសំខាន់ និងការងារបន្ទាន់',
+      '៥ គន្លឹះសម្ភាសន៍ការងារឱ្យជាប់ និងធ្វើឱ្យនិយោជកពេញចិត្ត',
+      'របៀបបង្កើត CV ដ៏ទាក់ទាញសម្រាប់និស្សិតទើបបញ្ចប់ការសិក្សា',
+      'វិធីគេចផុតពីភាពនឿយហត់ការងារ (Burnout) និងរក្សាថាមពលវិជ្ជមាន',
+      '៧ ទម្លាប់របស់បុគ្គលិកឆ្នើមដែលឆាប់ឡើងតំណែង',
+    ],
+  },
+  {
+    id: 'philosophy-wisdom',
+    code: '21',
+    nameEn: 'Philosophy & Wisdom',
+    nameKh: 'ទស្សនវិជ្ជា និងគតិបណ្ឌិត',
+    descriptionKh: 'ការអប់រំចិត្ត សេចក្ដីស្ងប់ សតិសម្បជញ្ញៈ និងទស្សនៈអ្នកប្រាជ្ញ',
+    accent: '#a16207',
+    sampleTopics: [
+      'ទស្សនវិជ្ជា Stoicism៖ របៀបរក្សាចិត្តស្ងប់កណ្ដាលព្យុះបញ្ហាជីវិត',
+      'គោលគំនិត «Ikigai» របស់ជប៉ុន៖ ស្វែងរកអត្ថន័យនៃការរស់នៅ',
+      'ការអប់រំចិត្តឱ្យស្គាល់សុភមង្គលក្នុងបច្ចុប្បន្នកាល (Mindfulness)',
+      'រឿងព្រះសង្ឃ និងកែវតែពេញ៖ មេរៀននៃការដាក់ខ្លួនរៀនសូត្រជានិច្ច',
+      'ហេតុអ្វីការអត់ឱនឱ្យអ្នកដទៃ ជាការដោះលែងខ្លួនឯងពីទុក្ខ?',
+      'សិល្បៈនៃការរស់នៅសាមញ្ញ (Minimalism)៖ កាន់តែតិច កាន់តែសប្បាយចិត្ត',
+      'មេរៀនពីធម្មជាតិ៖ ភាពស្ងប់ស្ងាត់ដូចទឹក និងភាពរឹងមាំដូចភ្នំ',
+    ],
+  },
+  {
+    id: 'digital-online-business',
+    code: '22',
+    nameEn: 'Digital & Online Business',
+    nameKh: 'អាជីវកម្មអនឡាញ និងទីផ្សារ',
+    descriptionKh: 'ការលក់អនឡាញ YouTube, Content Creation, Branding និង Digital Marketing',
+    accent: '#be185d',
+    sampleTopics: [
+      'របៀបកសាងឆានែល YouTube អប់រំពីសូន្យឱ្យមានអ្នកតាមដានពិតប្រាកដ',
+      '៥ គន្លឹះបង្កើតមាតិកា (Content) ឱ្យអ្នកទស្សនាចូលចិត្ត និងចែករំលែក',
+      'របៀបលក់ផលិតផលតាមអនឡាញឱ្យអតិថិជនជឿទុកចិត្ត និងទិញម្ដងហើយម្ដងទៀត',
+      'អ្វីទៅជា Personal Branding ហើយហេតុអ្វីមនុស្សសម័យថ្មីគួរកសាងវា?',
+      'គន្លឹះថតរូប និងរៀបចំហាងអនឡាញឱ្យមើលទៅដូចម៉ាកល្បី',
+      'វិធីប្រើការនិទានរឿង (Storytelling) ក្នុងការផ្សព្វផ្សាយអាជីវកម្ម',
+      'ការចាប់ផ្ដើមការងារ Freelance តាមអនឡាញសម្រាប់យុវជនកម្ពុជា',
+    ],
+  },
+  {
+    id: 'law-civics',
+    code: '23',
+    nameEn: 'Law & Civics',
+    nameKh: 'ច្បាប់ និងសីលធម៌សង្គម',
+    descriptionKh: 'សុវត្ថិភាពចរាចរណ៍ សីលធម៌សាធារណៈ សិទ្ធិ និងកាតព្វកិច្ចពលរដ្ឋ',
+    accent: '#334155',
+    sampleTopics: [
+      'វប្បធម៌បើកបរមានសុវត្ថិភាព៖ ៥ ទម្លាប់ជួយកាត់បន្ថយគ្រោះថ្នាក់ចរាចរណ៍',
+      'សុជីវធម៌នៅទីសាធារណៈ៖ ការតម្រង់ជួរ និងការគោរពសិទ្ធិអ្នកដទៃ',
+      'សិទ្ធិអ្នកប្រើប្រាស់ និងវិធីពិនិត្យកិច្ចសន្យាមុនពេលចុះហត្ថលេខា',
+      'ការប្រើប្រាស់បណ្ដាញសង្គមដោយមានទំនួលខុសត្រូវ និងចៀសវាងព័ត៌មានក្លែងក្លាយ',
+      'តួនាទីយុវជនក្នុងការចូលរួមអភិវឌ្ឍសហគមន៍មូលដ្ឋាន',
+      'ការការពារកម្មសិទ្ធិបញ្ញា (Copyright) សម្រាប់អ្នកបង្កើតមាតិកា',
+    ],
+  },
+  {
+    id: 'kids-stories',
+    code: '24',
+    nameEn: 'Kids Science & Stories',
+    nameKh: 'ចំណេះដឹង និងរឿងនិទានកុមារ',
+    descriptionKh: 'សំណួរចង់ដឹងរបស់ក្មេងៗ ទម្លាប់ល្អ សត្វគួរឱ្យស្រឡាញ់ និងសុវត្ថិភាពកុមារ',
+    accent: '#f59e0b',
+    sampleTopics: [
+      'ហេតុអ្វីក្មេងៗត្រូវដុសធ្មេញរាល់ព្រឹក និងមុនពេលចូលគេង? (រឿងទ័ពមេរោគតូច)',
+      'ដំណើររបស់ដង្កូវតូចក្លាយជាមេអំបៅដ៏ស្រស់ស្អាត',
+      'ហេតុអ្វីសត្វអំពិលអំពែកអាចបញ្ចេញពន្លឺនៅពេលយប់បាន?',
+      'មេរៀនល្អសម្រាប់កុមារ៖ ការនិយាយពាក្យ «អរគុណ» និង «សុំទោស»',
+      'ហេតុអ្វីដំរីមានប្រមោយវែង និងស្លឹកត្រចៀកធំ?',
+      'សុវត្ថិភាពកុមារ៖ ៥ រឿងដែលក្មេងៗត្រូវដឹងពេលនៅផ្ទះ និងពេលដើរឆ្លងផ្លូវ',
+      'រឿងដំណើរផ្សងព្រេងរបស់គ្រាប់ពូជស្វាយតូចមួយ',
     ],
   },
   {
     id: 'custom',
-    code: '13',
+    code: '25',
     nameEn: 'Custom Topic',
     nameKh: 'ប្រធានបទផ្ទាល់ខ្លួន',
     descriptionKh: 'បញ្ចូលប្រធានបទណាមួយតាមតម្រូវការពិសេសរបស់អ្នក',
@@ -379,7 +646,7 @@ D. CONCLUSION
 - Character Dialogue (if needed)
 - On-screen Text
 - AI Image Prompt (English)
-- AI Video Animation Prompt (English)
+- AI Video Animation Prompt (English + Spoken Khmer Narration)
 - Camera Movement
 - Background Music / Sound Effects
 
@@ -399,7 +666,7 @@ ${styleObj.promptAnchor}.
 
 6. RESEARCH & ACCURACY
 - ប្រើព័ត៌មានដែលអាចផ្ទៀងផ្ទាត់បាន មិនបង្កើតតួលេខ ឬសម្រង់សម្តីក្លែងក្លាយ។
-- ប្រសិនបើជាប្រវត្តិសាស្ត្រ ត្រូវរក្សាឈុត និងព្រឹត្តិការណ៍ឱ្យត្រឹមត្រូវ។
+- ប្រសិនបើជាប្រវត្តិសាស្ត្រ ត្រូវរក្សាឈ្មោះ និងព្រឹត្តិការណ៍ឱ្យត្រឹមត្រូវ។
 - បើជារឿងប្រឌិត ត្រូវបញ្ជាក់ថាជារឿងប្រឌិត។ បើមានព័ត៌មានមិនច្បាស់ ត្រូវបញ្ជាក់ថាមិនទាន់អាចផ្ទៀងផ្ទាត់បាន។
 
 7. FINAL OUTPUT
@@ -411,7 +678,7 @@ ${styleObj.promptAnchor}.
 5. Complete Standalone Narrator Script (Khmer)
 6. Scene-by-Scene Storyboard (${targetScenes} Scenes)
 7. AI Image Prompts for Every Scene (English — តាម Scenes នីមួយៗ)
-8. AI Video Animation Prompts for Every Scene (English — តាម Scenes នីមួយៗ)
+8. AI Video Animation Prompts for Every Scene (និយាយភាសាខ្មែរ — តាម Scenes នីមួយៗ)
 9. Khmer Subtitle (SRT Format)
 10. Background Music Suggestions
 11. YouTube Thumbnail Prompt
@@ -461,7 +728,7 @@ RULES:
       "appearance": "រូបរាង អាយុ សក់",
       "outfit": "សម្លៀកបំពាក់ជាក់លាក់",
       "personality": "បុគ្គលិកលក្ខណៈ",
-      "aiCharacterImagePromptEn": "Detailed English character design turnaround reference sheet (front view, 3/4 view, 3 expressions, exact outfit/hair/colors, clean solid cream background) + ${styleObj.promptAnchor}"
+      "aiCharacterImagePromptEn": "Authentic Cambodian (Khmer) character design turnaround reference sheet (front view, 3/4 view, 3 expressions, exact outfit/hair/colors, clean solid cream background) + ${styleObj.promptAnchor}"
     }
   ],
   "outline": [
@@ -502,8 +769,8 @@ RULES:
       "narratorScriptKh": "អត្ថបទអ្នកនិទានពេញលេញជាភាសាខ្មែរដែលអានថតសំឡេងបានភ្លាមៗ",
       "characterDialogue": "",
       "onScreenText": "អក្សរខ្លីលើអេក្រង់",
-      "aiImagePromptEn": "Detailed English 2D illustration prompt with exact character outfit + ${styleObj.promptAnchor}",
-      "aiVideoPromptEn": "Visual Motion: smooth 2D character motion and camera movement. Spoken Khmer Narration (${req.narratorVoice}, natural clear Khmer language): \\"<exact Khmer narratorScriptKh for this scene>\\". Background Music & SFX: warm documentary music. No embedded text.",
+      "aiImagePromptEn": "Detailed English 2D illustration prompt with exact Cambodian character outfit, Cambodian rural/city background + ${styleObj.promptAnchor}",
+      "aiVideoPromptEn": "Visual Motion: smooth 2D character motion and camera movement. Spoken Khmer Narration (${req.narratorVoice}, natural clear Khmer language): \\"<exact Khmer narratorScriptKh for this scene>\\". Background Music & SFX: warm documentary music. No floating subtitles.",
       "cameraMovement": "Slow push-in",
       "bgmAndSfx": "ភ្លេង Documentary ស្រទន់ + SFX"
     }
@@ -521,7 +788,7 @@ RULES:
     "headlineKh": "ចំណងជើងធំលើ Thumbnail",
     "subTextKh": "អក្សររងខ្លី",
     "visualConcept": "គំនិតរចនារូបភាព",
-    "aiThumbnailPromptEn": "Eye-catching 16:9 YouTube thumbnail prompt in English, no text inside image"
+    "aiThumbnailPromptEn": "Eye-catching 16:9 Cambodian 2D cartoon YouTube thumbnail prompt in English, authentic Khmer characters & Cambodian scenery, no watermarks"
   }
 }
 \`\`\`
@@ -569,14 +836,14 @@ export function buildOfflineDraftProject(req: GenerationRequest): StoryboardProj
       section,
       sceneTitle,
       durationSeconds: 8,
-      visualDescription: `ឈុតគំនូរជីវចលអប់រំ 2D បង្ហាញខ្លឹមសារសម្រាប់៖ ${sceneTitle} (${topicText})`,
-      character: 'តួអង្គឯក',
+      visualDescription: `ឈុតគំនូរជីវចលអប់រំ 2D បែបខ្មែរ បង្ហាញខ្លឹមសារសម្រាប់៖ ${sceneTitle} (${topicText})`,
+      character: 'តួអង្គឯកខ្មែរ',
       characterAction: 'បង្ហាញទឹកមុខរស់រវើក និងកាយវិការពន្យល់ស្របតាមសំឡេងអ្នកនិទាន',
       narratorScriptKh: narrator,
       characterDialogue: '',
       onScreenText: sceneTitle,
-      aiImagePromptEn: `Educational storytelling scene illustrating "${sceneTitle}" for topic "${topicText}", friendly Cambodian main character in sky-blue polo shirt and dark navy pants. ${styleObj.promptAnchor}.`,
-      aiVideoPromptEn: `Smooth ${styleObj.labelEn} motion showing expressive facial animation, clear gestures, and warm atmospheric lighting.`,
+      aiImagePromptEn: `Authentic Cambodian educational storytelling scene illustrating "${sceneTitle}" for topic "${topicText}", friendly authentic Cambodian (Khmer) young man in sky-blue polo shirt and dark navy pants in a Cambodian setting (Phnom Penh street or countryside rice fields with sugar palm trees). ${styleObj.promptAnchor}.`,
+      aiVideoPromptEn: `Smooth ${styleObj.labelEn} motion showing expressive Cambodian character gestures and warm atmospheric lighting.`,
       cameraMovement: num === 1 ? 'Slow push-in' : 'Gentle steady framing',
       bgmAndSfx: 'ភ្លេង Documentary ស្រទន់កក់ក្ដៅ',
     };
@@ -606,12 +873,12 @@ export function buildOfflineDraftProject(req: GenerationRequest): StoryboardProj
       'គម្រោងព្រាង (Offline Draft) — សូមកែសម្រួល និងបញ្ជាក់ប្រភពព័ត៌មានបន្ថែមមុនពេលថតសំឡេង។',
     characters: [
       {
-        name: 'តួអង្គឯក (Main Character)',
+        name: 'តួអង្គឯកខ្មែរ (Main Character)',
         role: 'តួអង្គនាំរឿង',
-        appearance: 'យុវជនខ្មែរអាយុ ២៥ ឆ្នាំ សក់ខ្លីរៀបរយ ទឹកមុខរស់រវើក',
+        appearance: 'យុវជនខ្មែរអាយុ ២៥ ឆ្នាំ សក់ខ្លីរៀបរយ ទឹកមុខរស់រវើក សម្បុរខ្មែរធម្មជាតិ',
         outfit: 'អាវពណ៌ខៀវផ្ទៃមេឃ ខោពណ៌ទឹកប៊ិចចាស់',
         personality: 'ចូលចិត្តរៀនសូត្រ រួសរាយ និងងាយយល់',
-        aiCharacterImagePromptEn: `Character design turnaround reference sheet of a friendly 25-year-old Cambodian young man with neat short black hair, expressive eyes, wearing a sky-blue polo shirt and dark navy pants. Full-body front view, 3/4 view, and 3 facial expressions (smiling, curious, inspired) on a clean solid soft cream background. ${styleObj.promptAnchor}.`,
+        aiCharacterImagePromptEn: `Authentic Cambodian (Khmer) 2D cartoon character design turnaround reference sheet of a friendly 25-year-old Cambodian young man with natural Southeast Asian facial features, neat short black hair, warm light-tan skin tone, expressive eyes, wearing a sky-blue polo shirt and dark navy pants. Full-body front view, 3/4 view, and 3 facial expressions (smiling, curious, inspired) on a clean solid soft cream background. ${styleObj.promptAnchor}.`,
       },
     ],
     outline: [
@@ -653,8 +920,8 @@ export function buildOfflineDraftProject(req: GenerationRequest): StoryboardProj
     thumbnail: {
       headlineKh: topicText,
       subTextKh: 'មេរៀនអប់រំ 2D Animation',
-      visualConcept: `បង្ហាញតួអង្គឯកមានទឹកមុខចាប់អារម្មណ៍ជាមួយរូបភាពនិមិត្តសញ្ញានៃ «${topicText}» ក្រោមពន្លឺពណ៌មាសកក់ក្ដៅ។`,
-      aiThumbnailPromptEn: `Eye-catching YouTube thumbnail for "${topicText}", expressive Cambodian cartoon character in sky-blue polo shirt pointing at glowing educational visual metaphors, warm amber and teal contrast, ${styleObj.promptAnchor}.`,
+      visualConcept: `បង្ហាញតួអង្គខ្មែរមានទឹកមុខចាប់អារម្មណ៍ជាមួយទេសភាពកម្ពុជា និងនិមិត្តសញ្ញានៃ «${topicText}» ក្រោមពន្លឺពណ៌មាសកក់ក្ដៅ។`,
+      aiThumbnailPromptEn: `Eye-catching authentic Cambodian YouTube thumbnail for "${topicText}", expressive Cambodian cartoon character in sky-blue polo shirt pointing at glowing educational visual metaphors with Cambodian sugar palm trees and Phnom Penh skyline in the background, warm amber and teal contrast, ${styleObj.promptAnchor}.`,
     },
   };
 }

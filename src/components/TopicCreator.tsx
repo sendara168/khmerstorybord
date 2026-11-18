@@ -13,6 +13,8 @@ import {
   ClipboardPaste,
   FilePlus2,
   Settings2,
+  Search,
+  Shuffle,
 } from 'lucide-react';
 import {
   AI_PROVIDER_PRESETS,
@@ -65,6 +67,47 @@ export const TopicCreator: React.FC<TopicCreatorProps> = ({
   const [pastedJson, setPastedJson] = useState<string>('');
   const [copiedPrompt, setCopiedPrompt] = useState<boolean>(false);
   const [copiedJsonPrompt, setCopiedJsonPrompt] = useState<boolean>(false);
+  const [topicSearch, setTopicSearch] = useState<string>('');
+
+  const totalTopicCount = useMemo(
+    () => TOPIC_CATEGORIES.reduce((sum, c) => sum + c.sampleTopics.length, 0),
+    []
+  );
+
+  const filteredCategories = useMemo(() => {
+    const q = topicSearch.trim().toLowerCase();
+    if (!q) return TOPIC_CATEGORIES;
+    return TOPIC_CATEGORIES.filter(
+      (c) =>
+        c.nameKh.toLowerCase().includes(q) ||
+        c.nameEn.toLowerCase().includes(q) ||
+        c.descriptionKh.toLowerCase().includes(q) ||
+        c.sampleTopics.some((t) => t.toLowerCase().includes(q))
+    );
+  }, [topicSearch]);
+
+  const matchingTopicsAcrossAll = useMemo(() => {
+    const q = topicSearch.trim().toLowerCase();
+    if (!q) return [];
+    const matches: Array<{ categoryId: string; categoryName: string; topic: string }> = [];
+    for (const c of TOPIC_CATEGORIES) {
+      for (const t of c.sampleTopics) {
+        if (t.toLowerCase().includes(q)) {
+          matches.push({ categoryId: c.id, categoryName: c.nameKh, topic: t });
+        }
+      }
+    }
+    return matches.slice(0, 18);
+  }, [topicSearch]);
+
+  const handlePickRandomTopic = () => {
+    const withTopics = TOPIC_CATEGORIES.filter((c) => c.sampleTopics.length > 0);
+    const randomCat = withTopics[Math.floor(Math.random() * withTopics.length)];
+    const randomTopic =
+      randomCat.sampleTopics[Math.floor(Math.random() * randomCat.sampleTopics.length)];
+    setCategoryId(randomCat.id);
+    setTopic(randomTopic);
+  };
 
   const selectedCategory =
     TOPIC_CATEGORIES.find((c) => c.id === categoryId) || TOPIC_CATEGORIES[0];
@@ -141,15 +184,61 @@ export const TopicCreator: React.FC<TopicCreatorProps> = ({
 
       {/* Step 1: Category Grid */}
       <section className="studio-card">
-        <div className="card-header-row">
+        <div className="card-header-row wrap">
           <div>
-            <span className="step-pill">ជំហានទី ១</span>
+            <span className="step-pill">
+              ជំហានទី ១ • {TOPIC_CATEGORIES.length} ប្រភេទ • {totalTopicCount}+ ប្រធានបទគំរូ
+            </span>
             <h2>ជ្រើសរើសប្រភេទវីដេអូ (Topic Category)</h2>
+          </div>
+
+          <div className="toolbar-right">
+            <div className="search-box">
+              <Search size={15} />
+              <input
+                type="text"
+                placeholder={`ស្វែងរកក្នុង ${totalTopicCount}+ ប្រធានបទ...`}
+                value={topicSearch}
+                onChange={(e) => setTopicSearch(e.target.value)}
+              />
+            </div>
+            <button
+              type="button"
+              className="btn-outline btn-sm"
+              onClick={handlePickRandomTopic}
+              title="ជ្រើសរើសប្រធានបទចៃដន្យ"
+            >
+              <Shuffle size={14} />
+              <span>រើសប្រធានបទចៃដន្យ</span>
+            </button>
           </div>
         </div>
 
+        {matchingTopicsAcrossAll.length > 0 && (
+          <div className="search-matches-box">
+            <span className="sample-label">
+              រកឃើញប្រធានបទត្រូវគ្នា ({matchingTopicsAcrossAll.length}) — ចុចដើម្បីជ្រើសរើសភ្លាម៖
+            </span>
+            <div className="chip-row">
+              {matchingTopicsAcrossAll.map((item) => (
+                <button
+                  key={`${item.categoryId}-${item.topic}`}
+                  type="button"
+                  className={`topic-chip ${topic === item.topic ? 'active' : ''}`}
+                  onClick={() => {
+                    setCategoryId(item.categoryId);
+                    setTopic(item.topic);
+                  }}
+                >
+                  <strong>[{item.categoryName}]</strong> {item.topic}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
         <div className="category-grid">
-          {TOPIC_CATEGORIES.map((cat) => {
+          {filteredCategories.map((cat) => {
             const active = cat.id === categoryId;
             return (
               <button
@@ -169,6 +258,9 @@ export const TopicCreator: React.FC<TopicCreatorProps> = ({
                 <div className="category-top">
                   <span className="category-code">{cat.code}</span>
                   <span className="category-en">{cat.nameEn}</span>
+                  {cat.sampleTopics.length > 0 && (
+                    <span className="cat-count-pill">{cat.sampleTopics.length}</span>
+                  )}
                 </div>
                 <div className="category-kh">{cat.nameKh}</div>
                 <div className="category-desc">{cat.descriptionKh}</div>
