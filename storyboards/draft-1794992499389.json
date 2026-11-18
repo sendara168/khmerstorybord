@@ -1,0 +1,279 @@
+{
+  "id": "draft-1794992499389",
+  "createdAt": "2026-11-18T09:01:39.389Z",
+  "updatedAt": "2026-11-18T09:01:39.388Z",
+  "categoryId": "business-money",
+  "categoryLabelKh": "01. Business & Money – មុខជំនួញ និងហិរញ្ញវត្ថុ",
+  "topic": "៧ វិធីគ្រប់គ្រងលុយឱ្យមានប្រសិទ្ធភាព",
+  "videoTitle": "៧ វិធីគ្រប់គ្រងលុយឱ្យមានប្រសិទ្ធភាព",
+  "videoDescription": "វីដេអូគំនូរជីវចលអប់រំ 2D ជាភាសាខ្មែរ អំពី «៧ វិធីគ្រប់គ្រងលុយឱ្យមានប្រសិទ្ធភាព»។\n\nសូមចុច Like, Share និង Subscribe ដើម្បីតាមដានមេរៀនល្អៗថ្មីៗ!",
+  "language": "Khmer",
+  "durationPreset": "3-5",
+  "durationLabel": "3–5 នាទី",
+  "videoFormat": "16:9",
+  "resolution": "1920 × 1080",
+  "animationStyle": "3d-cartoon",
+  "animationStyleLabel": "3D Stylized Cambodian Educational Animation",
+  "narratorVoice": "Khmer Male Voice",
+  "voiceTone": "Natural, Clear, Professional, Engaging",
+  "subtitleLanguage": "Khmer",
+  "audience": "General Audience",
+  "isFictionalNote": "គម្រោងព្រាង (Offline Draft) — សូមកែសម្រួល និងបញ្ជាក់ប្រភពព័ត៌មានបន្ថែមមុនពេលថតសំឡេង។",
+  "characters": [
+    {
+      "name": "តួអង្គឯក (Main Character)",
+      "role": "តួអង្គនាំរឿង",
+      "appearance": "យុវជនខ្មែរអាយុ ២៥ ឆ្នាំ សក់ខ្លីរៀបរយ ទឹកមុខរស់រវើក",
+      "outfit": "អាវពណ៌ខៀវផ្ទៃមេឃ ខោពណ៌ទឹកប៊ិចចាស់",
+      "personality": "ចូលចិត្តរៀនសូត្រ រួសរាយ និងងាយយល់",
+      "aiCharacterImagePromptEn": "Character design turnaround reference sheet of a friendly 25-year-old Cambodian young man with neat short black hair, expressive eyes, wearing a sky-blue polo shirt and dark navy pants. Full-body front view, 3/4 view, and 3 facial expressions (smiling, curious, inspired) on a clean solid soft cream background. Stylized 3D Pixar-inspired educational cartoon animation, authentic Cambodian (Khmer) characters and Cambodian rural/city scenery (palm trees, stilt houses, Phnom Penh streets and cafés), authentic Khmer script on natural storefront signboards when shops appear, soft global illumination, warm cinematic lighting, 16:9 aspect ratio, no floating subtitles or watermarks."
+    }
+  ],
+  "outline": [
+    {
+      "section": "INTRODUCTION",
+      "titleKh": "ផ្នែកផ្ដើម & សំណួរចាប់អារម្មណ៍",
+      "summary": "ណែនាំប្រធានបទ «៧ វិធីគ្រប់គ្រងលុយឱ្យមានប្រសិទ្ធភាព» និងបញ្ហាដែលអ្នកទស្សនាជួបប្រទះ។",
+      "keyPoints": [
+        "សំណួរចាប់អារម្មណ៍",
+        "ណែនាំប្រធានបទ"
+      ]
+    },
+    {
+      "section": "MAIN_STORY",
+      "titleKh": "ខ្លឹមសារសំខាន់ និងឧទាហរណ៍",
+      "summary": "ពន្យល់ខ្លឹមសារជាលំដាប់ជាមួយតួអង្គ និងឧទាហរណ៍ជាក់ស្ដែង។",
+      "keyPoints": [
+        "ចំណុចសំខាន់ទី១",
+        "ចំណុចសំខាន់ទី២",
+        "ឧទាហរណ៍ជាក់ស្ដែង"
+      ]
+    },
+    {
+      "section": "IMPORTANT_LESSONS",
+      "titleKh": "មេរៀនសំខាន់ៗដែលអាចអនុវត្តបាន",
+      "summary": "សង្ខេបដំណោះស្រាយ និងគំនិតដែលអ្នកទស្សនាអាចធ្វើតាមបានភ្លាមៗ។",
+      "keyPoints": [
+        "មេរៀនអនុវត្តជាក់ស្ដែង"
+      ]
+    },
+    {
+      "section": "CONCLUSION",
+      "titleKh": "សារចុងក្រោយ & Call to Action",
+      "summary": "ឃ្លាចងចាំ និងអញ្ជើញ Like, Share, Subscribe។",
+      "keyPoints": [
+        "សារលើកទឹកចិត្ត",
+        "Like, Share, Subscribe"
+      ]
+    }
+  ],
+  "scenes": [
+    {
+      "sceneNumber": 1,
+      "section": "INTRODUCTION",
+      "sceneTitle": "សំណួរចាប់ផ្ដើម (Opening Hook)",
+      "durationSeconds": 8,
+      "visualDescription": "ឈុតគំនូរជីវចលអប់រំ 2D បង្ហាញខ្លឹមសារសម្រាប់៖ សំណួរចាប់ផ្ដើម (Opening Hook) (៧ វិធីគ្រប់គ្រងលុយឱ្យមានប្រសិទ្ធភាព)",
+      "character": "តួអង្គឯក",
+      "characterAction": "បង្ហាញទឹកមុខរស់រវើក និងកាយវិការពន្យល់ស្របតាមសំឡេងអ្នកនិទាន",
+      "narratorScriptKh": "តើអ្នកធ្លាប់ឆ្ងល់ទេអំពី «៧ វិធីគ្រប់គ្រងលុយឱ្យមានប្រសិទ្ធភាព»? នៅក្នុងវីដេអូនេះ យើងនឹងស្វែងយល់ជាមួយគ្នាដោយងាយយល់។",
+      "characterDialogue": "",
+      "onScreenText": "សំណួរចាប់ផ្ដើម (Opening Hook)",
+      "aiImagePromptEn": "Educational storytelling scene illustrating \"សំណួរចាប់ផ្ដើម (Opening Hook)\" for topic \"៧ វិធីគ្រប់គ្រងលុយឱ្យមានប្រសិទ្ធភាព\", friendly Cambodian main character in sky-blue polo shirt and dark navy pants. Stylized 3D Pixar-inspired educational cartoon animation, authentic Cambodian (Khmer) characters and Cambodian rural/city scenery (palm trees, stilt houses, Phnom Penh streets and cafés), authentic Khmer script on natural storefront signboards when shops appear, soft global illumination, warm cinematic lighting, 16:9 aspect ratio, no floating subtitles or watermarks.",
+      "aiVideoPromptEn": "Smooth 3D Stylized Cambodian Educational Animation motion showing expressive facial animation, clear gestures, and warm atmospheric lighting.",
+      "cameraMovement": "Slow push-in",
+      "bgmAndSfx": "ភ្លេង Documentary ស្រទន់កក់ក្ដៅ"
+    },
+    {
+      "sceneNumber": 2,
+      "section": "INTRODUCTION",
+      "sceneTitle": "ណែនាំប្រធានបទ និងបញ្ហា",
+      "durationSeconds": 8,
+      "visualDescription": "ឈុតគំនូរជីវចលអប់រំ 2D បង្ហាញខ្លឹមសារសម្រាប់៖ ណែនាំប្រធានបទ និងបញ្ហា (៧ វិធីគ្រប់គ្រងលុយឱ្យមានប្រសិទ្ធភាព)",
+      "character": "តួអង្គឯក",
+      "characterAction": "បង្ហាញទឹកមុខរស់រវើក និងកាយវិការពន្យល់ស្របតាមសំឡេងអ្នកនិទាន",
+      "narratorScriptKh": "មនុស្សជាច្រើនតែងជួបបញ្ហាទាក់ទងនឹងប្រធានបទនេះ ប៉ុន្តែបើយើងយល់ពីគោលការណ៍សំខាន់ៗ អ្វីៗនឹងផ្លាស់ប្តូរ។",
+      "characterDialogue": "",
+      "onScreenText": "ណែនាំប្រធានបទ និងបញ្ហា",
+      "aiImagePromptEn": "Educational storytelling scene illustrating \"ណែនាំប្រធានបទ និងបញ្ហា\" for topic \"៧ វិធីគ្រប់គ្រងលុយឱ្យមានប្រសិទ្ធភាព\", friendly Cambodian main character in sky-blue polo shirt and dark navy pants. Stylized 3D Pixar-inspired educational cartoon animation, authentic Cambodian (Khmer) characters and Cambodian rural/city scenery (palm trees, stilt houses, Phnom Penh streets and cafés), authentic Khmer script on natural storefront signboards when shops appear, soft global illumination, warm cinematic lighting, 16:9 aspect ratio, no floating subtitles or watermarks.",
+      "aiVideoPromptEn": "Smooth 3D Stylized Cambodian Educational Animation motion showing expressive facial animation, clear gestures, and warm atmospheric lighting.",
+      "cameraMovement": "Gentle steady framing",
+      "bgmAndSfx": "ភ្លេង Documentary ស្រទន់កក់ក្ដៅ"
+    },
+    {
+      "sceneNumber": 3,
+      "section": "MAIN_STORY",
+      "sceneTitle": "សាច់រឿងផ្នែកទី 1",
+      "durationSeconds": 8,
+      "visualDescription": "ឈុតគំនូរជីវចលអប់រំ 2D បង្ហាញខ្លឹមសារសម្រាប់៖ សាច់រឿងផ្នែកទី 1 (៧ វិធីគ្រប់គ្រងលុយឱ្យមានប្រសិទ្ធភាព)",
+      "character": "តួអង្គឯក",
+      "characterAction": "បង្ហាញទឹកមុខរស់រវើក និងកាយវិការពន្យល់ស្របតាមសំឡេងអ្នកនិទាន",
+      "narratorScriptKh": "សរសេរអត្ថបទអ្នកនិទានពេញលេញសម្រាប់ឈុតទី 3 ទាក់ទងនឹង «៧ វិធីគ្រប់គ្រងលុយឱ្យមានប្រសិទ្ធភាព» នៅទីនេះ។",
+      "characterDialogue": "",
+      "onScreenText": "សាច់រឿងផ្នែកទី 1",
+      "aiImagePromptEn": "Educational storytelling scene illustrating \"សាច់រឿងផ្នែកទី 1\" for topic \"៧ វិធីគ្រប់គ្រងលុយឱ្យមានប្រសិទ្ធភាព\", friendly Cambodian main character in sky-blue polo shirt and dark navy pants. Stylized 3D Pixar-inspired educational cartoon animation, authentic Cambodian (Khmer) characters and Cambodian rural/city scenery (palm trees, stilt houses, Phnom Penh streets and cafés), authentic Khmer script on natural storefront signboards when shops appear, soft global illumination, warm cinematic lighting, 16:9 aspect ratio, no floating subtitles or watermarks.",
+      "aiVideoPromptEn": "Smooth 3D Stylized Cambodian Educational Animation motion showing expressive facial animation, clear gestures, and warm atmospheric lighting.",
+      "cameraMovement": "Gentle steady framing",
+      "bgmAndSfx": "ភ្លេង Documentary ស្រទន់កក់ក្ដៅ"
+    },
+    {
+      "sceneNumber": 4,
+      "section": "MAIN_STORY",
+      "sceneTitle": "សាច់រឿងផ្នែកទី 2",
+      "durationSeconds": 8,
+      "visualDescription": "ឈុតគំនូរជីវចលអប់រំ 2D បង្ហាញខ្លឹមសារសម្រាប់៖ សាច់រឿងផ្នែកទី 2 (៧ វិធីគ្រប់គ្រងលុយឱ្យមានប្រសិទ្ធភាព)",
+      "character": "តួអង្គឯក",
+      "characterAction": "បង្ហាញទឹកមុខរស់រវើក និងកាយវិការពន្យល់ស្របតាមសំឡេងអ្នកនិទាន",
+      "narratorScriptKh": "សរសេរអត្ថបទអ្នកនិទានពេញលេញសម្រាប់ឈុតទី 4 ទាក់ទងនឹង «៧ វិធីគ្រប់គ្រងលុយឱ្យមានប្រសិទ្ធភាព» នៅទីនេះ។",
+      "characterDialogue": "",
+      "onScreenText": "សាច់រឿងផ្នែកទី 2",
+      "aiImagePromptEn": "Educational storytelling scene illustrating \"សាច់រឿងផ្នែកទី 2\" for topic \"៧ វិធីគ្រប់គ្រងលុយឱ្យមានប្រសិទ្ធភាព\", friendly Cambodian main character in sky-blue polo shirt and dark navy pants. Stylized 3D Pixar-inspired educational cartoon animation, authentic Cambodian (Khmer) characters and Cambodian rural/city scenery (palm trees, stilt houses, Phnom Penh streets and cafés), authentic Khmer script on natural storefront signboards when shops appear, soft global illumination, warm cinematic lighting, 16:9 aspect ratio, no floating subtitles or watermarks.",
+      "aiVideoPromptEn": "Smooth 3D Stylized Cambodian Educational Animation motion showing expressive facial animation, clear gestures, and warm atmospheric lighting.",
+      "cameraMovement": "Gentle steady framing",
+      "bgmAndSfx": "ភ្លេង Documentary ស្រទន់កក់ក្ដៅ"
+    },
+    {
+      "sceneNumber": 5,
+      "section": "MAIN_STORY",
+      "sceneTitle": "សាច់រឿងផ្នែកទី 3",
+      "durationSeconds": 8,
+      "visualDescription": "ឈុតគំនូរជីវចលអប់រំ 2D បង្ហាញខ្លឹមសារសម្រាប់៖ សាច់រឿងផ្នែកទី 3 (៧ វិធីគ្រប់គ្រងលុយឱ្យមានប្រសិទ្ធភាព)",
+      "character": "តួអង្គឯក",
+      "characterAction": "បង្ហាញទឹកមុខរស់រវើក និងកាយវិការពន្យល់ស្របតាមសំឡេងអ្នកនិទាន",
+      "narratorScriptKh": "សរសេរអត្ថបទអ្នកនិទានពេញលេញសម្រាប់ឈុតទី 5 ទាក់ទងនឹង «៧ វិធីគ្រប់គ្រងលុយឱ្យមានប្រសិទ្ធភាព» នៅទីនេះ។",
+      "characterDialogue": "",
+      "onScreenText": "សាច់រឿងផ្នែកទី 3",
+      "aiImagePromptEn": "Educational storytelling scene illustrating \"សាច់រឿងផ្នែកទី 3\" for topic \"៧ វិធីគ្រប់គ្រងលុយឱ្យមានប្រសិទ្ធភាព\", friendly Cambodian main character in sky-blue polo shirt and dark navy pants. Stylized 3D Pixar-inspired educational cartoon animation, authentic Cambodian (Khmer) characters and Cambodian rural/city scenery (palm trees, stilt houses, Phnom Penh streets and cafés), authentic Khmer script on natural storefront signboards when shops appear, soft global illumination, warm cinematic lighting, 16:9 aspect ratio, no floating subtitles or watermarks.",
+      "aiVideoPromptEn": "Smooth 3D Stylized Cambodian Educational Animation motion showing expressive facial animation, clear gestures, and warm atmospheric lighting.",
+      "cameraMovement": "Gentle steady framing",
+      "bgmAndSfx": "ភ្លេង Documentary ស្រទន់កក់ក្ដៅ"
+    },
+    {
+      "sceneNumber": 6,
+      "section": "MAIN_STORY",
+      "sceneTitle": "សាច់រឿងផ្នែកទី 4",
+      "durationSeconds": 8,
+      "visualDescription": "ឈុតគំនូរជីវចលអប់រំ 2D បង្ហាញខ្លឹមសារសម្រាប់៖ សាច់រឿងផ្នែកទី 4 (៧ វិធីគ្រប់គ្រងលុយឱ្យមានប្រសិទ្ធភាព)",
+      "character": "តួអង្គឯក",
+      "characterAction": "បង្ហាញទឹកមុខរស់រវើក និងកាយវិការពន្យល់ស្របតាមសំឡេងអ្នកនិទាន",
+      "narratorScriptKh": "សរសេរអត្ថបទអ្នកនិទានពេញលេញសម្រាប់ឈុតទី 6 ទាក់ទងនឹង «៧ វិធីគ្រប់គ្រងលុយឱ្យមានប្រសិទ្ធភាព» នៅទីនេះ។",
+      "characterDialogue": "",
+      "onScreenText": "សាច់រឿងផ្នែកទី 4",
+      "aiImagePromptEn": "Educational storytelling scene illustrating \"សាច់រឿងផ្នែកទី 4\" for topic \"៧ វិធីគ្រប់គ្រងលុយឱ្យមានប្រសិទ្ធភាព\", friendly Cambodian main character in sky-blue polo shirt and dark navy pants. Stylized 3D Pixar-inspired educational cartoon animation, authentic Cambodian (Khmer) characters and Cambodian rural/city scenery (palm trees, stilt houses, Phnom Penh streets and cafés), authentic Khmer script on natural storefront signboards when shops appear, soft global illumination, warm cinematic lighting, 16:9 aspect ratio, no floating subtitles or watermarks.",
+      "aiVideoPromptEn": "Smooth 3D Stylized Cambodian Educational Animation motion showing expressive facial animation, clear gestures, and warm atmospheric lighting.",
+      "cameraMovement": "Gentle steady framing",
+      "bgmAndSfx": "ភ្លេង Documentary ស្រទន់កក់ក្ដៅ"
+    },
+    {
+      "sceneNumber": 7,
+      "section": "MAIN_STORY",
+      "sceneTitle": "សាច់រឿងផ្នែកទី 5",
+      "durationSeconds": 8,
+      "visualDescription": "ឈុតគំនូរជីវចលអប់រំ 2D បង្ហាញខ្លឹមសារសម្រាប់៖ សាច់រឿងផ្នែកទី 5 (៧ វិធីគ្រប់គ្រងលុយឱ្យមានប្រសិទ្ធភាព)",
+      "character": "តួអង្គឯក",
+      "characterAction": "បង្ហាញទឹកមុខរស់រវើក និងកាយវិការពន្យល់ស្របតាមសំឡេងអ្នកនិទាន",
+      "narratorScriptKh": "សរសេរអត្ថបទអ្នកនិទានពេញលេញសម្រាប់ឈុតទី 7 ទាក់ទងនឹង «៧ វិធីគ្រប់គ្រងលុយឱ្យមានប្រសិទ្ធភាព» នៅទីនេះ។",
+      "characterDialogue": "",
+      "onScreenText": "សាច់រឿងផ្នែកទី 5",
+      "aiImagePromptEn": "Educational storytelling scene illustrating \"សាច់រឿងផ្នែកទី 5\" for topic \"៧ វិធីគ្រប់គ្រងលុយឱ្យមានប្រសិទ្ធភាព\", friendly Cambodian main character in sky-blue polo shirt and dark navy pants. Stylized 3D Pixar-inspired educational cartoon animation, authentic Cambodian (Khmer) characters and Cambodian rural/city scenery (palm trees, stilt houses, Phnom Penh streets and cafés), authentic Khmer script on natural storefront signboards when shops appear, soft global illumination, warm cinematic lighting, 16:9 aspect ratio, no floating subtitles or watermarks.",
+      "aiVideoPromptEn": "Smooth 3D Stylized Cambodian Educational Animation motion showing expressive facial animation, clear gestures, and warm atmospheric lighting.",
+      "cameraMovement": "Gentle steady framing",
+      "bgmAndSfx": "ភ្លេង Documentary ស្រទន់កក់ក្ដៅ"
+    },
+    {
+      "sceneNumber": 8,
+      "section": "MAIN_STORY",
+      "sceneTitle": "សាច់រឿងផ្នែកទី 6",
+      "durationSeconds": 8,
+      "visualDescription": "ឈុតគំនូរជីវចលអប់រំ 2D បង្ហាញខ្លឹមសារសម្រាប់៖ សាច់រឿងផ្នែកទី 6 (៧ វិធីគ្រប់គ្រងលុយឱ្យមានប្រសិទ្ធភាព)",
+      "character": "តួអង្គឯក",
+      "characterAction": "បង្ហាញទឹកមុខរស់រវើក និងកាយវិការពន្យល់ស្របតាមសំឡេងអ្នកនិទាន",
+      "narratorScriptKh": "សរសេរអត្ថបទអ្នកនិទានពេញលេញសម្រាប់ឈុតទី 8 ទាក់ទងនឹង «៧ វិធីគ្រប់គ្រងលុយឱ្យមានប្រសិទ្ធភាព» នៅទីនេះ។",
+      "characterDialogue": "",
+      "onScreenText": "សាច់រឿងផ្នែកទី 6",
+      "aiImagePromptEn": "Educational storytelling scene illustrating \"សាច់រឿងផ្នែកទី 6\" for topic \"៧ វិធីគ្រប់គ្រងលុយឱ្យមានប្រសិទ្ធភាព\", friendly Cambodian main character in sky-blue polo shirt and dark navy pants. Stylized 3D Pixar-inspired educational cartoon animation, authentic Cambodian (Khmer) characters and Cambodian rural/city scenery (palm trees, stilt houses, Phnom Penh streets and cafés), authentic Khmer script on natural storefront signboards when shops appear, soft global illumination, warm cinematic lighting, 16:9 aspect ratio, no floating subtitles or watermarks.",
+      "aiVideoPromptEn": "Smooth 3D Stylized Cambodian Educational Animation motion showing expressive facial animation, clear gestures, and warm atmospheric lighting.",
+      "cameraMovement": "Gentle steady framing",
+      "bgmAndSfx": "ភ្លេង Documentary ស្រទន់កក់ក្ដៅ"
+    },
+    {
+      "sceneNumber": 9,
+      "section": "MAIN_STORY",
+      "sceneTitle": "សាច់រឿងផ្នែកទី 7",
+      "durationSeconds": 8,
+      "visualDescription": "ឈុតគំនូរជីវចលអប់រំ 2D បង្ហាញខ្លឹមសារសម្រាប់៖ សាច់រឿងផ្នែកទី 7 (៧ វិធីគ្រប់គ្រងលុយឱ្យមានប្រសិទ្ធភាព)",
+      "character": "តួអង្គឯក",
+      "characterAction": "បង្ហាញទឹកមុខរស់រវើក និងកាយវិការពន្យល់ស្របតាមសំឡេងអ្នកនិទាន",
+      "narratorScriptKh": "សរសេរអត្ថបទអ្នកនិទានពេញលេញសម្រាប់ឈុតទី 9 ទាក់ទងនឹង «៧ វិធីគ្រប់គ្រងលុយឱ្យមានប្រសិទ្ធភាព» នៅទីនេះ។",
+      "characterDialogue": "",
+      "onScreenText": "សាច់រឿងផ្នែកទី 7",
+      "aiImagePromptEn": "Educational storytelling scene illustrating \"សាច់រឿងផ្នែកទី 7\" for topic \"៧ វិធីគ្រប់គ្រងលុយឱ្យមានប្រសិទ្ធភាព\", friendly Cambodian main character in sky-blue polo shirt and dark navy pants. Stylized 3D Pixar-inspired educational cartoon animation, authentic Cambodian (Khmer) characters and Cambodian rural/city scenery (palm trees, stilt houses, Phnom Penh streets and cafés), authentic Khmer script on natural storefront signboards when shops appear, soft global illumination, warm cinematic lighting, 16:9 aspect ratio, no floating subtitles or watermarks.",
+      "aiVideoPromptEn": "Smooth 3D Stylized Cambodian Educational Animation motion showing expressive facial animation, clear gestures, and warm atmospheric lighting.",
+      "cameraMovement": "Gentle steady framing",
+      "bgmAndSfx": "ភ្លេង Documentary ស្រទន់កក់ក្ដៅ"
+    },
+    {
+      "sceneNumber": 10,
+      "section": "IMPORTANT_LESSONS",
+      "sceneTitle": "សង្ខេបមេរៀនសំខាន់ៗ",
+      "durationSeconds": 8,
+      "visualDescription": "ឈុតគំនូរជីវចលអប់រំ 2D បង្ហាញខ្លឹមសារសម្រាប់៖ សង្ខេបមេរៀនសំខាន់ៗ (៧ វិធីគ្រប់គ្រងលុយឱ្យមានប្រសិទ្ធភាព)",
+      "character": "តួអង្គឯក",
+      "characterAction": "បង្ហាញទឹកមុខរស់រវើក និងកាយវិការពន្យល់ស្របតាមសំឡេងអ្នកនិទាន",
+      "narratorScriptKh": "សង្ខេបមកវិញ មេរៀនសំខាន់បំផុតពី «៧ វិធីគ្រប់គ្រងលុយឱ្យមានប្រសិទ្ធភាព» គឺការយកទៅអនុវត្តជាក់ស្ដែងក្នុងជីវិតប្រចាំថ្ងៃ។",
+      "characterDialogue": "",
+      "onScreenText": "សង្ខេបមេរៀនសំខាន់ៗ",
+      "aiImagePromptEn": "Educational storytelling scene illustrating \"សង្ខេបមេរៀនសំខាន់ៗ\" for topic \"៧ វិធីគ្រប់គ្រងលុយឱ្យមានប្រសិទ្ធភាព\", friendly Cambodian main character in sky-blue polo shirt and dark navy pants. Stylized 3D Pixar-inspired educational cartoon animation, authentic Cambodian (Khmer) characters and Cambodian rural/city scenery (palm trees, stilt houses, Phnom Penh streets and cafés), authentic Khmer script on natural storefront signboards when shops appear, soft global illumination, warm cinematic lighting, 16:9 aspect ratio, no floating subtitles or watermarks.",
+      "aiVideoPromptEn": "Smooth 3D Stylized Cambodian Educational Animation motion showing expressive facial animation, clear gestures, and warm atmospheric lighting.",
+      "cameraMovement": "Gentle steady framing",
+      "bgmAndSfx": "ភ្លេង Documentary ស្រទន់កក់ក្ដៅ"
+    },
+    {
+      "sceneNumber": 11,
+      "section": "CONCLUSION",
+      "sceneTitle": "សារដ៏មានអត្ថន័យចុងបញ្ចប់",
+      "durationSeconds": 8,
+      "visualDescription": "ឈុតគំនូរជីវចលអប់រំ 2D បង្ហាញខ្លឹមសារសម្រាប់៖ សារដ៏មានអត្ថន័យចុងបញ្ចប់ (៧ វិធីគ្រប់គ្រងលុយឱ្យមានប្រសិទ្ធភាព)",
+      "character": "តួអង្គឯក",
+      "characterAction": "បង្ហាញទឹកមុខរស់រវើក និងកាយវិការពន្យល់ស្របតាមសំឡេងអ្នកនិទាន",
+      "narratorScriptKh": "សូមចងចាំថា ការផ្លាស់ប្តូរដ៏ធំ ចាប់ផ្ដើមពីជំហានតូចៗដែលអ្នកធ្វើនៅថ្ងៃនេះ។",
+      "characterDialogue": "",
+      "onScreenText": "សារដ៏មានអត្ថន័យចុងបញ្ចប់",
+      "aiImagePromptEn": "Educational storytelling scene illustrating \"សារដ៏មានអត្ថន័យចុងបញ្ចប់\" for topic \"៧ វិធីគ្រប់គ្រងលុយឱ្យមានប្រសិទ្ធភាព\", friendly Cambodian main character in sky-blue polo shirt and dark navy pants. Stylized 3D Pixar-inspired educational cartoon animation, authentic Cambodian (Khmer) characters and Cambodian rural/city scenery (palm trees, stilt houses, Phnom Penh streets and cafés), authentic Khmer script on natural storefront signboards when shops appear, soft global illumination, warm cinematic lighting, 16:9 aspect ratio, no floating subtitles or watermarks.",
+      "aiVideoPromptEn": "Smooth 3D Stylized Cambodian Educational Animation motion showing expressive facial animation, clear gestures, and warm atmospheric lighting.",
+      "cameraMovement": "Gentle steady framing",
+      "bgmAndSfx": "ភ្លេង Documentary ស្រទន់កក់ក្ដៅ"
+    },
+    {
+      "sceneNumber": 12,
+      "section": "CONCLUSION",
+      "sceneTitle": "អញ្ជើញ Like, Share និង Subscribe",
+      "durationSeconds": 8,
+      "visualDescription": "ឈុតគំនូរជីវចលអប់រំ 2D បង្ហាញខ្លឹមសារសម្រាប់៖ អញ្ជើញ Like, Share និង Subscribe (៧ វិធីគ្រប់គ្រងលុយឱ្យមានប្រសិទ្ធភាព)",
+      "character": "តួអង្គឯក",
+      "characterAction": "បង្ហាញទឹកមុខរស់រវើក និងកាយវិការពន្យល់ស្របតាមសំឡេងអ្នកនិទាន",
+      "narratorScriptKh": "សូមអរគុណសម្រាប់ការទស្សនា! កុំភ្លេចចុច Like, Share និង Subscribe ដើម្បីទទួលបានវីដេអូចំណេះដឹងថ្មីៗបន្តទៀត។",
+      "characterDialogue": "",
+      "onScreenText": "អញ្ជើញ Like, Share និង Subscribe",
+      "aiImagePromptEn": "Educational storytelling scene illustrating \"អញ្ជើញ Like, Share និង Subscribe\" for topic \"៧ វិធីគ្រប់គ្រងលុយឱ្យមានប្រសិទ្ធភាព\", friendly Cambodian main character in sky-blue polo shirt and dark navy pants. Stylized 3D Pixar-inspired educational cartoon animation, authentic Cambodian (Khmer) characters and Cambodian rural/city scenery (palm trees, stilt houses, Phnom Penh streets and cafés), authentic Khmer script on natural storefront signboards when shops appear, soft global illumination, warm cinematic lighting, 16:9 aspect ratio, no floating subtitles or watermarks.",
+      "aiVideoPromptEn": "Smooth 3D Stylized Cambodian Educational Animation motion showing expressive facial animation, clear gestures, and warm atmospheric lighting.",
+      "cameraMovement": "Gentle steady framing",
+      "bgmAndSfx": "ភ្លេង Documentary ស្រទន់កក់ក្ដៅ"
+    }
+  ],
+  "musicSuggestions": [
+    {
+      "section": "វីដេអូទាំងមូល",
+      "mood": "Warm Documentary, Educational, Uplifting",
+      "tempo": "85–95 BPM",
+      "instruments": "Soft Piano, Acoustic Guitar, Subtle Strings",
+      "usageTip": "រក្សាសំឡេងភ្លេងនៅ -20dB ដើម្បីឱ្យសំឡេងអ្នកនិទានច្បាស់ល្អ។"
+    }
+  ],
+  "thumbnail": {
+    "headlineKh": "៧ វិធីគ្រប់គ្រងលុយឱ្យមានប្រសិទ្ធភាព",
+    "subTextKh": "មេរៀនអប់រំ 2D Animation",
+    "visualConcept": "បង្ហាញតួអង្គឯកមានទឹកមុខចាប់អារម្មណ៍ជាមួយរូបភាពនិមិត្តសញ្ញានៃ «៧ វិធីគ្រប់គ្រងលុយឱ្យមានប្រសិទ្ធភាព» ក្រោមពន្លឺពណ៌មាសកក់ក្ដៅ។",
+    "aiThumbnailPromptEn": "Eye-catching YouTube thumbnail for \"៧ វិធីគ្រប់គ្រងលុយឱ្យមានប្រសិទ្ធភាព\", expressive Cambodian cartoon character in sky-blue polo shirt pointing at glowing educational visual metaphors, warm amber and teal contrast, Stylized 3D Pixar-inspired educational cartoon animation, authentic Cambodian (Khmer) characters and Cambodian rural/city scenery (palm trees, stilt houses, Phnom Penh streets and cafés), authentic Khmer script on natural storefront signboards when shops appear, soft global illumination, warm cinematic lighting, 16:9 aspect ratio, no floating subtitles or watermarks."
+  }
+}
