@@ -58,26 +58,26 @@ export const AI_PROVIDER_PRESETS: ProviderPreset[] = [
   {
     id: 'groq',
     name: 'Groq Cloud',
-    badgeKh: 'ឥតគិតថ្លៃ • លឿនខ្លាំង',
+    badgeKh: 'ល្បឿនលឿនបំផុត (~៣ វិនាទី) • ឥតគិតថ្លៃ',
     requiresKey: true,
     defaultBaseUrl: 'https://api.groq.com/openai/v1',
     defaultModel: 'llama-3.3-70b-versatile',
     suggestedModels: ['llama-3.3-70b-versatile', 'qwen/qwen3-32b', 'llama-3.1-8b-instant'],
     keyPlaceholder: 'gsk_...',
     docsUrl: 'https://console.groq.com/keys',
-    descriptionKh: 'បង្កើតលឿនបំផុត និងមានគម្រោងឥតគិតថ្លៃសម្រាប់សាកល្បង និងផលិតប្រចាំថ្ងៃ។',
+    descriptionKh: 'បង្កើតលឿនបំផុត (៥០០ tokens/វិនាទី) ឥតគិតថ្លៃ មិនបាច់ដាក់កាតធនាគារ។',
   },
   {
     id: 'gemini',
     name: 'Google Gemini API',
-    badgeKh: 'ភាសាខ្មែររលូនបំផុត • ឥតគិតថ្លៃ',
+    badgeKh: 'លឿន & ភាសាខ្មែររលូនបំផុត • ឥតគិតថ្លៃ',
     requiresKey: true,
     defaultBaseUrl: '',
     defaultModel: 'gemini-3.8-flash',
     suggestedModels: ['gemini-3.8-flash', 'gemini-2.5-flash', 'gemini-2.0-flash'],
     keyPlaceholder: 'AQ.... ឬ AIzaSy...',
     docsUrl: 'https://aistudio.google.com/apikey',
-    descriptionKh: 'ម៉ូដែល Google Gemini ផ្លូវការ (gemini-3.8-flash) សរសេរភាសាខ្មែរច្បាស់ និងរលូនបំផុត។',
+    descriptionKh: 'ម៉ូដែល Google Gemini 3.8 Flash ផ្លូវការ លឿន និងសរសេរភាសាខ្មែរច្បាស់រលូនបំផុត។',
   },
   {
     id: 'openai',
@@ -837,9 +837,12 @@ STRICT PRODUCTION RULES:
    - The Khmer Narrator Script is voiceover storytelling that accompanies the visual actions, while characters actively live, work, and collaborate in the world.
    - Include natural Khmer conversational dialogue between characters in "characterDialogue" whenever characters talk to each other!
 
-3. KHMER NARRATOR SCRIPT: Write natural, grammatically accurate, complete Khmer narrator sentences ready to read aloud immediately (NOT bullet headings). Connect every scene smoothly to the next like a polished documentary storyteller.
+3. KHMER NARRATOR SCRIPT: Write natural, grammatically accurate, complete Khmer narrator sentences ready to read aloud immediately (NOT bullet headings). Connect every scene smoothly to the next like a polished documentary storyteller (1-2 crisp spoken sentences per scene).
 4. CAMBODIAN CULTURAL SETTING: Authentic Cambodian features, scenery, clean Khmer script on shop signboards (no floating subtitles/watermarks).
-5. RETURN ONLY VALID JSON inside a single \`\`\`json code block matching the exact structure below (no extra explanation outside the JSON):
+5. FAST & PUNCHY GENERATION DIRECTIVE:
+   - Output valid JSON immediately with zero preamble.
+   - Keep descriptions, actions, and image prompts punchy, visual, and concise (1-2 crisp sentences per field) — avoid repetitive filler paragraphs to ensure ultra-fast generation.
+6. RETURN ONLY VALID JSON inside a single \`\`\`json code block matching the exact structure below (no extra explanation outside the JSON):
 
 \`\`\`json
 {

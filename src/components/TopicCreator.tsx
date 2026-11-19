@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   Sparkles,
   Copy,
@@ -23,6 +23,7 @@ import {
   Wrench,
   MessageSquare,
   Compass,
+  Zap,
 } from 'lucide-react';
 import {
   AI_PROVIDER_PRESETS,
@@ -84,6 +85,22 @@ export const TopicCreator: React.FC<TopicCreatorProps> = ({
   const [copiedPrompt, setCopiedPrompt] = useState<boolean>(false);
   const [copiedJsonPrompt, setCopiedJsonPrompt] = useState<boolean>(false);
   const [topicSearch, setTopicSearch] = useState<string>('');
+  const [elapsedSeconds, setElapsedSeconds] = useState<number>(0);
+
+  useEffect(() => {
+    let timer: any = null;
+    if (isGenerating) {
+      setElapsedSeconds(0);
+      timer = setInterval(() => {
+        setElapsedSeconds((prev) => prev + 1);
+      }, 1000);
+    } else {
+      setElapsedSeconds(0);
+    }
+    return () => {
+      if (timer) clearInterval(timer);
+    };
+  }, [isGenerating]);
 
   const totalTopicCount = useMemo(
     () => TOPIC_CATEGORIES.reduce((sum, c) => sum + c.sampleTopics.length, 0),
@@ -136,6 +153,35 @@ export const TopicCreator: React.FC<TopicCreatorProps> = ({
 
   const activePreset =
     AI_PROVIDER_PRESETS.find((p) => p.id === aiConfig.provider) || AI_PROVIDER_PRESETS[0];
+
+  const progressInfo = useMemo(() => {
+    if (elapsedSeconds < 2) {
+      return {
+        percent: 25,
+        title: '⚡ ដំណាក់កាលទី ១/៤៖ កំពុងរៀបចំ Outline & តួអង្គជាក្រុម...',
+        sub: `ដំណើរការលើ ${activePreset.name} (ម៉ូដែល ${activePreset.defaultModel || 'AI'})...`,
+      };
+    }
+    if (elapsedSeconds < 5) {
+      return {
+        percent: 55,
+        title: '✍️ ដំណាក់កាលទី ២/៤៖ កំពុងនិពន្ធ Khmer Narrator Script & សន្ទនា...',
+        sub: `សរសេរប្រយោគនិទានជាភាសាខ្មែររលូនតាម ${targetScenes} ឈុត...`,
+      };
+    }
+    if (elapsedSeconds < 9) {
+      return {
+        percent: 80,
+        title: '🎬 ដំណាក់កាលទី ៣/៤៖ កំពុងបង្កើត Scene Actions & AI Image Prompts...',
+        sub: 'រៀបចំប្លង់សកម្មភាព & Prompt រូបភាពអង់គ្លេសសម្រាប់ Midjourney/Flux...',
+      };
+    }
+    return {
+      percent: 94,
+      title: '✨ ដំណាក់កាលទី ៤/៤៖ កំពុងផ្ទៀងផ្ទាត់ និងរៀបចំ Storyboard គម្រោង...',
+      sub: 'ជិតរួចរាល់ហើយ! កំពុងត្រួតពិនិត្យទម្រង់ JSON & Timeline...',
+    };
+  }, [elapsedSeconds, activePreset, targetScenes]);
 
   const currentRequest: GenerationRequest = useMemo(
     () => ({
@@ -597,6 +643,25 @@ export const TopicCreator: React.FC<TopicCreatorProps> = ({
         </div>
       )}
 
+      {/* Live Speed Progress HUD */}
+      {isGenerating && (
+        <div className="generating-progress-card">
+          <div className="progress-header-row">
+            <div className="progress-title">
+              <Zap size={18} className="text-amber" />
+              <span>{progressInfo.title}</span>
+            </div>
+            <div className="progress-timer-pill">
+              ⏱️ {elapsedSeconds} វិនាទី
+            </div>
+          </div>
+          <div className="progress-track">
+            <div className="progress-fill" style={{ width: `${progressInfo.percent}%` }} />
+          </div>
+          <p className="progress-subtext">{progressInfo.sub}</p>
+        </div>
+      )}
+
       {/* Action Bar */}
       <div className="creator-action-bar">
         <button
@@ -656,6 +721,10 @@ export const TopicCreator: React.FC<TopicCreatorProps> = ({
           <ClipboardPaste size={17} />
           <span>ប្រើ ChatGPT / Gemini Web (ឥតគិតថ្លៃ)</span>
         </button>
+      </div>
+
+      <div style={{ marginTop: 8, fontSize: '0.8rem', color: '#6b7280', display: 'flex', alignItems: 'center', gap: 6 }}>
+        <span>⚡ <strong>គន្លឹះល្បឿន៖</strong> ប្រើ <strong>Google Gemini API</strong> ឬ <strong>Groq Cloud</strong> ដើម្បីបង្កើតលឿនបំផុត (ត្រឹមតែ ២ ទៅ ៦ វិនាទីប៉ុណ្ណោះ)។</span>
       </div>
 
       {/* Zero-API-Key ChatGPT / Gemini Web Bridge */}

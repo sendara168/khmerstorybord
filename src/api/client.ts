@@ -281,7 +281,7 @@ async function callOpenRouterInBrowser(prompt: string, config: AiProviderConfig)
         },
         { role: 'user', content: prompt },
       ],
-      temperature: 0.7,
+      temperature: 0.6,
       max_tokens: 4096,
     };
 
@@ -385,8 +385,8 @@ async function callGroqInBrowser(prompt: string, config: AiProviderConfig): Prom
           { role: 'user', content: prompt },
         ],
         response_format: { type: 'json_object' },
-        temperature: 0.7,
-        max_tokens: 8192,
+        temperature: 0.6,
+        max_tokens: 6000,
       }),
     });
   } catch (err) {
@@ -435,8 +435,8 @@ async function callOpenAICompatibleInBrowser(
           { role: 'user', content: prompt },
         ],
         response_format: { type: 'json_object' },
-        temperature: 0.7,
-        max_tokens: 8192,
+        temperature: 0.6,
+        max_tokens: 6000,
       }),
     });
   } catch (err) {
@@ -481,8 +481,8 @@ async function callGeminiInBrowser(prompt: string, config: AiProviderConfig): Pr
     ],
     generationConfig: {
       responseMimeType: 'application/json',
-      temperature: 0.7,
-      maxOutputTokens: 8192,
+      temperature: 0.6,
+      maxOutputTokens: 6000,
     },
   };
 
