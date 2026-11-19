@@ -429,13 +429,16 @@ async function generateWithOllama({ baseUrl, model, prompt }) {
 
 async function generateWithOpenAICompatible({ provider, baseUrl, apiKey, model, prompt }) {
   const defaults = {
-    openrouter: { url: 'https://openrouter.ai/api/v1', model: 'google/gemma-3-27b-it:free' },
+    openrouter: { url: 'https://openrouter.ai/api/v1', model: 'google/gemma-4-31b-it:free' },
     groq: { url: 'https://api.groq.com/openai/v1', model: 'llama-3.3-70b-versatile' },
     openai: { url: 'https://api.openai.com/v1', model: 'gpt-4o-mini' },
   };
   const def = defaults[provider] || defaults.openai;
   const cleanBase = String(baseUrl || def.url).replace(/\/+$/, '');
-  const selectedModel = String(model || def.model).trim();
+  let selectedModel = String(model || def.model).trim();
+  if (provider === 'openrouter' && selectedModel === 'google/gemma-3-27b-it:free') {
+    selectedModel = 'google/gemma-4-31b-it:free';
+  }
   const isLocal = /^https?:\/\/(localhost|127\.0\.0\.1)/i.test(cleanBase);
 
   if (!isLocal && !apiKey) {
@@ -455,48 +458,70 @@ async function generateWithOpenAICompatible({ provider, baseUrl, apiKey, model, 
     headers['X-Title'] = 'Khmer Storyboard Studio';
   }
 
-  const body = {
-    model: selectedModel,
-    messages: [
-      {
-        role: 'system',
-        content:
-          'You are a professional Khmer educational storytelling animation scriptwriter and storyboard director. Always return ONLY valid JSON.',
-      },
-      { role: 'user', content: prompt },
-    ],
-    temperature: 0.7,
-  };
+  const candidateModels = provider === 'openrouter'
+    ? [selectedModel, 'google/gemma-4-31b-it:free', 'google/gemma-4-26b-a4b-it:free', 'google/gemma-3-27b-it']
+        .filter((m, idx, arr) => Boolean(m) && arr.indexOf(m) === idx)
+    : [selectedModel];
 
-  // Use json_object response_format for providers that reliably support it
-  if (provider === 'openai' || provider === 'groq') {
-    body.response_format = { type: 'json_object' };
+  let lastError = null;
+
+  for (let i = 0; i < candidateModels.length; i++) {
+    const currentModel = candidateModels[i];
+    const body = {
+      model: currentModel,
+      messages: [
+        {
+          role: 'system',
+          content:
+            'You are a professional Khmer educational storytelling animation scriptwriter and storyboard director. Always return ONLY valid JSON.',
+        },
+        { role: 'user', content: prompt },
+      ],
+      temperature: 0.7,
+    };
+
+    // Use json_object response_format for providers that reliably support it
+    if (provider === 'openai' || provider === 'groq') {
+      body.response_format = { type: 'json_object' };
+    }
+
+    let res;
+    try {
+      res = await fetch(`${cleanBase}/chat/completions`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(body),
+      });
+    } catch (err) {
+      throw new Error(
+        `មិនអាចភ្ជាប់ទៅ ${cleanBase} បានទេ (${err instanceof Error ? err.message : 'Network error'})។`
+      );
+    }
+
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      const errMsg = String(data?.error?.message || data?.message || `HTTP ${res.status}`);
+      const isUnavailable =
+        res.status === 404 ||
+        errMsg.toLowerCase().includes('unavailable') ||
+        errMsg.toLowerCase().includes('not found') ||
+        errMsg.toLowerCase().includes('use this slug instead');
+
+      if (provider === 'openrouter' && isUnavailable && i < candidateModels.length - 1) {
+        lastError = new Error(`${provider.toUpperCase()} Error (${res.status}): ${errMsg}`);
+        continue;
+      }
+      throw new Error(`${provider.toUpperCase()} Error (${res.status}): ${errMsg}`);
+    }
+
+    const content = data?.choices?.[0]?.message?.content;
+    if (!content) {
+      throw new Error(`${provider.toUpperCase()} បានត្រឡប់លទ្ធផលទទេ។`);
+    }
+    return extractJsonFromText(content);
   }
 
-  let res;
-  try {
-    res = await fetch(`${cleanBase}/chat/completions`, {
-      method: 'POST',
-      headers,
-      body: JSON.stringify(body),
-    });
-  } catch (err) {
-    throw new Error(
-      `មិនអាចភ្ជាប់ទៅ ${cleanBase} បានទេ (${err instanceof Error ? err.message : 'Network error'})។`
-    );
-  }
-
-  const data = await res.json().catch(() => ({}));
-  if (!res.ok) {
-    const errMsg = data?.error?.message || data?.message || `HTTP ${res.status}`;
-    throw new Error(`${provider.toUpperCase()} Error (${res.status}): ${errMsg}`);
-  }
-
-  const content = data?.choices?.[0]?.message?.content;
-  if (!content) {
-    throw new Error(`${provider.toUpperCase()} បានត្រឡប់លទ្ធផលទទេ។`);
-  }
-  return extractJsonFromText(content);
+  throw lastError || new Error(`${provider.toUpperCase()} មិនអាចដំណើរការបានទេ។`);
 }
 
 async function generateWithGemini({ apiKey, model, prompt }) {

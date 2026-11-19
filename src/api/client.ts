@@ -128,7 +128,12 @@ async function callOpenRouterInBrowser(prompt: string, config: AiProviderConfig)
     throw new Error('សូមបញ្ចូល OpenRouter API Key នៅក្នុង «កំណត់ការភ្ជាប់ AI» (ប៊ូតុង Settings) ជាមុនសិន។');
   }
   const baseUrl = (config.baseUrl || 'https://openrouter.ai/api/v1').replace(/\/+$/, '');
-  const model = (config.model || 'google/gemma-3-27b-it:free').trim();
+  let requestedModel = (config.model || 'google/gemma-4-31b-it:free').trim();
+
+  // If old deprecated free model slug is passed, immediately rewrite to working free model
+  if (requestedModel === 'google/gemma-3-27b-it:free') {
+    requestedModel = 'google/gemma-4-31b-it:free';
+  }
 
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
@@ -137,44 +142,69 @@ async function callOpenRouterInBrowser(prompt: string, config: AiProviderConfig)
     'X-Title': 'Khmer Storyboard Studio',
   };
 
-  const body = {
-    model,
-    messages: [
-      {
-        role: 'system',
-        content:
-          'You are a professional Khmer educational storytelling animation scriptwriter and storyboard director. Output ONLY valid JSON matching the requested schema.',
-      },
-      { role: 'user', content: prompt },
-    ],
-    temperature: 0.7,
-    max_tokens: 8192,
-  };
+  const candidateModels = [
+    requestedModel,
+    'google/gemma-4-31b-it:free',
+    'google/gemma-4-26b-a4b-it:free',
+    'google/gemma-3-27b-it',
+  ].filter((m, idx, arr) => Boolean(m) && arr.indexOf(m) === idx);
 
-  let res: Response;
-  try {
-    res = await fetch(`${baseUrl}/chat/completions`, {
-      method: 'POST',
-      headers,
-      body: JSON.stringify(body),
-    });
-  } catch (err) {
-    throw new Error(
-      `មិនអាចភ្ជាប់ទៅ OpenRouter បានទេ (${err instanceof Error ? err.message : 'Network error'})។ សូមពិនិត្យ Internet ឬ VPN/Adblock។`
-    );
+  let lastError: Error | null = null;
+
+  for (let i = 0; i < candidateModels.length; i++) {
+    const modelToTry = candidateModels[i];
+    const body = {
+      model: modelToTry,
+      messages: [
+        {
+          role: 'system',
+          content:
+            'You are a professional Khmer educational storytelling animation scriptwriter and storyboard director. Output ONLY valid JSON matching the requested schema.',
+        },
+        { role: 'user', content: prompt },
+      ],
+      temperature: 0.7,
+      max_tokens: 8192,
+    };
+
+    let res: Response;
+    try {
+      res = await fetch(`${baseUrl}/chat/completions`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(body),
+      });
+    } catch (err) {
+      throw new Error(
+        `មិនអាចភ្ជាប់ទៅ OpenRouter បានទេ (${err instanceof Error ? err.message : 'Network error'})។ សូមពិនិត្យ Internet ឬ VPN/Adblock។`
+      );
+    }
+
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      const errMsg = String(data?.error?.message || data?.message || `HTTP ${res.status}`);
+      const isUnavailable =
+        res.status === 404 ||
+        errMsg.toLowerCase().includes('unavailable') ||
+        errMsg.toLowerCase().includes('not found') ||
+        errMsg.toLowerCase().includes('use this slug instead');
+
+      if (isUnavailable && i < candidateModels.length - 1) {
+        console.warn(`OpenRouter model ${modelToTry} unavailable (${errMsg}), falling back to ${candidateModels[i + 1]}...`);
+        lastError = new Error(`OpenRouter Error (${res.status}): ${errMsg}`);
+        continue;
+      }
+      throw new Error(`OpenRouter Error (${res.status}): ${errMsg}`);
+    }
+
+    const content = data?.choices?.[0]?.message?.content;
+    if (!content) {
+      throw new Error('OpenRouter បានត្រឡប់លទ្ធផលទទេ។ សូមសាកល្បងម្ដងទៀត ឬប្ដូរម៉ូដែល។');
+    }
+    return content;
   }
 
-  const data = await res.json().catch(() => ({}));
-  if (!res.ok) {
-    const errMsg = data?.error?.message || data?.message || `HTTP ${res.status}`;
-    throw new Error(`OpenRouter Error (${res.status}): ${errMsg}`);
-  }
-
-  const content = data?.choices?.[0]?.message?.content;
-  if (!content) {
-    throw new Error('OpenRouter បានត្រឡប់លទ្ធផលទទេ។ សូមសាកល្បងម្ដងទៀត ឬប្ដូរម៉ូដែល។');
-  }
-  return content;
+  throw lastError || new Error('OpenRouter មិនអាចដំណើរការបានទេ។');
 }
 
 async function callGroqInBrowser(prompt: string, config: AiProviderConfig): Promise<string> {

@@ -41,12 +41,21 @@ function loadInitialConfig(): AiProviderConfig {
         const preset =
           AI_PROVIDER_PRESETS.find((p) => p.id === parsed.provider) ||
           AI_PROVIDER_PRESETS[0];
-        return {
+        let model = parsed.model || preset.defaultModel;
+        // Automatically upgrade deprecated free model slug
+        if (model === 'google/gemma-3-27b-it:free') {
+          model = 'google/gemma-4-31b-it:free';
+        }
+        const updatedConfig: AiProviderConfig = {
           provider: preset.id,
           apiKey: parsed.apiKey || '',
-          model: parsed.model || preset.defaultModel,
+          model,
           baseUrl: parsed.baseUrl || preset.defaultBaseUrl,
         };
+        if (parsed.model === 'google/gemma-3-27b-it:free') {
+          persistConfig(updatedConfig);
+        }
+        return updatedConfig;
       }
     }
   } catch {
