@@ -461,14 +461,16 @@ async function callGeminiInBrowser(prompt: string, config: AiProviderConfig): Pr
       'សូមបញ្ចូល Gemini API Key នៅក្នុង «កំណត់ការភ្ជាប់ AI» ជាមុនសិន (ទទួលយកឥតគិតថ្លៃនៅ aistudio.google.com)។'
     );
   }
-  let model = (config.model || 'gemini-2.5-flash').trim();
-  if (model === 'gemini-3.8-flash' || model === 'gemini-4-argon' || !model) {
-    model = 'gemini-2.5-flash';
+
+  let requestedModel = (config.model || 'gemini-3.8-flash').trim().replace(/^models\//, '');
+  if (requestedModel === 'gemini-2.5-flash' || requestedModel === 'gemini-4-argon' || !requestedModel) {
+    requestedModel = 'gemini-3.8-flash';
   }
 
-  const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(
-    apiKey
-  )}`;
+  const reqHeaders: Record<string, string> = {
+    'Content-Type': 'application/json',
+    'x-goog-api-key': apiKey,
+  };
 
   const requestBody = {
     contents: [
@@ -481,62 +483,72 @@ async function callGeminiInBrowser(prompt: string, config: AiProviderConfig): Pr
       responseMimeType: 'application/json',
       temperature: 0.7,
       maxOutputTokens: 8192,
-      thinkingConfig: {
-        thinkingBudget: 0,
-      },
     },
   };
 
-  const reqHeaders: Record<string, string> = {
-    'Content-Type': 'application/json',
-    'x-goog-api-key': apiKey,
-  };
+  const candidateModels = [
+    requestedModel,
+    'gemini-3.8-flash',
+    'gemini-2.5-flash',
+    'gemini-2.0-flash',
+  ].filter((m, idx, arr) => Boolean(m) && arr.indexOf(m) === idx);
 
-  let res: Response;
-  try {
-    res = await fetch(endpoint, {
-      method: 'POST',
-      headers: reqHeaders,
-      body: JSON.stringify(requestBody),
-    });
-  } catch (err) {
-    throw new Error(
-      `មិនអាចភ្ជាប់ទៅ Google Gemini API បានទេ (${err instanceof Error ? err.message : 'Network error'})។`
-    );
-  }
+  let lastError: Error | null = null;
 
-  if (res.status === 404 && model !== 'gemini-2.5-flash') {
-    const fallbackEndpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(
+  for (let i = 0; i < candidateModels.length; i++) {
+    const curModel = candidateModels[i];
+    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${curModel}:generateContent?key=${encodeURIComponent(
       apiKey
     )}`;
-    res = await fetch(fallbackEndpoint, {
-      method: 'POST',
-      headers: reqHeaders,
-      body: JSON.stringify(requestBody),
-    });
+
+    let res: Response;
+    try {
+      res = await fetch(endpoint, {
+        method: 'POST',
+        headers: reqHeaders,
+        body: JSON.stringify(requestBody),
+      });
+    } catch (err) {
+      throw new Error(
+        `មិនអាចភ្ជាប់ទៅ Google Gemini API បានទេ (${err instanceof Error ? err.message : 'Network error'})។ សូមពិនិត្យ Internet ឬ VPN/Adblock។`
+      );
+    }
+
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      const errMsg = String(data?.error?.message || data?.message || `HTTP ${res.status}`);
+      const isUnavailable =
+        res.status === 404 ||
+        errMsg.toLowerCase().includes('not found') ||
+        errMsg.toLowerCase().includes('no longer available') ||
+        errMsg.toLowerCase().includes('update your code to use');
+
+      if (isUnavailable && i < candidateModels.length - 1) {
+        console.warn(`Gemini model ${curModel} failed (${errMsg}), falling back to ${candidateModels[i + 1]}...`);
+        lastError = new Error(`Gemini API Error (${res.status}): ${errMsg}`);
+        continue;
+      }
+      throw new Error(`Gemini API Error (${res.status}): ${errMsg}`);
+    }
+
+    const candidate = data?.candidates?.[0];
+    const parts = candidate?.content?.parts || [];
+    // Exclude reasoning thoughts and join all actual text parts
+    const nonThoughtParts = parts.filter((p: any) => !p.thought);
+    let text = '';
+    if (nonThoughtParts.length > 0) {
+      text = nonThoughtParts.map((p: any) => p.text || '').join('');
+    } else {
+      text = parts.map((p: any) => p.text || '').join('');
+    }
+
+    if (!text.trim()) {
+      throw new Error('Gemini API បានត្រឡប់លទ្ធផលទទេ។ សូមសាកល្បងម្ដងទៀត។');
+    }
+    return text;
   }
 
-  const data = await res.json().catch(() => ({}));
-  if (!res.ok) {
-    const errMsg = data?.error?.message || `HTTP ${res.status}`;
-    throw new Error(`Gemini API Error (${res.status}): ${errMsg}`);
-  }
-
-  const candidate = data?.candidates?.[0];
-  const parts = candidate?.content?.parts || [];
-  // Exclude reasoning thoughts and join all actual text parts
-  const nonThoughtParts = parts.filter((p: any) => !p.thought);
-  let text = '';
-  if (nonThoughtParts.length > 0) {
-    text = nonThoughtParts.map((p: any) => p.text || '').join('');
-  } else {
-    text = parts.map((p: any) => p.text || '').join('');
-  }
-
-  if (!text.trim()) {
-    throw new Error('Gemini API បានត្រឡប់លទ្ធផលទទេ។ សូមសាកល្បងម្ដងទៀត។');
-  }
-  return text;
+  throw lastError || new Error('មិនអាចបង្កើត Storyboard តាម Gemini API បានទេ។');
 }
 
 async function callOllamaInBrowser(prompt: string, config: AiProviderConfig): Promise<string> {

@@ -566,7 +566,7 @@ export const TopicCreator: React.FC<TopicCreatorProps> = ({
                       onUpdateAiConfig({
                         provider: 'gemini',
                         apiKey: aiConfig.apiKey,
-                        model: 'gemini-2.5-flash',
+                        model: 'gemini-3.8-flash',
                         baseUrl: '',
                       });
                     }}

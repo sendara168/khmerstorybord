@@ -51,9 +51,9 @@ function loadInitialConfig(): AiProviderConfig {
         }
         if (
           parsed.provider === 'gemini' &&
-          (model === 'gemini-3.8-flash' || model === 'gemini-4-argon' || !model)
+          (model === 'gemini-2.5-flash' || model === 'gemini-4-argon' || !model)
         ) {
-          model = 'gemini-2.5-flash';
+          model = 'gemini-3.8-flash';
         }
         const updatedConfig: AiProviderConfig = {
           provider: preset.id,
