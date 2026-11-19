@@ -2,7 +2,14 @@ export type StorySection = 'INTRODUCTION' | 'MAIN_STORY' | 'IMPORTANT_LESSONS' |
 
 export type AnimationStyleId = '2d-cartoon' | '3d-cartoon' | '2d-documentary';
 
-export type DurationPresetId = '3-5' | '5-10' | '15-20';
+export type DurationPresetId =
+  | '1-2'
+  | '3-5'
+  | '5-10'
+  | '10-15'
+  | '15-20'
+  | '20-30'
+  | 'custom';
 
 export type AiProviderId = 'ollama' | 'gemini' | 'openrouter' | 'groq' | 'openai';
 

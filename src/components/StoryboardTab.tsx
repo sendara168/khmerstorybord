@@ -130,6 +130,46 @@ export const StoryboardTab: React.FC<StoryboardTabProps> = ({
     setEditingSceneNum(nextNum);
   };
 
+  const addMultipleScenes = (countToAdd: number) => {
+    const currentLen = project.scenes.length;
+    const newScenes: StoryboardScene[] = [];
+    for (let i = 0; i < countToAdd; i++) {
+      const nextNum = currentLen + i + 1;
+      newScenes.push({
+        sceneNumber: nextNum,
+        section: sectionFilter === 'ALL' ? 'MAIN_STORY' : sectionFilter,
+        sceneTitle: `ឈុតថ្មីទី ${nextNum}`,
+        durationSeconds: 8,
+        visualDescription: `ប្លង់សកម្មភាពរស់រវើកក្នុងឈុតទី ${nextNum} ក្នុងបរិយាកាសកម្ពុជាពិតប្រាកដ`,
+        character: project.characters[0]?.name || 'សុខា & ក្រុមការងារ',
+        characterAction: 'សមាជិកក្រុមកំពុងធ្វើការងារ និងបង្ហាញដំណោះស្រាយផ្ទាល់ដៃ',
+        narratorScriptKh: `សរសេរអត្ថបទអ្នកនិទានសម្រាប់ឈុតទី ${nextNum} នៅទីនេះ...`,
+        characterDialogue: '',
+        onScreenText: `ឈុតទី ${nextNum}`,
+        aiImagePromptEn: `Clean 2D cartoon educational illustration in authentic Cambodian setting, active poses, teamwork, 16:9 composition, no text.`,
+        aiVideoPromptEn: `Smooth dynamic 2D animation motion illustrating topic concepts hands-on, camera tracking. Silent cinematic action, characters do not speak, no dialogue or lip-sync, 16:9.`,
+        cameraMovement: 'Medium tracking shot',
+        bgmAndSfx: 'ភ្លេង Documentary ស្រទន់',
+      });
+    }
+    onUpdateProject({ ...project, scenes: [...project.scenes, ...newScenes] });
+    setEditingSceneNum(currentLen + 1);
+  };
+
+  const duplicateScene = (sceneNumber: number) => {
+    const idx = project.scenes.findIndex((s) => s.sceneNumber === sceneNumber);
+    if (idx < 0) return;
+    const target = project.scenes[idx];
+    const clone: StoryboardScene = {
+      ...target,
+      sceneTitle: `${target.sceneTitle} (ចម្លង)`,
+    };
+    const copy = [...project.scenes];
+    copy.splice(idx + 1, 0, clone);
+    onUpdateProject({ ...project, scenes: renumberScenes(copy) });
+    setEditingSceneNum(idx + 2);
+  };
+
   return (
     <div className="tab-stack">
       {/* Character Reference Image Prompts Quick Strip */}
@@ -196,10 +236,20 @@ export const StoryboardTab: React.FC<StoryboardTabProps> = ({
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <button className="btn-primary btn-sm" onClick={addScene}>
-            <Plus size={15} />
-            <span>បន្ថែមឈុតថ្មី</span>
-          </button>
+          <div className="button-row">
+            <button
+              className="btn-secondary btn-sm"
+              onClick={() => addMultipleScenes(5)}
+              title="បន្ថែម ៥ ឈុតក្នុងពេលតែមួយ"
+            >
+              <Plus size={14} />
+              <span>+ ៥ ឈុត</span>
+            </button>
+            <button className="btn-primary btn-sm" onClick={addScene}>
+              <Plus size={15} />
+              <span>បន្ថែម ១ ឈុត</span>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -250,6 +300,13 @@ export const StoryboardTab: React.FC<StoryboardTabProps> = ({
                     }
                   >
                     <Edit3 size={14} />
+                  </button>
+                  <button
+                    className="btn-icon-subtle"
+                    title="ចម្លងឈុតនេះ (Duplicate Scene)"
+                    onClick={() => duplicateScene(scene.sceneNumber)}
+                  >
+                    <Copy size={13} />
                   </button>
                   <button
                     className="btn-icon-subtle danger"

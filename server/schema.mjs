@@ -163,7 +163,7 @@ export const STYLE_ANCHORS = {
 
 export function buildGenerationPrompt(input, includeExplicitJsonShape = false) {
   const styleAnchor = STYLE_ANCHORS[input.animationStyle] || STYLE_ANCHORS['2d-cartoon'];
-  const targetScenes = Math.min(60, Math.max(8, Number(input.targetScenes) || 24));
+  const targetScenes = Math.min(120, Math.max(4, Number(input.targetScenes) || 24));
 
   const jsonShapeBlock = includeExplicitJsonShape
     ? `

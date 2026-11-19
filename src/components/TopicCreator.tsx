@@ -511,26 +511,104 @@ export const TopicCreator: React.FC<TopicCreatorProps> = ({
               ))}
             </div>
 
+            {/* Detailed Scene Selector Box */}
             <div className="slider-box">
-              <div className="slider-header">
-                <span>ចំនួនឈុតគោលដៅ (Target Scenes):</span>
-                <strong>
-                  {targetScenes} ឈុត (~{Math.round((targetScenes * 8) / 60)} នាទី)
-                </strong>
+              <div className="slider-header" style={{ alignItems: 'center', marginBottom: 12 }}>
+                <div>
+                  <span style={{ fontWeight: 600, fontSize: '0.92rem' }}>
+                    ចំនួនឈុតដែលត្រូវបង្កើត (Scene Count):
+                  </span>
+                  <div className="text-muted" style={{ fontSize: '0.78rem', marginTop: 2 }}>
+                    ⏱️ រយៈពេលសរុបប៉ាន់ស្មាន៖ ~{Math.floor((targetScenes * 8) / 60)} នាទី{' '}
+                    {(targetScenes * 8) % 60 > 0 ? `${(targetScenes * 8) % 60} វិនាទី` : ''}{' '}
+                    (ជាមធ្យម 8s/ឈុត)
+                  </div>
+                </div>
+
+                {/* Direct Number Input + Stepper */}
+                <div className="scene-input-stepper">
+                  <button
+                    type="button"
+                    className="btn-step"
+                    onClick={() => setTargetScenes((v) => Math.max(4, v - 5))}
+                    title="បន្ថយ ៥ ឈុត"
+                  >
+                    -5
+                  </button>
+                  <button
+                    type="button"
+                    className="btn-step"
+                    onClick={() => setTargetScenes((v) => Math.max(4, v - 1))}
+                    title="បន្ថយ ១ ឈុត"
+                  >
+                    -1
+                  </button>
+                  <div className="scene-number-display">
+                    <input
+                      type="number"
+                      min={4}
+                      max={120}
+                      value={targetScenes}
+                      onChange={(e) => {
+                        const val = parseInt(e.target.value, 10);
+                        if (!isNaN(val)) {
+                          setTargetScenes(Math.max(4, Math.min(120, val)));
+                        }
+                      }}
+                      className="scene-direct-input"
+                    />
+                    <span className="scene-input-unit">ឈុត</span>
+                  </div>
+                  <button
+                    type="button"
+                    className="btn-step"
+                    onClick={() => setTargetScenes((v) => Math.min(120, v + 1))}
+                    title="ថែម ១ ឈុត"
+                  >
+                    +1
+                  </button>
+                  <button
+                    type="button"
+                    className="btn-step"
+                    onClick={() => setTargetScenes((v) => Math.min(120, v + 5))}
+                    title="ថែម ៥ ឈុត"
+                  >
+                    +5
+                  </button>
+                </div>
               </div>
+
+              {/* Range Slider 4 to 120 */}
               <input
                 type="range"
-                min={10}
-                max={60}
+                min={4}
+                max={120}
                 step={2}
                 value={targetScenes}
                 onChange={(e) => setTargetScenes(Number(e.target.value))}
                 className="range-slider"
               />
+
+              {/* Quick Preset Scene Chips */}
+              <div className="quick-scene-chips">
+                <span className="quick-chip-label">រើសរហ័ស៖</span>
+                {[6, 10, 16, 24, 30, 42, 50, 60, 80, 100].map((num) => (
+                  <button
+                    key={num}
+                    type="button"
+                    className={`quick-scene-chip ${targetScenes === num ? 'active' : ''}`}
+                    onClick={() => setTargetScenes(num)}
+                  >
+                    {num} ឈុត
+                  </button>
+                ))}
+              </div>
+
               <div className="slider-ticks">
-                <span>10 ឈុត (រហ័ស)</span>
-                <span>24–30 ឈុត</span>
-                <span>40–60 ឈុត (ពេញលេញ)</span>
+                <span>4 ឈុត (ខ្លីបំផុត)</span>
+                <span>24–30 ឈុត (មធ្យម)</span>
+                <span>42–60 ឈុត (ពេញលេញ)</span>
+                <span>80–120 ឈុត (វែងស៊ីជម្រៅ)</span>
               </div>
             </div>
           </div>

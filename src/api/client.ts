@@ -487,7 +487,7 @@ async function callGeminiInBrowser(prompt: string, config: AiProviderConfig): Pr
     generationConfig: {
       responseMimeType: 'application/json',
       temperature: 0.6,
-      maxOutputTokens: 6000,
+      maxOutputTokens: 8192,
     },
   };
 

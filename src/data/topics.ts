@@ -533,25 +533,53 @@ export const DURATION_PRESETS: Array<{
   sceneRange: string;
 }> = [
   {
+    id: '1-2',
+    labelKh: '១–២ នាទី (Shorts / Reels)',
+    labelEn: '1–2 Minutes (Shorts / Reels)',
+    defaultScenes: 10,
+    sceneRange: '6–12 ឈុត',
+  },
+  {
     id: '3-5',
-    labelKh: '3–5 នាទី',
+    labelKh: '៣–៥ នាទី (រហ័ស)',
     labelEn: '3–5 Minutes',
     defaultScenes: 24,
     sceneRange: '20–30 ឈុត',
   },
   {
     id: '5-10',
-    labelKh: '5–10 នាទី (ណែនាំ)',
-    labelEn: '5–10 Minutes',
+    labelKh: '៥–១០ នាទី (ណែនាំទូទៅ)',
+    labelEn: '5–10 Minutes (Standard)',
     defaultScenes: 42,
-    sceneRange: '40–60 ឈុត',
+    sceneRange: '36–50 ឈុត',
+  },
+  {
+    id: '10-15',
+    labelKh: '១០–១៥ នាទី (លម្អិត)',
+    labelEn: '10–15 Minutes (In-depth)',
+    defaultScenes: 60,
+    sceneRange: '50–70 ឈុត',
   },
   {
     id: '15-20',
-    labelKh: '15–20 នាទី',
-    labelEn: '15–20 Minutes',
-    defaultScenes: 60,
-    sceneRange: '60+ ឈុត',
+    labelKh: '១៥–២០ នាទី (ស៊ីជម្រៅ)',
+    labelEn: '15–20 Minutes (Long Form)',
+    defaultScenes: 80,
+    sceneRange: '70–90 ឈុត',
+  },
+  {
+    id: '20-30',
+    labelKh: '២០–៣០ នាទី (ឯកសារធំ)',
+    labelEn: '20–30 Minutes (Documentary)',
+    defaultScenes: 100,
+    sceneRange: '90–120 ឈុត',
+  },
+  {
+    id: 'custom',
+    labelKh: 'កំណត់ឈុតតាមចិត្ត',
+    labelEn: 'Custom Scene Count',
+    defaultScenes: 30,
+    sceneRange: '៤ ដល់ ១២០ ឈុត',
   },
 ];
 
@@ -960,7 +988,7 @@ export function buildOfflineDraftProject(req: GenerationRequest): StoryboardProj
   const actionObj =
     SCENE_ACTION_DYNAMICS.find((a) => a.id === req.actionDynamic) || SCENE_ACTION_DYNAMICS[0];
   const topicText = req.topic.trim() || 'ប្រធានបទវីដេអូថ្មី';
-  const count = Math.min(20, Math.max(8, Math.round(req.targetScenes / 2)));
+  const count = Math.max(4, Math.min(120, Number(req.targetScenes) || durationObj.defaultScenes || 24));
   const now = new Date().toISOString();
 
   let characters = [
