@@ -3,6 +3,8 @@ import type {
   AnimationStyleId,
   DurationPresetId,
   GenerationRequest,
+  PresenterSetupOption,
+  SceneActionDynamicOption,
   StoryboardProject,
   StoryboardScene,
   TopicCategory,
@@ -580,11 +582,97 @@ export const ANIMATION_STYLES: Array<{
   },
 ];
 
+export const PRESENTER_SETUP_OPTIONS: PresenterSetupOption[] = [
+  {
+    id: 'group',
+    labelKh: 'ក្រុមតួអង្គច្រើននាក់ / ក្រុមការងារ (Team & Group Presentation)',
+    labelEn: 'Team & Group Ensemble (3–5 Characters)',
+    badgeKh: 'ពេញនិយម • មានតួអង្គ ៣–៥ នាក់',
+    descriptionKh:
+      'មានតួអង្គជាក្រុម (ប្រធានក្រុម អ្នកបច្ចេកទេស សមាជិក) ធ្វើការរួមគ្នា ប្រជុំ ពិភាក្សា ចែករំលែកបទពិសោធន៍ និងធ្វើសកម្មភាពជាក់ស្តែង',
+    castCount: '3–5 Characters',
+    castHintKh: 'បង្កើតតួអង្គសំខាន់ ៣ ទៅ ៥ នាក់ដែលមានតួនាទីខុសៗគ្នា និងសហការគ្នាគ្រប់ឈុត',
+  },
+  {
+    id: 'duo',
+    labelKh: 'គូតួអង្គធ្វើបទបង្ហាញ / ពិភាក្សាឆ្លើយឆ្លង (Duo Co-hosts / Dynamic Pair)',
+    labelEn: 'Duo Co-hosts / Dynamic Pair (2 Characters)',
+    badgeKh: 'ឆ្លើយឆ្លង • តួអង្គ ២ នាក់',
+    descriptionKh:
+      'តួអង្គ ២ នាក់ឆ្លើយឆ្លងគ្នា (ដូចជា គ្រូ & សិស្ស, អ្នកជំនាញ & អ្នកចាប់ផ្តើម ឬមិត្តភក្តិ ២ នាក់) ជួយពន្យល់ និងសួរដេញដោល',
+    castCount: '2 Characters',
+    castHintKh: 'បង្កើតតួអង្គ ២ នាក់ដែលមានចរិតបំពេញគ្នាទៅវិញទៅមក និងជជែកសួរឆ្លើយរស់រវើក',
+  },
+  {
+    id: 'drama-cast',
+    labelKh: 'ក្រុមតួអង្គដើរតួក្នុងសាច់រឿងជាក់ស្តែង (Full Story Narrative / Drama Cast)',
+    labelEn: 'Full Narrative Story & Drama Roleplay (3–6 Characters)',
+    badgeKh: 'សាច់រឿងជីវិតពិត • ៣–៦ នាក់',
+    descriptionKh:
+      'សាច់រឿងបែបកុនជីវិតពិត មានតួឯក តួគ្រួសារ មិត្តភក្តិ អតិថិជន និងសហគមន៍ សម្តែងឈុតឆាកជាក់ស្តែងតាមជីវិតរស់នៅ',
+    castCount: '3–6 Characters',
+    castHintKh: 'មានតួឯក តួគ្រួសារ អ្នកជិតខាង និងអតិថិជន សម្តែងជាសាច់រឿងជាក់ស្តែង',
+  },
+  {
+    id: 'solo',
+    labelKh: 'អ្នកធ្វើបទបង្ហាញទោល + តួអង្គក្នុងឧទាហរណ៍ (Solo Host + Scenario Examples)',
+    labelEn: 'Solo Host + Scenario Cast (1–2 Characters)',
+    badgeKh: 'បទបង្ហាញទោល • ១–២ នាក់',
+    descriptionKh:
+      'មានអ្នកធ្វើបទបង្ហាញម្នាក់ជាគោល ប៉ុន្តែចុះទៅបង្ហាញសកម្មភាពផ្ទាល់ និងជួបតួអង្គផ្សេងៗក្នុងសាច់រឿង',
+    castCount: '1–2 Characters',
+    castHintKh: 'អ្នកធ្វើបទបង្ហាញ ១ នាក់ និងតួអង្គឧទាហរណ៍ក្នុងសាច់រឿង',
+  },
+];
+
+export const SCENE_ACTION_DYNAMICS: SceneActionDynamicOption[] = [
+  {
+    id: 'cinematic-action',
+    labelKh: 'ប្លង់សកម្មភាពជាក់ស្តែង & ចលនារស់រវើក (Cinematic Action & Movement)',
+    labelEn: 'Cinematic Action & Movement (NO Boring Talking Heads)',
+    badgeKh: 'ណែនាំ • ហាមឈរនិយាយទទេ',
+    descriptionKh:
+      'ហាមដាច់ខាតឈរនិយាយទទេ! តួអង្គត្រូវមានចលនា ដើរ រត់ ធ្វើការងារ បើកបរ ចង្អុលបង្ហាញ ជួបមនុស្ស និងដោះស្រាយបញ្ហាផ្ទាល់',
+    actionHintKh: 'គ្រប់ឈុតត្រូវមានសកម្មភាពរស់រវើក មិនឈរនិយាយស្ងៀមៗមុខកាមេរ៉ាឡើយ',
+  },
+  {
+    id: 'hands-on-demo',
+    labelKh: 'ការងារ & ការអនុវត្តជាក់ស្តែង (Hands-on Workflow & Step-by-Step)',
+    labelEn: 'Hands-on Workflow & Practical Demonstration',
+    badgeKh: 'អនុវត្តផ្ទាល់',
+    descriptionKh:
+      'បង្ហាញដំណាក់កាលធ្វើការងារជាក់ស្តែង ប្រើប្រាស់ឧបករណ៍ សរសេរ គណនា ចម្អិន ឬសាងសង់ ដោយមានកាយវិការសកម្ម',
+    actionHintKh: 'ផ្តោតលើការបង្ហាញកាយវិការធ្វើការងារជាក់ស្តែង ប្រើដៃ ឧបករណ៍ ឬឯកសារផ្ទាល់',
+  },
+  {
+    id: 'dialogue-roleplay',
+    labelKh: 'ការសន្ទនាឆ្លើយឆ្លង & ប្លង់កាត់មុំកាមេរ៉ា (Interactive Group Dialogue)',
+    labelEn: 'Interactive Group Dialogue & Multi-Angle Shots',
+    badgeKh: 'សន្ទនាឆ្លើយឆ្លង',
+    descriptionKh:
+      'ប្លង់សន្ទនាជាក្រុម ចាប់មុំពីចំហៀង មុំពីក្រោយស្មា (Over-The-Shoulder) និងប្លង់ទូលាយ មិនមែនសំឡឹងចំកាមេរ៉ាស្ងៀមៗឡើយ',
+    actionHintKh: 'ផ្តោតលើការសន្ទនាឆ្លើយឆ្លងគ្នា និងមុំកាមេរ៉ាកាត់ចុះឡើងរវាងតួអង្គ',
+  },
+  {
+    id: 'field-documentary',
+    labelKh: 'ចុះទីតាំងផ្ទាល់បែបឯកសារ (On-location Fieldwork & Exploration)',
+    labelEn: 'On-location Fieldwork & Environment Exploration',
+    badgeKh: 'ចុះទីតាំងផ្ទាល់',
+    descriptionKh:
+      'តួអង្គធ្វើដំណើរចុះទីតាំងផ្ទាល់ ផ្សារ វាលស្រែ រោងចក្រ ការិយាល័យ ផ្ទះ និងកន្លែងសាធារណៈ រួមជាមួយមនុស្សជុំវិញ',
+    actionHintKh: 'ផ្តោតលើការចុះទីតាំងជាក់ស្តែង និងទំនាក់ទំនងជាមួយបរិស្ថានជុំវិញ',
+  },
+];
+
 export function buildMasterPrompt(req?: Partial<GenerationRequest>): string {
   const durationObj =
     DURATION_PRESETS.find((d) => d.id === req?.durationPreset) || DURATION_PRESETS[1];
   const styleObj =
     ANIMATION_STYLES.find((s) => s.id === req?.animationStyle) || ANIMATION_STYLES[0];
+  const presenterObj =
+    PRESENTER_SETUP_OPTIONS.find((p) => p.id === req?.presenterSetup) || PRESENTER_SETUP_OPTIONS[0];
+  const actionObj =
+    SCENE_ACTION_DYNAMICS.find((a) => a.id === req?.actionDynamic) || SCENE_ACTION_DYNAMICS[0];
   const topicText = req?.topic?.trim() || '[បញ្ចូលប្រធានបទ]';
   const categoryText = req?.categoryLabelKh || 'Business & Money – មុខជំនួញ និងហិរញ្ញវត្ថុ';
   const targetScenes = req?.targetScenes || durationObj.defaultScenes;
@@ -594,7 +682,7 @@ export function buildMasterPrompt(req?: Partial<GenerationRequest>): string {
   return `MASTER PROMPT – KHMER EDUCATIONAL STORYTELLING ANIMATION
 
 អ្នកគឺជាអ្នកនិពន្ធស្គ្រីបភាពយន្ត អ្នកស្រាវជ្រាវចំណេះដឹង អ្នកដឹកនាំរឿង Animation និងអ្នកនិទានរឿងអាជីព។
-ខ្ញុំចង់បង្កើតវីដេអូអប់រំ និងចែករំលែកចំណេះដឹង បែប ${styleObj.labelEn} ដោយយកស្ទីល Educational Storytelling ជាគំរូ។
+ខ្ញុំចង់បង្កើតវីដេអូអប់រំ និងចែករំលែកចំណេះដឹង បែប ${styleObj.labelEn} ដោយយកស្ទីល Educational Storytelling & Dynamic Action ជាគំរូ។
 
 1. ព័ត៌មានសម្រាប់បង្កើតវីដេអូ
 - Category: ${categoryText}
@@ -604,25 +692,27 @@ export function buildMasterPrompt(req?: Partial<GenerationRequest>): string {
 - Video Duration: ${durationObj.labelEn} (${targetScenes} ឈុត / 5–10 វិនាទីក្នុងមួយឈុត)
 - Video Format: 16:9 (1920 × 1080)
 - Animation Style: ${styleObj.labelEn}
+- Presenter & Cast Setup: ${presenterObj.labelEn} — ${presenterObj.labelKh} (${presenterObj.castCount})
+- Scene Action Dynamics: ${actionObj.labelEn} — ${actionObj.labelKh}
 - Narrator: ${narratorVoice}
 - Voice Tone: Natural, Clear, Professional, Engaging
 - Subtitle: Khmer
 - Audience: General Audience
-- Storytelling: Educational, Informative and Entertaining${
+- Storytelling: Educational, Dynamic Real-world Action, Practical Demonstrations${
     req?.customNotes?.trim() ? `\n- Additional Notes: ${req.customNotes.trim()}` : ''
   }
 
 2. របៀបសរសេរ Script
 សូមសរសេរ Script ពេញលេញ ដោយមានផ្នែកដូចខាងក្រោម៖
 A. INTRODUCTION
-- ចាប់ផ្ដើមដោយសំណួរដែលធ្វើឱ្យអ្នកទស្សនាចង់ដឹង។
-- បង្ហាញបញ្ហា ឬចំណុចគួរឱ្យចាប់អារម្មណ៍។
+- ចាប់ផ្ដើមដោយសំណួរ ឬសកម្មភាពជាក់ស្តែងដែលធ្វើឱ្យអ្នកទស្សនាចង់ដឹង។
+- បង្ហាញបញ្ហា ឬចំណុចគួរឱ្យចាប់អារម្មណ៍តាមរយៈតួអង្គក្នុងជីវិតពិត។
 - ណែនាំប្រធានបទវីដេអូ។
 
 B. MAIN STORY
 - រៀបរាប់ខ្លឹមសារជាផ្នែកៗ។
-- ពន្យល់ឱ្យងាយយល់ និងមានឧទាហរណ៍ជាក់ស្តែង។
-- បង្កើតតួអង្គ និងស្ថានភាពក្នុងរឿង ដើម្បីជួយឱ្យអ្នកទស្សនាយល់។
+- ពន្យល់ឱ្យងាយយល់ និងមានសកម្មភាពការងារជាក់ស្តែង។
+- ប្រើប្រាស់តួអង្គជាក្រុម ឬដៃគូ ដើម្បីជជែក ដោះស្រាយ និងបង្ហាញដំណោះស្រាយផ្ទាល់ដៃ។
 - រៀបចំចំណុចសំខាន់ៗជាលំដាប់។
 
 C. IMPORTANT LESSONS
@@ -634,42 +724,56 @@ D. CONCLUSION
 - បញ្ចប់ដោយសារដ៏មានអត្ថន័យ និងឃ្លាដែលធ្វើឱ្យអ្នកទស្សនាចងចាំ។
 - អញ្ជើញឱ្យ Like, Share និង Subscribe។
 
-3. FORMAT សម្រាប់រៀបចំឈុតវីដេអូ
+3. ច្បាប់សំខាន់សម្រាប់តួអង្គ និងប្លង់សកម្មភាព (STRICT ACTION & CAST DYNAMICS)
+- ជម្រើសទម្រង់តួអង្គ៖ ${presenterObj.labelKh} (${presenterObj.castHintKh})
+- ជម្រើសប្លង់សកម្មភាព៖ ${actionObj.labelKh} (${actionObj.actionHintKh})
+- ហាមដាច់ខាតឈរនិយាយទទេ (ANTI-TALKING-HEAD MANDATE)៖ កុំឱ្យតួអង្គគ្រាន់តែឈរស្ងៀមៗមុខកាមេរ៉ាអាន Script Voiceover ឱ្យសោះ! នេះជាគំនូរជីវចលអប់រំបែប Storytelling រស់រវើក។
+- គ្រប់ឈុតទាំងអស់៖ «visualDescription» និង «characterAction» ត្រូវតែរៀបរាប់សកម្មភាពរូបវន្តរស់រវើក (Physical actions) ដូចជា៖
+  * តួអង្គដើរយ៉ាងស្វាហាប់តាមដងផ្លូវ ទីប្រជុំជន ឬវាលស្រែ
+  * ក្រុមការងារប្រជុំ លើកដៃស្នើគំនិត ចង្អុលបង្ហាញក្រាហ្វិកលើក្តារខៀន ឬអេក្រង់កុំព្យូទ័រ
+  * កំពុងកាន់ និងបង្ហាញឧបករណ៍ ឬទំនិញជាក់ស្តែងក្នុងដៃ
+  * កំពុងជិះ PassApp/រ៉ឺម៉កកង់បី ជជែកគ្នា ឬអង្គុយញ៉ាំកាហ្វេជជែកការងារ
+  * កំពុងចុះពិនិត្យកសិដ្ឋាន ហាង ផ្សារ ឬរោងចក្រជាមួយប្រជាជនក្នុងតំបន់
+  * មានកាយវិការឆ្លើយឆ្លង សើច ឆ្ងល់ ពិភាក្សា និងសហការគ្នា
+- សំឡេងអ្នកនិទាន (Khmer Narrator Script) គឺជាអ្នករៀបរាប់សាច់រឿងអប់រំពីលើ (Voiceover Narration) ខណៈពេលដែលតួអង្គកំពុងធ្វើសកម្មភាពជាក់ស្តែងក្នុងរូបភាព។
+- ឈុតដែលមានការសន្ទនា សូមបញ្ចូលឃ្លាសន្ទនាខ្លីៗរវាងតួអង្គក្នុង «characterDialogue» ឱ្យបានច្រើន ដើម្បីឱ្យសាច់រឿងមានភាពរស់រវើកបែបមនុស្សពិត!
+
+4. FORMAT សម្រាប់រៀបចំឈុតវីដេអូ
 បែងចែកវីដេអូជា ${targetScenes} ឈុត (5–10 វិនាទី/ឈុត)។ ឈុតនីមួយៗត្រូវមាន៖
 - Scene Number
 - Scene Title
 - Duration
 - Visual Description
-- Character
-- Character Action
-- Narrator Script (Khmer)
-- Character Dialogue (if needed)
+- Character (ឈ្មោះតួអង្គ ឬក្រុមតួអង្គដែលកំពុងធ្វើសកម្មភាព)
+- Character Action (សកម្មភាពជាក់ស្តែងរស់រវើក មិនឈរនិយាយទទេ)
+- Narrator Script (Khmer Voiceover ពេញលេញ)
+- Character Dialogue (សន្ទនាខ្លីៗរវាងតួអង្គ)
 - On-screen Text
-- AI Image Prompt (English)
-- AI Video Animation Prompt (English + Spoken Khmer Narration)
-- Camera Movement
+- AI Image Prompt (English — active poses, multi-character composition, Cambodian setting)
+- AI Video Animation Prompt (English + Spoken Khmer Narration instruction)
+- Camera Movement (Track shot, dynamic panning, over-the-shoulder, etc.)
 - Background Music / Sound Effects
 
-4. ច្បាប់សំខាន់សម្រាប់អ្នកនិទាន (NARRATOR SCRIPT)
+5. ច្បាប់សំខាន់សម្រាប់អ្នកនិទាន (NARRATOR SCRIPT)
 - សរសេរជាភាសាខ្មែរឱ្យត្រឹមត្រូវតាមវេយ្យាករណ៍ ប្រើពាក្យសាមញ្ញ ងាយស្ដាប់ និងងាយយល់។
 - Script ត្រូវមានអត្ថន័យពេញលេញ មិនមែនសរសេរត្រឹមតែចំណងជើងទេ ហើយត្រូវមានការតភ្ជាប់ពីប្រយោគមួយទៅប្រយោគមួយ។
 - កុំប្រើពាក្យដដែលៗច្រើនពេក និងកុំសង្ខេបខ្លឹមសារខ្លីពេក។
 - ត្រូវសរសេរអត្ថបទដែលអ្នកនិទានអាចអានថតសំឡេងបានភ្លាមៗ និងត្រូវដាក់ដាច់ដោយឡែកពី AI Image Prompt និង AI Video Prompt។
 - កុំឱ្យ Narrator និយាយខុសពីសកម្មភាពដែលកំពុងបង្ហាញក្នុងរូបភាព។
 
-5. ANIMATION STYLE, KHMER CULTURAL SETTING & VISUAL CONSISTENCY
+6. ANIMATION STYLE, KHMER CULTURAL SETTING & VISUAL CONSISTENCY
 ${styleObj.promptAnchor}.
 - តួអង្គទាំងអស់ត្រូវជាតួអង្គខ្មែរពិតប្រាកដ (Authentic Cambodian/Khmer facial features, natural Southeast Asian skin tone, realistic everyday Khmer outfits, school uniforms, or subtle krama details when appropriate)។
 - ទេសភាព និងទិដ្ឋភាពត្រូវជាបរិយាកាសកម្ពុជាពិតប្រាកដ ទាំងស្រុកស្រែចម្ការ (វាលស្រែ ដើមត្នោត ផ្ទះឈើខ្មែរ ស្រះឈូក ផ្លូវដីក្រហម ដំបូលវត្ត) និងទីក្រុងកម្ពុជា (ផ្ទះល្វែងខ្មែរ មាត់ទន្លេចតុមុខ ហាងកាហ្វេភ្នំពេញ រ៉ឺម៉កកង់បី/PassApp ដើមឈើតាមដងផ្លូវ)។
 - បើមានហាង សាលារៀន ផ្សារ ឬអគារពាណិជ្ជកម្ម ត្រូវបញ្ចូលអក្សរខ្មែរលើស្លាកយីហោឱ្យច្បាស់ល្អ (ឧ. «កាហ្វេតារា», «ហាងលក់ទំនិញ», «វិទ្យាល័យ», «ផ្សារ») ប៉ុន្តែកុំដាក់ Watermark ឬអក្សរ Subtitle អណ្ដែតលើរូប។
 - Consistent character design across all scenes (no random character changes).
 
-6. RESEARCH & ACCURACY
+7. RESEARCH & ACCURACY
 - ប្រើព័ត៌មានដែលអាចផ្ទៀងផ្ទាត់បាន មិនបង្កើតតួលេខ ឬសម្រង់សម្តីក្លែងក្លាយ។
 - ប្រសិនបើជាប្រវត្តិសាស្ត្រ ត្រូវរក្សាឈ្មោះ និងព្រឹត្តិការណ៍ឱ្យត្រឹមត្រូវ។
 - បើជារឿងប្រឌិត ត្រូវបញ្ជាក់ថាជារឿងប្រឌិត។ បើមានព័ត៌មានមិនច្បាស់ ត្រូវបញ្ជាក់ថាមិនទាន់អាចផ្ទៀងផ្ទាត់បាន។
 
-7. FINAL OUTPUT
+8. FINAL OUTPUT
 សូមបង្កើតលទ្ធផលពេញលេញជា៖
 1. Video Title
 2. Video Description
@@ -695,26 +799,45 @@ export function buildJsonImportPrompt(req: GenerationRequest): string {
     DURATION_PRESETS.find((d) => d.id === req.durationPreset) || DURATION_PRESETS[1];
   const styleObj =
     ANIMATION_STYLES.find((s) => s.id === req.animationStyle) || ANIMATION_STYLES[0];
+  const presenterObj =
+    PRESENTER_SETUP_OPTIONS.find((p) => p.id === req.presenterSetup) || PRESENTER_SETUP_OPTIONS[0];
+  const actionObj =
+    SCENE_ACTION_DYNAMICS.find((a) => a.id === req.actionDynamic) || SCENE_ACTION_DYNAMICS[0];
   const topicText = req.topic.trim() || '៧ វិធីគ្រប់គ្រងលុយឱ្យមានប្រសិទ្ធភាព';
 
   return `You are an expert Khmer Educational Storytelling Animation director, documentary researcher, scriptwriter, and narrator.
 Create a complete, production-ready Khmer Educational Animation storyboard for:
 - Category: ${req.categoryLabelKh}
 - Topic: ${topicText}
+- Presenter & Cast Setup: ${presenterObj.labelEn} (${presenterObj.labelKh} — ${presenterObj.castCount})
+- Scene Action Dynamics: ${actionObj.labelEn} (${actionObj.labelKh})
 - Duration: ${durationObj.labelEn} (${req.targetScenes} sequential scenes, 6–10 seconds per scene)
 - Animation Style: ${styleObj.labelEn}
 - Visual Anchor (include in every aiImagePromptEn): "${styleObj.promptAnchor}"
 - Narrator: ${req.narratorVoice} (Natural, Clear, Professional, Engaging Khmer)
-${req.customNotes.trim() ? `- Additional Notes: ${req.customNotes.trim()}` : ''}
+${req.customNotes?.trim() ? `- Additional Notes: ${req.customNotes.trim()}` : ''}
 
-RULES:
-1. Write natural, grammatically accurate, complete Khmer narrator sentences ready to read aloud immediately (NOT bullet headings).
-2. ALL characters MUST be authentically Cambodian (Khmer), and ALL landscapes/settings MUST depict authentic Cambodia (both rural countryside with sugar palm trees, rice fields, wooden stilt houses AND Cambodian cities like Phnom Penh shophouses, riverside, tuk-tuks, local cafés).
-3. Whenever shops, cafés, markets, or schools appear, include authentic clean Khmer script on natural storefront signboards (e.g. "កាហ្វេតារា", "វិទ្យាល័យ"), with no floating subtitles or watermarks.
-4. Keep consistent character design across ALL scenes by repeating exact clothing/appearance descriptors in every aiImagePromptEn.
-5. Structure scenes into 4 sections: INTRODUCTION, MAIN_STORY, IMPORTANT_LESSONS, CONCLUSION (ending with Like, Share, Subscribe CTA).
-6. Use verifiable facts (no fake statistics/quotes). State clearly in "isFictionalNote" if characters/story are fictional educational illustrations.
-7. IMPORTANT: Return ONLY valid JSON inside a single \`\`\`json code block matching the exact structure below (no extra explanation outside the JSON):
+STRICT PRODUCTION RULES:
+1. MULTI-CHARACTER CAST SETUP (${presenterObj.labelEn}):
+   - In "characters", define multiple distinct Cambodian (Khmer) characters (${presenterObj.castHintKh}).
+   - Give each character a distinct role (e.g. Team Leader, Technical Specialist, Practitioner, Curious Learner), distinct natural Cambodian appearance, consistent everyday outfits, and distinct personalities.
+   - Throughout the story, actively showcase these characters collaborating, discussing, problem-solving, and interacting together!
+
+2. ANTI-TALKING-HEAD MANDATE & DYNAMIC SCENE ACTION (${actionObj.labelEn}):
+   - CRITICAL RULE: NEVER create scenes where characters merely stand still facing the camera reading the voiceover script!
+   - In EVERY SINGLE SCENE, "visualDescription" and "characterAction" MUST depict tangible, dynamic physical activities:
+     * Characters walking briskly through Phnom Penh streets or Cambodian village paths
+     * Writing or sketching workflows on a whiteboard with team members gathered around exchanging ideas
+     * Inspecting real equipment, crops, books, financial spreadsheets, or products hands-on
+     * Riding PassApp / bicycles / motorbikes while pointing out real-world landmarks
+     * Gathering around a desk with laptops, sticky notes, or tea/coffee cups in lively discussion
+     * Shaking hands, handing over items, smiling, gesturing expressively, cheering, solving problems
+   - The Khmer Narrator Script is voiceover storytelling that accompanies the visual actions, while characters actively live, work, and collaborate in the world.
+   - Include natural Khmer conversational dialogue between characters in "characterDialogue" whenever characters talk to each other!
+
+3. KHMER NARRATOR SCRIPT: Write natural, grammatically accurate, complete Khmer narrator sentences ready to read aloud immediately (NOT bullet headings). Connect every scene smoothly to the next like a polished documentary storyteller.
+4. CAMBODIAN CULTURAL SETTING: Authentic Cambodian features, scenery, clean Khmer script on shop signboards (no floating subtitles/watermarks).
+5. RETURN ONLY VALID JSON inside a single \`\`\`json code block matching the exact structure below (no extra explanation outside the JSON):
 
 \`\`\`json
 {
@@ -723,9 +846,9 @@ RULES:
   "isFictionalNote": "កំណត់សម្គាល់ភាពត្រឹមត្រូវ ឬបញ្ជាក់បើជារឿងប្រឌិតអប់រំ",
   "characters": [
     {
-      "name": "ឈ្មោះតួអង្គ",
-      "role": "តួនាទី",
-      "appearance": "រូបរាង អាយុ សក់",
+      "name": "ឈ្មោះតួអង្គ (ឧ. សុខា - ប្រធានក្រុម)",
+      "role": "តួនាទីជាក់លាក់",
+      "appearance": "រូបរាង អាយុ សក់ សម្បុរ",
       "outfit": "សម្លៀកបំពាក់ជាក់លាក់",
       "personality": "បុគ្គលិកលក្ខណៈ",
       "aiCharacterImagePromptEn": "Authentic Cambodian (Khmer) character design turnaround reference sheet (front view, 3/4 view, 3 expressions, exact outfit/hair/colors, clean solid cream background) + ${styleObj.promptAnchor}"
@@ -763,15 +886,15 @@ RULES:
       "section": "INTRODUCTION",
       "sceneTitle": "ចំណងជើងឈុត",
       "durationSeconds": 8,
-      "visualDescription": "ការពិពណ៌នារូបភាពជាភាសាខ្មែរ",
-      "character": "ឈ្មោះតួអង្គ",
-      "characterAction": "សកម្មភាពតួអង្គ",
+      "visualDescription": "ការពិពណ៌នារូបភាពជាភាសាខ្មែរ (សកម្មភាពជាក់ស្តែង មិនឈរនិយាយទទេ)",
+      "character": "ឈ្មោះតួអង្គ ឬក្រុមតួអង្គ",
+      "characterAction": "សកម្មភាពតួអង្គជាក់ស្តែង (កំពុងដើរ ពិភាក្សា ចង្អុលបង្ហាញ ឬធ្វើការងារផ្ទាល់)",
       "narratorScriptKh": "អត្ថបទអ្នកនិទានពេញលេញជាភាសាខ្មែរដែលអានថតសំឡេងបានភ្លាមៗ",
-      "characterDialogue": "",
+      "characterDialogue": "ឃ្លាសន្ទនាខ្លីៗរវាងតួអង្គ (បើមាន)",
       "onScreenText": "អក្សរខ្លីលើអេក្រង់",
-      "aiImagePromptEn": "Detailed English 2D illustration prompt with exact Cambodian character outfit, Cambodian rural/city background + ${styleObj.promptAnchor}",
-      "aiVideoPromptEn": "Visual Motion: smooth 2D character motion and camera movement. Spoken Khmer Narration (${req.narratorVoice}, natural clear Khmer language): \\"<exact Khmer narratorScriptKh for this scene>\\". Background Music & SFX: warm documentary music. No floating subtitles.",
-      "cameraMovement": "Slow push-in",
+      "aiImagePromptEn": "Detailed English 2D illustration prompt depicting active poses, multi-character teamwork, authentic Cambodian countryside/city background + ${styleObj.promptAnchor}",
+      "aiVideoPromptEn": "Visual Motion: smooth character motion, walking, gesturing, camera tracking. Spoken Khmer Narration (${req.narratorVoice}, natural clear Khmer language): \\"<exact Khmer narratorScriptKh for this scene>\\". Background Music & SFX: warm documentary music. No floating subtitles.",
+      "cameraMovement": "Dynamic tracking shot / over-the-shoulder angle",
       "bgmAndSfx": "ភ្លេង Documentary ស្រទន់ + SFX"
     }
   ],
@@ -787,8 +910,8 @@ RULES:
   "thumbnail": {
     "headlineKh": "ចំណងជើងធំលើ Thumbnail",
     "subTextKh": "អក្សររងខ្លី",
-    "visualConcept": "គំនិតរចនារូបភាព",
-    "aiThumbnailPromptEn": "Eye-catching 16:9 Cambodian 2D cartoon YouTube thumbnail prompt in English, authentic Khmer characters & Cambodian scenery, no watermarks"
+    "visualConcept": "គំនិតរចនារូបភាពតួអង្គជាក្រុមធ្វើសកម្មភាព",
+    "aiThumbnailPromptEn": "Eye-catching 16:9 Cambodian 2D cartoon YouTube thumbnail prompt in English showing team collaboration & Cambodian setting, no watermarks"
   }
 }
 \`\`\`
@@ -801,34 +924,83 @@ export function buildOfflineDraftProject(req: GenerationRequest): StoryboardProj
     DURATION_PRESETS.find((d) => d.id === req.durationPreset) || DURATION_PRESETS[1];
   const styleObj =
     ANIMATION_STYLES.find((s) => s.id === req.animationStyle) || ANIMATION_STYLES[0];
+  const presenterObj =
+    PRESENTER_SETUP_OPTIONS.find((p) => p.id === req.presenterSetup) || PRESENTER_SETUP_OPTIONS[0];
+  const actionObj =
+    SCENE_ACTION_DYNAMICS.find((a) => a.id === req.actionDynamic) || SCENE_ACTION_DYNAMICS[0];
   const topicText = req.topic.trim() || 'ប្រធានបទវីដេអូថ្មី';
   const count = Math.min(20, Math.max(8, Math.round(req.targetScenes / 2)));
   const now = new Date().toISOString();
 
+  let characters = [
+    {
+      name: 'សុខា (ប្រធានក្រុម / Team Lead)',
+      role: 'អ្នកដឹកនាំ និងសម្របសម្រួលបទបង្ហាញ',
+      appearance: 'យុវជនខ្មែរអាយុ ២៨ ឆ្នាំ សក់ខ្លីរៀបរយ ទឹកមុខរួសរាយ សម្បុរស្រអែមធម្មជាតិ',
+      outfit: 'អាវពណ៌ខៀវផ្ទៃមេឃ ខោពណ៌ទឹកប៊ិចចាស់ ស្បែកជើងស្បែក',
+      personality: 'មានភាពជាអ្នកដឹកនាំ ពូកែពន្យល់ និងលើកទឹកចិត្តក្រុម',
+      aiCharacterImagePromptEn: `Authentic Cambodian (Khmer) 2D cartoon character design turnaround reference sheet of Sokha, a friendly 28-year-old Cambodian team lead with natural Southeast Asian facial features, neat short black hair, warm light-tan skin tone, wearing a sky-blue polo shirt and dark navy pants. Full-body front view, 3/4 view, and 3 facial expressions (speaking, smiling, enthusiastic). ${styleObj.promptAnchor}.`,
+    },
+    {
+      name: 'តារា (អ្នកបច្ចេកទេស & អនុវត្ត / Specialist)',
+      role: 'អ្នកបង្ហាញការងារ និងដំណោះស្រាយជាក់ស្តែង',
+      appearance: 'យុវជនខ្មែរអាយុ ២៥ ឆ្នាំ ពាក់វ៉ែនតា សក់ទាន់សម័យ សម្បុរសណ្តែកបាយ',
+      outfit: 'អាវយឺតកមូលពណ៌ស អាវក្រៅពណ៌ប្រផេះស្រាល ខោខូវប៊យ',
+      personality: 'រហ័សរហួន ពូកែវិភាគ និងបង្ហាញឧបករណ៍ជាក់ស្តែង',
+      aiCharacterImagePromptEn: `Authentic Cambodian (Khmer) 2D cartoon character design turnaround reference sheet of Dara, a smart 25-year-old Cambodian tech specialist with round glasses, stylish short black hair, wearing a white t-shirt under a light gray casual jacket and jeans. Full-body front view, 3/4 view, and 3 facial expressions (focused, analyzing, joyful). ${styleObj.promptAnchor}.`,
+    },
+    {
+      name: 'កញ្ញា (អ្នកស្រាវជ្រាវ / Researcher)',
+      role: 'អ្នកផ្តល់ព័ត៌មាន និងសួរសំណួរគន្លឹះ',
+      appearance: 'យុវតីខ្មែរអាយុ ២៤ ឆ្នាំ ចងសក់ទៅក្រោយ ទឹកមុខឆ្លាតវៃ សម្បុរស្រស់ថ្លា',
+      outfit: 'អាវសាច់ក្រណាត់ដៃវែងពណ៌លឿងខ្ចី សំពត់ពណ៌ខ្មៅរៀបរយ',
+      personality: 'ឧស្សាហ៍ព្យាយាម សម្បូរគំនិតច្នៃប្រឌិត និងយកចិត្តទុកដាក់',
+      aiCharacterImagePromptEn: `Authentic Cambodian (Khmer) 2D cartoon character design turnaround reference sheet of Kanya, a bright 24-year-old Cambodian female researcher with ponytail hair, warm Southeast Asian skin tone, wearing a pastel yellow blouse and dark pleated skirt. Full-body front view, 3/4 view, and 3 facial expressions (curious, presenting, satisfied). ${styleObj.promptAnchor}.`,
+    },
+  ];
+
+  if (presenterObj.id === 'duo') {
+    characters = characters.slice(0, 2);
+  } else if (presenterObj.id === 'solo') {
+    characters = [characters[0]];
+  }
+
   const scenes: StoryboardScene[] = Array.from({ length: count }, (_, idx) => {
     const num = idx + 1;
     let section: StoryboardScene['section'] = 'MAIN_STORY';
-    let sceneTitle = `សាច់រឿងផ្នែកទី ${num - 2}`;
+    let sceneTitle = `សកម្មភាព និងការអនុវត្តផ្នែកទី ${num - 2}`;
     let narrator = `សរសេរអត្ថបទអ្នកនិទានពេញលេញសម្រាប់ឈុតទី ${num} ទាក់ទងនឹង «${topicText}» នៅទីនេះ។`;
+    let character = 'សុខា & ក្រុមការងារ';
+    let action = 'សមាជិកក្រុមកំពុងពិភាក្សា លើកដៃចង្អុលបង្ហាញក្រាហ្វិកលើក្តារខៀនយ៉ាងសកម្ម មិនឈរស្ងៀម';
+    let dialogue = '';
 
     if (num <= 2) {
       section = 'INTRODUCTION';
-      sceneTitle = num === 1 ? 'សំណួរចាប់ផ្ដើម (Opening Hook)' : 'ណែនាំប្រធានបទ និងបញ្ហា';
+      sceneTitle = num === 1 ? 'សំណួរចាប់ផ្ដើម & បញ្ហាជាក់ស្តែង' : 'ក្រុមការងារជួបជុំណែនាំប្រធានបទ';
       narrator =
         num === 1
-          ? `តើអ្នកធ្លាប់ឆ្ងល់ទេអំពី «${topicText}»? នៅក្នុងវីដេអូនេះ យើងនឹងស្វែងយល់ជាមួយគ្នាដោយងាយយល់។`
-          : `មនុស្សជាច្រើនតែងជួបបញ្ហាទាក់ទងនឹងប្រធានបទនេះ ប៉ុន្តែបើយើងយល់ពីគោលការណ៍សំខាន់ៗ អ្វីៗនឹងផ្លាស់ប្តូរ។`;
+          ? `តើអ្នកធ្លាប់ឆ្ងល់ទេអំពី «${topicText}»? នៅក្នុងវីដេអូនេះ ក្រុមការងារយើងនឹងនាំអ្នកទាំងអស់គ្នាទៅស្វែងយល់តាមរយៈសកម្មភាពជាក់ស្តែង។`
+          : `មនុស្សជាច្រើនតែងជួបបញ្ហានេះ ដូច្នេះថ្ងៃនេះក្រុមយើងបានរៀបចំវិធីសាស្ត្រងាយៗដើម្បីអនុវត្តជាមួយគ្នា។`;
+      character = 'សុខា & តារា';
+      action = 'សុខា និងតារាកំពុងដើរយ៉ាងស្វាហាប់តាមផ្លូវក្នុងទីក្រុងភ្នំពេញ ទឹកមុខរស់រវើក ចង្អុលបង្ហាញស្ថានភាពជុំវិញ';
+      dialogue = 'សុខា៖ «តោះតារា! យើងទៅពិនិត្យមើលបញ្ហានេះជាក់ស្តែងទាំងអស់គ្នា!»';
     } else if (num === count - 2) {
       section = 'IMPORTANT_LESSONS';
-      sceneTitle = 'សង្ខេបមេរៀនសំខាន់ៗ';
-      narrator = `សង្ខេបមកវិញ មេរៀនសំខាន់បំផុតពី «${topicText}» គឺការយកទៅអនុវត្តជាក់ស្ដែងក្នុងជីវិតប្រចាំថ្ងៃ។`;
+      sceneTitle = 'សង្ខេបមេរៀន និងដំណោះស្រាយជាក់ស្តែង';
+      narrator = `សង្ខេបមកវិញ មេរៀនសំខាន់បំផុតពី «${topicText}» គឺការយកទៅអនុវត្តជាក់ស្ដែងជាមួយក្រុមការងារ និងជីវិតរស់នៅ។`;
+      character = 'ក្រុមការងារទាំងមូល (សុខា, តារា, កញ្ញា)';
+      action = 'តួអង្គទាំង ៣ នាក់ប្រជុំជុំវិញតុការងារ កញ្ញាចង្អុលបង្ហាញរបាយការណ៍ តារាសរសេរលើក្តារខៀន សុខាងក់ក្បាលគាំទ្រ';
+      dialogue = 'កញ្ញា៖ «បើយើងអនុវត្តតាមជំហានទាំងនេះ លទ្ធផលនឹងកើនឡើងជាក់ជាមិនខាន!»';
     } else if (num >= count - 1) {
       section = 'CONCLUSION';
       sceneTitle = num === count ? 'អញ្ជើញ Like, Share និង Subscribe' : 'សារដ៏មានអត្ថន័យចុងបញ្ចប់';
       narrator =
         num === count
-          ? 'សូមអរគុណសម្រាប់ការទស្សនា! កុំភ្លេចចុច Like, Share និង Subscribe ដើម្បីទទួលបានវីដេអូចំណេះដឹងថ្មីៗបន្តទៀត។'
-          : 'សូមចងចាំថា ការផ្លាស់ប្តូរដ៏ធំ ចាប់ផ្ដើមពីជំហានតូចៗដែលអ្នកធ្វើនៅថ្ងៃនេះ។';
+          ? 'សូមអរគុណសម្រាប់ការទស្សនា! កុំភ្លេចចុច Like, Share និង Subscribe ដើម្បីទទួលបានវីដេអូចំណេះដឹងថ្មីៗពីក្រុមយើងខ្ញុំ!'
+          : 'សូមចងចាំថា ការផ្លាស់ប្តូរដ៏អស្ចារ្យ តែងតែចាប់ផ្ដើមពីការសហការ និងជំហានដំបូងដែលអ្នកធ្វើនៅថ្ងៃនេះ។';
+      character = 'ក្រុមការងារទាំងមូល';
+      action = 'សមាជិកក្រុមទាំងអស់ឈររួមគ្នាដោយទឹកមុខរីករាយ ញញឹម និងលើកដៃស្វាគមន៍អ្នកទស្សនា ក្រោមពន្លឺថ្ងៃកក់ក្តៅ';
+      dialogue = 'សុខា & ក្រុមការងារ៖ «កុំភ្លេចចុច Subscribe ជួបគ្នានៅវីដេអូបន្ទាប់!»';
     }
 
     return {
@@ -836,16 +1008,16 @@ export function buildOfflineDraftProject(req: GenerationRequest): StoryboardProj
       section,
       sceneTitle,
       durationSeconds: 8,
-      visualDescription: `ឈុតគំនូរជីវចលអប់រំ 2D បែបខ្មែរ បង្ហាញខ្លឹមសារសម្រាប់៖ ${sceneTitle} (${topicText})`,
-      character: 'តួអង្គឯកខ្មែរ',
-      characterAction: 'បង្ហាញទឹកមុខរស់រវើក និងកាយវិការពន្យល់ស្របតាមសំឡេងអ្នកនិទាន',
+      visualDescription: `ប្លង់សកម្មភាពរស់រវើកបែបខ្មែរ៖ ${action} ក្នុងបរិយាកាសកម្ពុជាពិតប្រាកដ`,
+      character,
+      characterAction: action,
       narratorScriptKh: narrator,
-      characterDialogue: '',
+      characterDialogue: dialogue,
       onScreenText: sceneTitle,
-      aiImagePromptEn: `Authentic Cambodian educational storytelling scene illustrating "${sceneTitle}" for topic "${topicText}", friendly authentic Cambodian (Khmer) young man in sky-blue polo shirt and dark navy pants in a Cambodian setting (Phnom Penh street or countryside rice fields with sugar palm trees). ${styleObj.promptAnchor}.`,
-      aiVideoPromptEn: `Smooth ${styleObj.labelEn} motion showing expressive Cambodian character gestures and warm atmospheric lighting.`,
-      cameraMovement: num === 1 ? 'Slow push-in' : 'Gentle steady framing',
-      bgmAndSfx: 'ភ្លេង Documentary ស្រទន់កក់ក្ដៅ',
+      aiImagePromptEn: `Authentic Cambodian educational storytelling animation scene of ${character}, actively engaged in: ${action}, topic: "${topicText}", vibrant authentic Cambodian setting, expressive body language and teamwork, natural warm cinematic lighting, ${styleObj.promptAnchor}.`,
+      aiVideoPromptEn: `Smooth dynamic 2D animation motion of ${character} actively moving and collaborating in authentic Cambodian setting, expressive gestures, camera slowly tracking, clear Khmer voiceover.`,
+      cameraMovement: num === 1 ? 'Dynamic track shot following characters' : 'Medium two-shot with subtle push-in',
+      bgmAndSfx: 'ភ្លេង Documentary ស្រទន់កក់ក្ដៅ + សំឡេងបរិយាកាសធម្មជាតិ',
     };
   });
 
@@ -867,20 +1039,15 @@ export function buildOfflineDraftProject(req: GenerationRequest): StoryboardProj
     animationStyleLabel: styleObj.labelEn,
     narratorVoice: req.narratorVoice,
     voiceTone: 'Natural, Clear, Professional, Engaging',
+    presenterSetup: presenterObj.id,
+    presenterSetupLabel: presenterObj.labelKh,
+    actionDynamic: actionObj.id,
+    actionDynamicLabel: actionObj.labelKh,
     subtitleLanguage: 'Khmer',
     audience: 'General Audience',
     isFictionalNote:
       'គម្រោងព្រាង (Offline Draft) — សូមកែសម្រួល និងបញ្ជាក់ប្រភពព័ត៌មានបន្ថែមមុនពេលថតសំឡេង។',
-    characters: [
-      {
-        name: 'តួអង្គឯកខ្មែរ (Main Character)',
-        role: 'តួអង្គនាំរឿង',
-        appearance: 'យុវជនខ្មែរអាយុ ២៥ ឆ្នាំ សក់ខ្លីរៀបរយ ទឹកមុខរស់រវើក សម្បុរខ្មែរធម្មជាតិ',
-        outfit: 'អាវពណ៌ខៀវផ្ទៃមេឃ ខោពណ៌ទឹកប៊ិចចាស់',
-        personality: 'ចូលចិត្តរៀនសូត្រ រួសរាយ និងងាយយល់',
-        aiCharacterImagePromptEn: `Authentic Cambodian (Khmer) 2D cartoon character design turnaround reference sheet of a friendly 25-year-old Cambodian young man with natural Southeast Asian facial features, neat short black hair, warm light-tan skin tone, expressive eyes, wearing a sky-blue polo shirt and dark navy pants. Full-body front view, 3/4 view, and 3 facial expressions (smiling, curious, inspired) on a clean solid soft cream background. ${styleObj.promptAnchor}.`,
-      },
-    ],
+    characters,
     outline: [
       {
         section: 'INTRODUCTION',
@@ -920,8 +1087,8 @@ export function buildOfflineDraftProject(req: GenerationRequest): StoryboardProj
     thumbnail: {
       headlineKh: topicText,
       subTextKh: 'មេរៀនអប់រំ 2D Animation',
-      visualConcept: `បង្ហាញតួអង្គខ្មែរមានទឹកមុខចាប់អារម្មណ៍ជាមួយទេសភាពកម្ពុជា និងនិមិត្តសញ្ញានៃ «${topicText}» ក្រោមពន្លឺពណ៌មាសកក់ក្ដៅ។`,
-      aiThumbnailPromptEn: `Eye-catching authentic Cambodian YouTube thumbnail for "${topicText}", expressive Cambodian cartoon character in sky-blue polo shirt pointing at glowing educational visual metaphors with Cambodian sugar palm trees and Phnom Penh skyline in the background, warm amber and teal contrast, ${styleObj.promptAnchor}.`,
+      visualConcept: `បង្ហាញក្រុមតួអង្គខ្មែរមានទឹកមុខចាប់អារម្មណ៍ជាមួយទេសភាពកម្ពុជា និងនិមិត្តសញ្ញានៃ «${topicText}» ក្រោមពន្លឺពណ៌មាសកក់ក្ដៅ។`,
+      aiThumbnailPromptEn: `Eye-catching authentic Cambodian YouTube thumbnail for "${topicText}", expressive Cambodian cartoon characters in lively collaboration, pointing at glowing educational visual metaphors with Cambodian sugar palm trees and Phnom Penh skyline in the background, warm amber and teal contrast, ${styleObj.promptAnchor}.`,
     },
   };
 }

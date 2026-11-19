@@ -226,6 +226,8 @@ Create a COMPLETE, production-ready Khmer Educational Storytelling Animation sto
 PROJECT PARAMETERS:
 - Category: ${input.categoryLabelKh}
 - Topic: ${input.topic}
+- Presenter & Cast Setup: ${input.presenterSetupLabel || 'Team & Group Presentation (3–5 Characters)'}
+- Scene Action Dynamics: ${input.actionDynamicLabel || 'Cinematic Action & Practical Movement (NO Boring Talking Heads)'}
 - Language for Script, Titles, Visual Descriptions, Subtitles: Natural, grammatically accurate Khmer (ភាសាខ្មែរ)
 - Language for AI Image Prompts, AI Video Animation Prompts, and AI Thumbnail Prompt: English
 - Target Video Duration: ${input.durationLabel}
@@ -236,28 +238,43 @@ PROJECT PARAMETERS:
 ${input.customNotes ? `- Special User Instructions: ${input.customNotes}` : ''}
 
 STRICT QUALITY RULES:
-1. STORY STRUCTURE:
-   - A. INTRODUCTION (~12% of scenes): Start with an intriguing hook question, show the relatable problem, introduce the topic.
-   - B. MAIN STORY (~60% of scenes): Explain step-by-step with concrete relatable character scenarios and examples.
+1. MULTI-CHARACTER CAST & PRESENTATION DYNAMICS:
+   - When Presenter & Cast Setup is a team or duo or drama cast, define MULTIPLE distinct Cambodian characters in \`characters\` with consistent names, distinct roles (e.g. Team Lead, Technical Specialist, Practitioner, Learner), distinct natural Cambodian appearances, everyday attire, and personalities.
+   - Actively showcase these characters interacting, collaborating, problem-solving, and discussing across the scenes!
+
+2. ANTI-TALKING-HEAD MANDATE & DYNAMIC SCENE ACTION:
+   - CRITICAL: NEVER create scenes where characters merely stand still facing the camera reading the voiceover script!
+   - In EVERY SINGLE SCENE, \`visualDescription\` and \`characterAction\` MUST portray active, tangible physical movements:
+     * Walking briskly through Cambodian city streets, markets, or village paths
+     * Writing/sketching workflows on whiteboards with team members gathered around exchanging ideas
+     * Inspecting equipment, crops, books, documents, products, or laptops hands-on
+     * Riding PassApp / bicycles / motorbikes while pointing out real-world landmarks
+     * Gathering around tables in lively discussion, shaking hands, gesturing expressively, solving practical challenges
+   - The Khmer voiceover (narrator script) provides the educational storytelling narrative, while characters actively act out lively scenarios in the visual scenes.
+   - Include natural Khmer conversational dialogue between characters in \`characterDialogue\` whenever characters communicate!
+
+3. STORY STRUCTURE:
+   - A. INTRODUCTION (~12% of scenes): Start with an intriguing hook question or dynamic real-life scenario, show the relatable problem, introduce the topic.
+   - B. MAIN STORY (~60% of scenes): Explain step-by-step with concrete relatable character scenarios, teamwork, and practical demonstrations.
    - C. IMPORTANT LESSONS (~18% of scenes): Summarize actionable takeaways and practical solutions.
    - D. CONCLUSION (~10% of scenes): Memorable closing message + warm invitation to Like, Share, and Subscribe in Khmer.
 
-2. KHMER NARRATOR SCRIPT RULES:
+4. KHMER NARRATOR SCRIPT RULES:
    - Write complete, rich, natural Khmer sentences ready to read aloud immediately by a voice actor.
    - NEVER write bare bullet points or headings as narrator script.
    - Connect every scene smoothly to the next scene like a polished documentary storyteller.
    - Ensure the narrator script ALWAYS matches what is visually happening in that scene.
    - Avoid repetitive phrasing.
 
-3. CAMBODIAN (KHMER) CULTURAL & VISUAL CONSISTENCY RULES:
+5. CAMBODIAN (KHMER) CULTURAL & VISUAL CONSISTENCY RULES:
    - ALL characters MUST be authentically Cambodian (Khmer) with natural Cambodian facial features, warm light-brown/tan skin tone, black hair, and realistic Cambodian everyday attire (or Cambodian school uniforms / subtle Khmer krama scarf details where appropriate).
    - ALL landscapes, streets, homes, and backgrounds MUST reflect authentic Cambodia — including BOTH Cambodian countryside (golden rice fields, sugar palm trees / Borassus palms, traditional Khmer wooden stilt houses, lotus ponds, red-earth village paths, distant pagoda roofs) AND Cambodian cityscapes (Phnom Penh shophouses, Chaktomuk riverside promenade, Cambodian coffee shops, tuk-tuks / PassApp, tropical boulevard trees).
    - Whenever a shop, café, cart, market, school, or business appears in a scene, explicitly include authentic clean Khmer script on its natural storefront signboard (e.g., signboard reading "កាហ្វេតារា", "ហាងសុខា", "វិទ្យាល័យ", "ផ្សារទំនើប") while avoiding floating subtitles or random English watermarks.
-   - Define 1–3 memorable recurring Cambodian characters in \`characters\` with exact clothing, hair, age, and colors, and repeat those exact visual descriptors in EVERY \`aiImagePromptEn\` where they appear so there are NO random character changes.
+   - Define memorable recurring Cambodian characters in \`characters\` with exact clothing, hair, age, and colors, and repeat those exact visual descriptors in EVERY \`aiImagePromptEn\` where they appear so there are NO random character changes.
    - End or frame every \`aiImagePromptEn\` with the visual style anchor: "${styleAnchor}".
    - Put on-screen overlay titles in \`onScreenText\` (separate from natural Khmer shop signboards inside the world).
 
-4. RESEARCH & ACCURACY RULES:
+6. RESEARCH & ACCURACY RULES:
    - Use verifiable facts; never invent fake statistics or fake historical quotes.
    - If illustrating a principle with fictional characters, clearly state in \`isFictionalNote\` that the characters/story are fictional educational examples.${jsonShapeBlock}
 

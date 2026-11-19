@@ -441,6 +441,10 @@ function normalizeParsedInBrowser(
     animationStyleLabel: styleObj.labelEn,
     narratorVoice: req.narratorVoice || 'Khmer Male Voice',
     voiceTone: 'Natural, Clear, Professional, Engaging',
+    presenterSetup: req.presenterSetup || 'group',
+    presenterSetupLabel: req.presenterSetupLabel || 'Team & Group Presentation (3–5 Characters)',
+    actionDynamic: req.actionDynamic || 'cinematic-action',
+    actionDynamicLabel: req.actionDynamicLabel || 'Cinematic Action & Movement (No Static Talking Heads)',
     subtitleLanguage: 'Khmer',
     audience: 'General Audience',
     isFictionalNote:

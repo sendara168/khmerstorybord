@@ -423,6 +423,7 @@ Rewrite and synchronize ALL AI prompts below so that:
 3. Whenever a shop, café, cart, market, or school appears, include authentic clean Khmer script on the natural storefront signboard (e.g., signboard reading "កាហ្វេតារា", "ហាងសុខា", "វិទ្យាល័យ"), with NO floating subtitles or English watermarks.
 4. EVERY Scene Image Prompt strictly illustrates what the Khmer Narrator Script is saying in that scene.
 5. EVERY Scene Video Prompt describes smooth visual motion, camera movement, AND explicitly instructs the AI video generator to SPEAK IN NATURAL KHMER LANGUAGE using the exact Khmer Narrator Script (and any Khmer character dialogue) for that scene!
+6. ACTIVE DYNAMIC ACTIONS (NO STATIC TALKING HEADS): Ensure all Scene Image Prompts and Video Prompts depict tangible active physical movements (team members collaborating around desks/whiteboards, walking briskly through Cambodian streets/markets, demonstrating tools/workflows hands-on, expressive gestures and lively interactions) rather than characters standing still facing the camera.
 
 VIDEO INFO:
 - Title: ${project.videoTitle}

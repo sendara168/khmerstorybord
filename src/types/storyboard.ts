@@ -6,6 +6,33 @@ export type DurationPresetId = '3-5' | '5-10' | '15-20';
 
 export type AiProviderId = 'ollama' | 'gemini' | 'openrouter' | 'groq' | 'openai';
 
+export type PresenterSetupId = 'group' | 'duo' | 'drama-cast' | 'solo';
+
+export interface PresenterSetupOption {
+  id: PresenterSetupId;
+  labelKh: string;
+  labelEn: string;
+  badgeKh: string;
+  descriptionKh: string;
+  castCount: string;
+  castHintKh: string;
+}
+
+export type SceneActionDynamicId =
+  | 'cinematic-action'
+  | 'hands-on-demo'
+  | 'dialogue-roleplay'
+  | 'field-documentary';
+
+export interface SceneActionDynamicOption {
+  id: SceneActionDynamicId;
+  labelKh: string;
+  labelEn: string;
+  badgeKh: string;
+  descriptionKh: string;
+  actionHintKh: string;
+}
+
 export interface AiProviderConfig {
   provider: AiProviderId;
   apiKey: string;
@@ -79,6 +106,10 @@ export interface StoryboardProject {
   animationStyleLabel: string;
   narratorVoice: string;
   voiceTone: string;
+  presenterSetup?: PresenterSetupId;
+  presenterSetupLabel?: string;
+  actionDynamic?: SceneActionDynamicId;
+  actionDynamicLabel?: string;
   subtitleLanguage: string;
   audience: string;
   isFictionalNote: string;
@@ -120,5 +151,9 @@ export interface GenerationRequest {
   targetScenes: number;
   animationStyle: AnimationStyleId;
   narratorVoice: string;
+  presenterSetup?: PresenterSetupId;
+  presenterSetupLabel?: string;
+  actionDynamic?: SceneActionDynamicId;
+  actionDynamicLabel?: string;
   customNotes: string;
 }

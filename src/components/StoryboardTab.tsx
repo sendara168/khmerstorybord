@@ -468,10 +468,15 @@ export const StoryboardTab: React.FC<StoryboardTabProps> = ({
                     </div>
                     <div className="detail-item">
                       <span className="detail-label">
-                        <User size={12} /> Character & Action
+                        {/&|,|និង|ក្រុម|team/i.test(scene.character) ? (
+                          <Users size={12} className="text-amber" />
+                        ) : (
+                          <User size={12} />
+                        )}{' '}
+                        តួអង្គ & ប្លង់សកម្មភាព (Character & Action)
                       </span>
                       <p>
-                        <strong>{scene.character}</strong> — {scene.characterAction}
+                        <strong>{scene.character}</strong> — <span>{scene.characterAction}</span>
                       </p>
                     </div>
                   </div>

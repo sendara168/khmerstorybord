@@ -15,11 +15,21 @@ import {
   Settings2,
   Search,
   Shuffle,
+  Users,
+  UserCheck,
+  Clapperboard,
+  User,
+  Activity,
+  Wrench,
+  MessageSquare,
+  Compass,
 } from 'lucide-react';
 import {
   AI_PROVIDER_PRESETS,
   ANIMATION_STYLES,
   DURATION_PRESETS,
+  PRESENTER_SETUP_OPTIONS,
+  SCENE_ACTION_DYNAMICS,
   TOPIC_CATEGORIES,
   buildJsonImportPrompt,
   buildMasterPrompt,
@@ -29,6 +39,8 @@ import type {
   AnimationStyleId,
   DurationPresetId,
   GenerationRequest,
+  PresenterSetupId,
+  SceneActionDynamicId,
 } from '../types/storyboard';
 
 interface TopicCreatorProps {
@@ -60,6 +72,8 @@ export const TopicCreator: React.FC<TopicCreatorProps> = ({
   const [targetScenes, setTargetScenes] = useState<number>(30);
   const [animationStyle, setAnimationStyle] = useState<AnimationStyleId>('2d-cartoon');
   const [narratorVoice, setNarratorVoice] = useState<string>('Khmer Male Voice');
+  const [presenterSetup, setPresenterSetup] = useState<PresenterSetupId>('group');
+  const [actionDynamic, setActionDynamic] = useState<SceneActionDynamicId>('cinematic-action');
   const [customNotes, setCustomNotes] = useState<string>('');
 
   const [showPromptPreview, setShowPromptPreview] = useState<boolean>(false);
@@ -112,6 +126,12 @@ export const TopicCreator: React.FC<TopicCreatorProps> = ({
   const selectedCategory =
     TOPIC_CATEGORIES.find((c) => c.id === categoryId) || TOPIC_CATEGORIES[0];
 
+  const selectedPresenter =
+    PRESENTER_SETUP_OPTIONS.find((p) => p.id === presenterSetup) || PRESENTER_SETUP_OPTIONS[0];
+
+  const selectedAction =
+    SCENE_ACTION_DYNAMICS.find((a) => a.id === actionDynamic) || SCENE_ACTION_DYNAMICS[0];
+
   const activePreset =
     AI_PROVIDER_PRESETS.find((p) => p.id === aiConfig.provider) || AI_PROVIDER_PRESETS[0];
 
@@ -124,6 +144,10 @@ export const TopicCreator: React.FC<TopicCreatorProps> = ({
       targetScenes,
       animationStyle,
       narratorVoice,
+      presenterSetup,
+      presenterSetupLabel: selectedPresenter.labelKh,
+      actionDynamic,
+      actionDynamicLabel: selectedAction.labelKh,
       customNotes,
     }),
     [
@@ -134,6 +158,10 @@ export const TopicCreator: React.FC<TopicCreatorProps> = ({
       targetScenes,
       animationStyle,
       narratorVoice,
+      presenterSetup,
+      selectedPresenter,
+      actionDynamic,
+      selectedAction,
       customNotes,
     ]
   );
@@ -320,11 +348,97 @@ export const TopicCreator: React.FC<TopicCreatorProps> = ({
         </div>
       </section>
 
-      {/* Step 3: Duration, Scene Count, Style, Voice */}
+      {/* Step 3: Presenter & Character Cast Setup */}
       <section className="studio-card">
         <div className="card-header-row">
           <div>
-            <span className="step-pill">ជំហានទី ៣</span>
+            <span className="step-pill">ជំហានទី ៣ • ជម្រើសតួអង្គ</span>
+            <h2>ទម្រង់តួអង្គធ្វើបទបង្ហាញ (Presenter & Character Cast Setup)</h2>
+            <p className="muted-text">
+              ជ្រើសរើសទម្រង់តួអង្គធ្វើបទបង្ហាញក្នុងវីដេអូ — ជាក្រុមការងារច្រើននាក់ គូតួអង្គឆ្លើយឆ្លង ឬក្រុមតួអង្គដើរតួក្នុងសាច់រឿងជាក់ស្តែង។
+            </p>
+          </div>
+        </div>
+
+        <div className="options-grid-2x2">
+          {PRESENTER_SETUP_OPTIONS.map((opt) => {
+            const active = presenterSetup === opt.id;
+            return (
+              <button
+                key={opt.id}
+                type="button"
+                className={`setup-card-choice ${active ? 'active' : ''}`}
+                onClick={() => setPresenterSetup(opt.id)}
+              >
+                <div className="setup-card-top">
+                  <div className="setup-card-title">
+                    {opt.id === 'group' && <Users size={18} className="text-amber" />}
+                    {opt.id === 'duo' && <UserCheck size={18} className="text-amber" />}
+                    {opt.id === 'drama-cast' && <Clapperboard size={18} className="text-amber" />}
+                    {opt.id === 'solo' && <User size={18} className="text-amber" />}
+                    <span>{opt.labelKh.split('(')[0]}</span>
+                  </div>
+                  <span className="setup-card-badge">{opt.badgeKh}</span>
+                </div>
+                <p className="setup-card-desc">{opt.descriptionKh}</p>
+                <div className="setup-card-hint">
+                  <Sparkles size={12} />
+                  <span>{opt.castHintKh}</span>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* Step 4: Scene Action Dynamics */}
+      <section className="studio-card">
+        <div className="card-header-row">
+          <div>
+            <span className="step-pill">ជំហានទី ៤ • ប្លង់សកម្មភាពរស់រវើក</span>
+            <h2>ស្ទីលប្លង់សកម្មភាព (Scene Action Dynamics — ហាមឈរនិយាយទទេ)</h2>
+            <p className="muted-text">
+              កំណត់របៀបដែលតួអង្គធ្វើសកម្មភាពក្នុងឈុតនីមួយៗ — ផ្តោតលើចលនារស់រវើក ការងារជាក់ស្តែង និងការសហការ មិនឈរនិយាយស្ងៀមមុខកាមេរ៉ា។
+            </p>
+          </div>
+        </div>
+
+        <div className="options-grid-2x2">
+          {SCENE_ACTION_DYNAMICS.map((dyn) => {
+            const active = actionDynamic === dyn.id;
+            return (
+              <button
+                key={dyn.id}
+                type="button"
+                className={`setup-card-choice ${active ? 'active' : ''}`}
+                onClick={() => setActionDynamic(dyn.id)}
+              >
+                <div className="setup-card-top">
+                  <div className="setup-card-title">
+                    {dyn.id === 'cinematic-action' && <Activity size={18} className="text-amber" />}
+                    {dyn.id === 'hands-on-demo' && <Wrench size={18} className="text-amber" />}
+                    {dyn.id === 'dialogue-roleplay' && <MessageSquare size={18} className="text-amber" />}
+                    {dyn.id === 'field-documentary' && <Compass size={18} className="text-amber" />}
+                    <span>{dyn.labelKh.split('(')[0]}</span>
+                  </div>
+                  <span className="setup-card-badge">{dyn.badgeKh}</span>
+                </div>
+                <p className="setup-card-desc">{dyn.descriptionKh}</p>
+                <div className="setup-card-hint">
+                  <Sparkles size={12} />
+                  <span>{dyn.actionHintKh}</span>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* Step 5: Duration, Scene Count, Style, Voice */}
+      <section className="studio-card">
+        <div className="card-header-row">
+          <div>
+            <span className="step-pill">ជំហានទី ៥</span>
             <h2>កំណត់រយៈពេល ស្ទីល Animation និងសំឡេងអ្នកនិទាន</h2>
           </div>
         </div>

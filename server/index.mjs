@@ -299,6 +299,12 @@ function normalizeProjectPayload(parsed, meta = {}) {
       meta.animationStyleLabel || parsed.animationStyleLabel || '2D Cartoon Educational Animation',
     narratorVoice: meta.narratorVoice || parsed.narratorVoice || 'Khmer Male Voice',
     voiceTone: 'Natural, Clear, Professional, Engaging',
+    presenterSetup: meta.presenterSetup || parsed.presenterSetup || 'group',
+    presenterSetupLabel:
+      meta.presenterSetupLabel || parsed.presenterSetupLabel || 'Team & Group Presentation (3–5 Characters)',
+    actionDynamic: meta.actionDynamic || parsed.actionDynamic || 'cinematic-action',
+    actionDynamicLabel:
+      meta.actionDynamicLabel || parsed.actionDynamicLabel || 'Cinematic Action & Movement (No Static Talking Heads)',
     subtitleLanguage: 'Khmer',
     audience: 'General Audience',
     isFictionalNote:
@@ -689,6 +695,10 @@ app.post('/api/generate', async (req, res) => {
       animationStyle,
       animationStyleLabel,
       narratorVoice,
+      presenterSetup,
+      presenterSetupLabel,
+      actionDynamic,
+      actionDynamicLabel,
       customNotes,
     } = req.body || {};
 
@@ -705,6 +715,11 @@ app.post('/api/generate', async (req, res) => {
       animationStyle: animationStyle || '2d-cartoon',
       animationStyleLabel: animationStyleLabel || '2D Cartoon Educational Animation',
       narratorVoice: narratorVoice || 'Khmer Male Voice',
+      presenterSetup: presenterSetup || 'group',
+      presenterSetupLabel: presenterSetupLabel || 'Team & Group Presentation (3–5 Characters)',
+      actionDynamic: actionDynamic || 'cinematic-action',
+      actionDynamicLabel:
+        actionDynamicLabel || 'Cinematic Action & Practical Movement (NO Boring Talking Heads)',
       customNotes: customNotes ? String(customNotes).trim() : '',
     };
 
@@ -739,6 +754,10 @@ app.post('/api/generate', async (req, res) => {
       animationStyle,
       animationStyleLabel,
       narratorVoice,
+      presenterSetup,
+      presenterSetupLabel,
+      actionDynamic,
+      actionDynamicLabel,
     });
 
     const saved = await saveProjectBundle(project);

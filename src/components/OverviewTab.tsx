@@ -11,6 +11,7 @@ import {
   Subtitles,
   Image as ImageIcon,
   Edit3,
+  Activity,
 } from 'lucide-react';
 import type { StoryboardProject } from '../types/storyboard';
 import {
@@ -82,6 +83,24 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
             <strong>{project.subtitleLanguage} (SRT Ready)</strong>
           </div>
         </div>
+        {project.presenterSetupLabel && (
+          <div className="spec-item">
+            <Users size={16} />
+            <div>
+              <span>ទម្រង់តួអង្គ</span>
+              <strong>{project.presenterSetupLabel.split('(')[0]}</strong>
+            </div>
+          </div>
+        )}
+        {project.actionDynamicLabel && (
+          <div className="spec-item">
+            <Activity size={16} />
+            <div>
+              <span>ប្លង់សកម្មភាព</span>
+              <strong>{project.actionDynamicLabel.split('(')[0]}</strong>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Video Title & YouTube Description */}

@@ -790,6 +790,87 @@ select {
   background: var(--amber-soft);
 }
 
+.options-grid-2x2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.setup-card-choice {
+  text-align: left;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1.5px solid var(--border);
+  background: #fdfcfb;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.setup-card-choice:hover {
+  border-color: #d97706;
+  background: #fffdfa;
+  transform: translateY(-1px);
+}
+
+.setup-card-choice.active {
+  border-color: #d97706;
+  background: #fffbeb;
+  box-shadow: 0 0 0 1px #d97706, 0 4px 12px rgba(217, 119, 6, 0.12);
+}
+
+.setup-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.setup-card-title {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.setup-card-badge {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: #f1ede6;
+  color: #786f64;
+  white-space: nowrap;
+}
+
+.setup-card-choice.active .setup-card-badge {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.setup-card-desc {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 1.45;
+  margin: 0;
+}
+
+.setup-card-hint {
+  font-size: 0.74rem;
+  color: #92400e;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 2px;
+}
+
 .creator-action-bar {
   display: flex;
   flex-wrap: wrap;
