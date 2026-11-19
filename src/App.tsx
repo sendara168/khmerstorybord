@@ -344,6 +344,7 @@ export const App: React.FC = () => {
             onImportPasted={handleImportPasted}
             onCreateOfflineDraft={handleCreateOfflineDraft}
             onOpenSettings={() => setSettingsOpen(true)}
+            onUpdateAiConfig={handleSaveSettings}
           />
         ) : (
           <ProjectStudio

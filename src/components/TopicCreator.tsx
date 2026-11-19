@@ -53,6 +53,7 @@ interface TopicCreatorProps {
   onImportPasted: (rawText: string, req: GenerationRequest) => void;
   onCreateOfflineDraft: (req: GenerationRequest) => void;
   onOpenSettings: () => void;
+  onUpdateAiConfig?: (config: AiProviderConfig) => void;
 }
 
 export const TopicCreator: React.FC<TopicCreatorProps> = ({
@@ -65,6 +66,7 @@ export const TopicCreator: React.FC<TopicCreatorProps> = ({
   onImportPasted,
   onCreateOfflineDraft,
   onOpenSettings,
+  onUpdateAiConfig,
 }) => {
   const [categoryId, setCategoryId] = useState<string>('business-money');
   const [topic, setTopic] = useState<string>('៧ វិធីគ្រប់គ្រងលុយឱ្យមានប្រសិទ្ធភាព');
@@ -534,6 +536,45 @@ export const TopicCreator: React.FC<TopicCreatorProps> = ({
             <div>
               <strong>មានបញ្ហាក្នុងការបង្កើត៖</strong> {errorMessage}
             </div>
+            {aiConfig.provider !== 'gemini' &&
+              (aiConfig.apiKey?.trim().startsWith('AQ.') ||
+                aiConfig.apiKey?.trim().startsWith('AIza') ||
+                errorMessage.includes('AQ.') ||
+                (errorMessage.includes('401') && aiConfig.apiKey?.trim().startsWith('AQ.'))) &&
+              onUpdateAiConfig && (
+                <div
+                  style={{
+                    marginTop: 10,
+                    padding: '10px 14px',
+                    background: '#eff6ff',
+                    border: '1px solid #93c5fd',
+                    borderRadius: 8,
+                    color: '#1e40af',
+                  }}
+                >
+                  <div style={{ fontWeight: 700, marginBottom: 4 }}>
+                    💡 សម្គាល់ឃើញ៖ API Key របស់អ្នក (<code>{aiConfig.apiKey?.slice(0, 8)}...</code>) គឺជា Google Gemini API Key ថ្មី មិនមែន OpenAI Key ទេ!
+                  </div>
+                  <div style={{ fontSize: '0.85rem', marginBottom: 8, color: '#1e3a8a' }}>
+                    Google AI Studio បានប្ដូរទម្រង់ Key ទៅជា <code>AQ....</code>។ សូមចុចប៊ូតុងខាងក្រោមដើម្បីប្ដូរទៅប្រើ Google Gemini API ភ្លាមៗ៖
+                  </div>
+                  <button
+                    type="button"
+                    className="btn-primary"
+                    style={{ fontSize: '0.84rem', padding: '6px 16px' }}
+                    onClick={() => {
+                      onUpdateAiConfig({
+                        provider: 'gemini',
+                        apiKey: aiConfig.apiKey,
+                        model: 'gemini-2.5-flash',
+                        baseUrl: '',
+                      });
+                    }}
+                  >
+                    ✨ ប្ដូរទៅប្រើ Google Gemini ជាមួយ Key នេះភ្លាមៗ
+                  </button>
+                </div>
+              )}
             <div style={{ marginTop: 8, display: 'flex', gap: 8, flexWrap: 'wrap' }}>
               <button
                 type="button"

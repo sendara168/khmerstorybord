@@ -96,8 +96,26 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   };
 
   const trimmedKey = apiKey.trim();
+  const detectedProvider = (() => {
+    if (!trimmedKey) return null;
+    if (trimmedKey.startsWith('AQ.') || trimmedKey.startsWith('AIza')) return 'gemini';
+    if (trimmedKey.startsWith('gsk_')) return 'groq';
+    if (trimmedKey.startsWith('sk-or-')) return 'openrouter';
+    if (trimmedKey.startsWith('sk-proj-') || (trimmedKey.startsWith('sk-') && !trimmedKey.startsWith('sk-or-'))) return 'openai';
+    return null;
+  })();
+
+  const isKeyMismatch =
+    Boolean(trimmedKey) &&
+    provider !== 'ollama' &&
+    detectedProvider !== null &&
+    detectedProvider !== provider;
+
   const geminiWrongPrefix =
-    provider === 'gemini' && Boolean(trimmedKey) && !trimmedKey.startsWith('AIza');
+    provider === 'gemini' &&
+    Boolean(trimmedKey) &&
+    !trimmedKey.startsWith('AIza') &&
+    !trimmedKey.startsWith('AQ.');
 
   return (
     <div className="modal-backdrop" onClick={onClose}>
@@ -228,11 +246,45 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 placeholder={preset.keyPlaceholder}
                 className="input-field mono"
               />
-              {geminiWrongPrefix && (
-                <div className="alert-error" style={{ padding: '8px 11px', fontSize: '0.8rem' }}>
+              {isKeyMismatch && detectedProvider && (
+                <div
+                  className="alert-info"
+                  style={{
+                    marginTop: 6,
+                    padding: '8px 12px',
+                    fontSize: '0.82rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    flexWrap: 'wrap',
+                    gap: 8,
+                    background: '#eff6ff',
+                    border: '1px solid #bfdbfe',
+                    borderRadius: 6,
+                  }}
+                >
+                  <span style={{ color: '#1e40af' }}>
+                    💡 <strong>សម្គាល់ឃើញ៖</strong> Key នេះត្រូវជាមួយ{' '}
+                    <strong>
+                      {AI_PROVIDER_PRESETS.find((p) => p.id === detectedProvider)?.name}
+                    </strong>
+                    !
+                  </span>
+                  <button
+                    type="button"
+                    className="btn-primary"
+                    style={{ fontSize: '0.78rem', padding: '4px 10px' }}
+                    onClick={() => handleSwitchProvider(detectedProvider)}
+                  >
+                    ប្ដូរទៅ {AI_PROVIDER_PRESETS.find((p) => p.id === detectedProvider)?.name} ភ្លាមៗ
+                  </button>
+                </div>
+              )}
+              {geminiWrongPrefix && !isKeyMismatch && (
+                <div className="alert-error" style={{ marginTop: 6, padding: '8px 11px', fontSize: '0.8rem' }}>
                   <AlertTriangle size={15} />
                   <span>
-                    Gemini API Key ត្រូវចាប់ផ្ដើមដោយ <code>AIza</code>។ បើអ្នកមាន OpenAI/OpenRouter/Groq Key សូមចុចជ្រើសរើស Provider នោះនៅខាងលើវិញ!
+                    Google Gemini API Key ត្រូវចាប់ផ្ដើមដោយ <code>AQ.</code> ឬ <code>AIza</code>។
                   </span>
                 </div>
               )}

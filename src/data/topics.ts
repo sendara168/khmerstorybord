@@ -75,9 +75,9 @@ export const AI_PROVIDER_PRESETS: ProviderPreset[] = [
     defaultBaseUrl: '',
     defaultModel: 'gemini-2.5-flash',
     suggestedModels: ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-2.5-pro'],
-    keyPlaceholder: 'AIzaSy...',
+    keyPlaceholder: 'AQ.... ឬ AIzaSy...',
     docsUrl: 'https://aistudio.google.com/apikey',
-    descriptionKh: 'ម៉ូដែល Google Gemini ផ្លូវការ សរសេរភាសាខ្មែរច្បាស់ ត្រឹមត្រូវតាមវេយ្យាករណ៍។',
+    descriptionKh: 'ម៉ូដែល Google Gemini ផ្លូវការ សរសេរភាសាខ្មែរច្បាស់ (គាំទ្រ Key ថ្មី AQ... និង AIza...)។',
   },
   {
     id: 'openai',

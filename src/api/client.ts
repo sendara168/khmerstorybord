@@ -487,11 +487,16 @@ async function callGeminiInBrowser(prompt: string, config: AiProviderConfig): Pr
     },
   };
 
+  const reqHeaders: Record<string, string> = {
+    'Content-Type': 'application/json',
+    'x-goog-api-key': apiKey,
+  };
+
   let res: Response;
   try {
     res = await fetch(endpoint, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: reqHeaders,
       body: JSON.stringify(requestBody),
     });
   } catch (err) {
@@ -506,7 +511,7 @@ async function callGeminiInBrowser(prompt: string, config: AiProviderConfig): Pr
     )}`;
     res = await fetch(fallbackEndpoint, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: reqHeaders,
       body: JSON.stringify(requestBody),
     });
   }
