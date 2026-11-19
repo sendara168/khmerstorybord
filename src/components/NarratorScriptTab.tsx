@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { Copy, Check, Download, Mic, AlignLeft, BookOpen } from 'lucide-react';
+import { Copy, Check, Download, Mic, AlignLeft, BookOpen, Link2 } from 'lucide-react';
 import type { StoryboardProject, StorySection } from '../types/storyboard';
 import {
   downloadTextFile,
@@ -102,6 +102,11 @@ export const NarratorScriptTab: React.FC<NarratorScriptTabProps> = ({ project })
                     </span>
                     <span className="scene-mini-title">{scene.sceneTitle}</span>
                     <span className="scene-dur-pill">{scene.durationSeconds}s</span>
+                    {scene.sceneNumber > 1 && (
+                      <span className="narrator-bridge-badge" style={{ marginLeft: 'auto' }}>
+                        <Link2 size={11} /> តភ្ជាប់ពី Scene {String(scene.sceneNumber - 1).padStart(2, '0')}
+                      </span>
+                    )}
                   </div>
                   <p className="narrator-spoken-text">«{scene.narratorScriptKh}»</p>
                   {scene.characterDialogue?.trim() && (

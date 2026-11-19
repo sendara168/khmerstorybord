@@ -463,7 +463,12 @@ async function callGeminiInBrowser(prompt: string, config: AiProviderConfig): Pr
   }
 
   let requestedModel = (config.model || 'gemini-3.8-flash').trim().replace(/^models\//, '');
-  if (requestedModel === 'gemini-2.5-flash' || requestedModel === 'gemini-4-argon' || !requestedModel) {
+  if (
+    requestedModel === 'gemini-2.5-flash' ||
+    requestedModel.includes('2.5-flash') ||
+    requestedModel === 'gemini-4-argon' ||
+    !requestedModel
+  ) {
     requestedModel = 'gemini-3.8-flash';
   }
 
@@ -489,8 +494,8 @@ async function callGeminiInBrowser(prompt: string, config: AiProviderConfig): Pr
   const candidateModels = [
     requestedModel,
     'gemini-3.8-flash',
-    'gemini-2.5-flash',
     'gemini-2.0-flash',
+    'gemini-1.5-flash',
   ].filter((m, idx, arr) => Boolean(m) && arr.indexOf(m) === idx);
 
   let lastError: Error | null = null;

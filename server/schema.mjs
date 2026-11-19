@@ -106,7 +106,7 @@ export const STORYBOARD_JSON_SCHEMA = {
           narratorScriptKh: {
             type: 'string',
             description:
-              'Complete, natural, grammatically accurate Khmer narrator voiceover sentence(s) that match the visual action and connect smoothly to adjacent scenes.',
+              'Comprehensive, substantive, natural Khmer narrator voiceover (2-4 well-developed sentences, ~35-65 words) that explains the core topic in depth with root causes, practical steps, and Cambodian analogies, matching the visual action, and explicitly beginning with or featuring narrative bridge words connecting smoothly from the preceding scene.',
           },
           characterDialogue: { type: 'string' },
           onScreenText: { type: 'string' },
@@ -253,18 +253,23 @@ STRICT QUALITY RULES:
    - The Khmer voiceover (narrator script) provides the educational storytelling narrative, while characters actively act out lively scenarios in the visual scenes.
    - Include natural Khmer conversational dialogue between characters in \`characterDialogue\` whenever characters communicate!
 
-3. STORY STRUCTURE:
-   - A. INTRODUCTION (~12% of scenes): Start with an intriguing hook question or dynamic real-life scenario, show the relatable problem, introduce the topic.
-   - B. MAIN STORY (~60% of scenes): Explain step-by-step with concrete relatable character scenarios, teamwork, and practical demonstrations.
-   - C. IMPORTANT LESSONS (~18% of scenes): Summarize actionable takeaways and practical solutions.
+3. STORY STRUCTURE & COMPREHENSIVE EDUCATIONAL DEPTH:
+   - CRITICAL REQUIREMENT: Every topic must be deeply and thoroughly explained, never treated with shallow bullet points!
+   - Explain the "WHY" (Root causes, underlying psychological triggers, scientific, financial, or mechanical principles).
+   - Explain the "HOW" (Concrete practical steps, clear rules of thumb, formulas, and actionable techniques viewers can use immediately).
+   - Ground every concept in relatable Cambodian real-world analogies (coffee expenses, family bookkeeping, KHQR banking, small trade, agriculture, school life).
+   - A. INTRODUCTION (~12% of scenes): Intriguing hook question or relatable dilemma, show the problem's stakes, introduce the topic.
+   - B. MAIN STORY (~60% of scenes): Step-by-step breakdown with concrete character scenarios, teamwork, and hands-on demonstrations.
+   - C. IMPORTANT LESSONS (~18% of scenes): Actionable takeaways and practical golden rules.
    - D. CONCLUSION (~10% of scenes): Memorable closing message + warm invitation to Like, Share, and Subscribe in Khmer.
 
-4. KHMER NARRATOR SCRIPT RULES:
-   - Write complete, rich, natural Khmer sentences ready to read aloud immediately by a voice actor.
-   - NEVER write bare bullet points or headings as narrator script.
-   - Connect every scene smoothly to the next scene like a polished documentary storyteller.
-   - Ensure the narrator script ALWAYS matches what is visually happening in that scene.
-   - Avoid repetitive phrasing.
+4. SEAMLESS SCENE-TO-SCENE NARRATIVE CONTINUITY (មិនដាច់កង់):
+   - The entire storyboard MUST flow as ONE unified progressive storytelling journey without disjointed leaps:
+     * Scene 1 (Hook & Relatable Dilemma): Begins with an intriguing question or realistic dilemma facing the characters.
+     * Scene 2+: Every scene's `narratorScriptKh` MUST start with or incorporate explicit narrative bridge words connecting directly to the preceding scene's insight (e.g. «ដើម្បីឆ្លើយតបនឹងសំណួរនេះ...», «បន្ទាប់ពីយើងបានយល់ពី... ជំហានបន្ទាប់ដែលត្រូវធ្វើគឺ...», «ប៉ុន្តែ តើចុះបើ... ត្រង់ចំណុចនេះហើយដែល...», «ក្រៅពីវិធីសាស្ត្រខាងលើ កត្តាមួយទៀតដែលសំខាន់មិនអាចខ្វះបានគឺ...», «នៅពេលដែលយើងអនុវត្តចំណុចនេះបានជោគជ័យ... សំណួរគឺថាតើ...», «តភ្ជាប់ពីចំណុចនេះ...»).
+     * Conclusion: Seamlessly unifies all earlier lessons into a powerful takeaway: «សរុបជារួម មកដល់ចំណុចនេះ យើងឃើញថា...».
+   - Visual Action Story Arc: Characters follow an unbroken physical journey (Problem Encountered ➔ Team Whiteboard Plan ➔ Field Trial ➔ Challenge Overcome ➔ Measurable Result ➔ Community Lesson).
+   - In each scene, `narratorScriptKh` must be 2 to 4 rich, well-formed spoken Khmer sentences (~35–65 words) ready for voiceover.
 
 5. CAMBODIAN (KHMER) CULTURAL & VISUAL CONSISTENCY RULES:
    - ALL characters MUST be authentically Cambodian (Khmer) with natural Cambodian facial features, warm light-brown/tan skin tone, black hair, and realistic Cambodian everyday attire (or Cambodian school uniforms / subtle Khmer krama scarf details where appropriate).

@@ -74,7 +74,7 @@ export const AI_PROVIDER_PRESETS: ProviderPreset[] = [
     requiresKey: true,
     defaultBaseUrl: '',
     defaultModel: 'gemini-3.8-flash',
-    suggestedModels: ['gemini-3.8-flash', 'gemini-2.5-flash', 'gemini-2.0-flash'],
+    suggestedModels: ['gemini-3.8-flash', 'gemini-2.0-flash', 'gemini-1.5-flash'],
     keyPlaceholder: 'AQ.... ឬ AIzaSy...',
     docsUrl: 'https://aistudio.google.com/apikey',
     descriptionKh: 'ម៉ូដែល Google Gemini 3.8 Flash ផ្លូវការ លឿន និងសរសេរភាសាខ្មែរច្បាស់រលូនបំផុត។',
@@ -704,29 +704,42 @@ export function buildMasterPrompt(req?: Partial<GenerationRequest>): string {
     req?.customNotes?.trim() ? `\n- Additional Notes: ${req.customNotes.trim()}` : ''
   }
 
-2. របៀបសរសេរ Script
-សូមសរសេរ Script ពេញលេញ ដោយមានផ្នែកដូចខាងក្រោម៖
-A. INTRODUCTION
-- ចាប់ផ្ដើមដោយសំណួរ ឬសកម្មភាពជាក់ស្តែងដែលធ្វើឱ្យអ្នកទស្សនាចង់ដឹង។
-- បង្ហាញបញ្ហា ឬចំណុចគួរឱ្យចាប់អារម្មណ៍តាមរយៈតួអង្គក្នុងជីវិតពិត។
-- ណែនាំប្រធានបទវីដេអូ។
+2. របៀបសរសេរ Script & ការពន្យល់ខ្លឹមសារឱ្យក្បោះក្បាយពេញលេញ (COMPREHENSIVE EDUCATIONAL DEPTH)
+គ្រប់ Topic ទាំងអស់ ត្រូវតែពន្យល់ឱ្យបានស៊ីជម្រៅ ក្បោះក្បាយ ងាយយល់ និងមានតម្លៃចំណេះដឹងពិតប្រាកដ មិនមែនសរសេរត្រឹមតែពាក្យស្លោក ឬចំណុចត្រួសៗឡើយ៖
+A. INTRODUCTION (~12% នៃឈុត)
+- Scene 1 (The Hook & Dilemma): ចាប់ផ្ដើមដោយសំណួរចាក់ដោត ឬបញ្ហាជាក់ស្តែងដែលតួអង្គ និងមនុស្សទូទៅជួបប្រទះក្នុងជីវិតរស់នៅ ដែលទាក់ទាញចិត្តអ្នកទស្សនាឱ្យចង់ដឹង និងចង់តាមដានដំណោះស្រាយ។
+- បង្ហាញពីផលប៉ះពាល់នៃបញ្ហានេះបើមិនបានដោះស្រាយ និងណែនាំប្រធានបទវីដេអូឱ្យទាក់ទាញ។
 
-B. MAIN STORY
-- រៀបរាប់ខ្លឹមសារជាផ្នែកៗ។
-- ពន្យល់ឱ្យងាយយល់ និងមានសកម្មភាពការងារជាក់ស្តែង។
-- ប្រើប្រាស់តួអង្គជាក្រុម ឬដៃគូ ដើម្បីជជែក ដោះស្រាយ និងបង្ហាញដំណោះស្រាយផ្ទាល់ដៃ។
-- រៀបចំចំណុចសំខាន់ៗជាលំដាប់។
+B. MAIN STORY (~60% នៃឈុត)
+- ពន្យល់ពីមូលហេតុពិតប្រាកដ (The "Why"): បកស្រាយពីឫសគល់នៃបញ្ហា ចិត្តវិទ្យាពីក្រោយ ឬច្បាប់ធម្មជាតិ/វិទ្យាសាស្ត្រ (ឧ. ហេតុអ្វីមនុស្សយើងបរាជ័យក្នុងការសន្សំលុយ? ហេតុអ្វីខួរក្បាលចូលចិត្តពន្យារពេល?)។
+- វិធីសាស្ត្រអនុវត្តជាក់ស្តែងជាជំហានៗ (The "How"): បង្ហាញដំណោះស្រាយច្បាស់លាស់ មានក្បួនច្បាប់ វិធីគណនា ឬរូបមន្តអនុវត្តជាក់ស្តែង ដែលអ្នកទស្សនាមើលហើយអាចយកទៅធ្វើតាមបានភ្លាមៗ។
+- ឧទាហរណ៍ជាក់ស្ដែងក្នុងសង្គមកម្ពុជា: លើកយកឧទាហរណ៍ពិតៗមកប្រៀបធៀប ដូចជាការរកស៊ីលក់ដូរតូចតាច កាហ្វេប្រចាំថ្ងៃ ការសន្សំប្រាក់រៀលតាម KHQR ការធ្វើកសិកម្ម ការរៀនសូត្រ ឬជីវភាពគ្រួសារខ្មែរ។
+- ការប្រៀបធៀបឱ្យងាយយល់ (Intuitive Analogies): បើមានពាក្យបច្ចេកទេសពិបាកយល់ ត្រូវប្រៀបធៀបជាមួយរបស់សាមញ្ញៗដែលមនុស្សគ្រប់គ្នាស្គាល់ (ដូចជា ការប្រាក់បូកផ្សំប្រៀបដូចជាការដាំកូនឈើ...)។
+- អត្ថបទអ្នកនិទានមានទម្ងន់ (Substantive Voiceover): ក្នុងមួយឈុតៗ Narrator Script ត្រូវមានពី 2 ទៅ 4 ប្រយោគពិស្ដារ (ប្រហែល 35-65 ពាក្យខ្មែរ) ផ្ដល់ចំណេះដឹងពេញលេញ ស្ដាប់ហើយពេញចិត្ត មិនមែនសរសេរមួយឃ្លាខ្លីកំបុតៗនោះទេ។
 
-C. IMPORTANT LESSONS
-- សង្ខេបមេរៀនសំខាន់ៗ។
-- ផ្តល់គំនិត និងដំណោះស្រាយដែលអាចអនុវត្តបាន។
-- បង្ហាញអ្វីដែលអ្នកទស្សនាគួររៀនពីប្រធានបទនេះ។
+C. IMPORTANT LESSONS (~18% នៃឈុត)
+- សង្ខេបមេរៀនសំខាន់ៗដែលស្រង់ចេញពីសាច់រឿង។
+- ផ្តល់ក្បួនអនុវត្តសង្ខេប (Golden Rules) និងដំណោះស្រាយដែលអាចអនុវត្តបានយូរអង្វែង។
+- បង្ហាញអ្វីដែលអ្នកទស្សនាគួរផ្លាស់ប្តូរចាប់ពីថ្ងៃនេះតទៅ។
 
-D. CONCLUSION
+D. CONCLUSION (~10% នៃឈុត)
 - បញ្ចប់ដោយសារដ៏មានអត្ថន័យ និងឃ្លាដែលធ្វើឱ្យអ្នកទស្សនាចងចាំ។
-- អញ្ជើញឱ្យ Like, Share និង Subscribe។
+- អញ្ជើញឱ្យ Like, Share និង Subscribe ដើម្បីទទួលបានចំណេះដឹងថ្មីៗ។
 
-3. ច្បាប់សំខាន់សម្រាប់តួអង្គ និងប្លង់សកម្មភាព (STRICT ACTION & CAST DYNAMICS)
+3. ច្បាប់តភ្ជាប់សាច់រឿងរលូនពីឈុតមួយទៅឈុតមួយ មិនដាច់កង់ (SEAMLESS SCENE-TO-SCENE CONTINUITY)
+- ឈុតនីមួយៗត្រូវតែមានចំណងតភ្ជាប់ (Narrative Bridges) ពីឈុតមុនទៅឈុតបន្ទាប់ ដូចជាខ្សែភាពយន្តឯកសារលំដាប់អន្តរជាតិ៖
+  * Scene 1: ចោទជាសំណួរ ឬបញ្ហាឱ្យចង់តាមដាន។
+  * Scene 2+: អត្ថបទអ្នកនិទាន (narratorScriptKh) ត្រូវតែចាប់ផ្ដើម ឬមានឃ្លាតភ្ជាប់ពីលទ្ធផល ឬចម្ងល់នៃ Scene មុន ដូចជា៖
+    - «ដើម្បីឆ្លើយតបនឹងសំណួរនេះ...»
+    - «បន្ទាប់ពីយើងបានយល់ពី... ជំហានបន្ទាប់ដែលត្រូវធ្វើគឺ...»
+    - «ប៉ុន្តែ តើចុះបើ... ត្រង់ចំណុចនេះហើយដែល...»
+    - «ក្រៅពីវិធីសាស្ត្រខាងលើ កត្តាមួយទៀតដែលសំខាន់មិនអាចខ្វះបានគឺ...»
+    - «នៅពេលដែលយើងអនុវត្តចំណុចនេះបានជោគជ័យ... សំណួរគឺថាតើ...»
+    - «តភ្ជាប់ពីចំណុចនេះ...»
+  * Conclusion: ប្រមូលផ្តុំដំណោះស្រាយទាំងអស់ជាធ្លុងមួយ៖ «សរុបជារួម មកដល់ចំណុចនេះ យើងឃើញថា...»
+- Visual & Character Action Journey: រូបភាព និងសកម្មភាពតួអង្គត្រូវបន្តដំណើរជាសាច់រឿងតែមួយ (Story Arc)៖ ជួបបញ្ហា ➔ ប្រជុំពិភាក្សា ➔ ចុះសាកល្បងអនុវត្តផ្ទាល់ ➔ ជួបឧបសគ្គតូចមួយ ➔ សហការដោះស្រាយ ➔ ទទួលបានលទ្ធផលជាផ្លែផ្កា ➔ សង្ខេបមេរៀនរួមគ្នា។
+
+4. ច្បាប់សំខាន់សម្រាប់តួអង្គ និងប្លង់សកម្មភាព (STRICT ACTION & CAST DYNAMICS)
 - ជម្រើសទម្រង់តួអង្គ៖ ${presenterObj.labelKh} (${presenterObj.castHintKh})
 - ជម្រើសប្លង់សកម្មភាព៖ ${actionObj.labelKh} (${actionObj.actionHintKh})
 - ហាមដាច់ខាតឈរនិយាយទទេ (ANTI-TALKING-HEAD MANDATE)៖ កុំឱ្យតួអង្គគ្រាន់តែឈរស្ងៀមៗមុខកាមេរ៉ាអាន Script Voiceover ឱ្យសោះ! នេះជាគំនូរជីវចលអប់រំបែប Storytelling រស់រវើក។
@@ -837,12 +850,25 @@ STRICT PRODUCTION RULES:
    - The Khmer Narrator Script is voiceover storytelling that accompanies the visual actions, while characters actively live, work, and collaborate in the world.
    - Include natural Khmer conversational dialogue between characters in "characterDialogue" whenever characters talk to each other!
 
-3. KHMER NARRATOR SCRIPT: Write natural, grammatically accurate, complete Khmer narrator sentences ready to read aloud immediately (NOT bullet headings). Connect every scene smoothly to the next like a polished documentary storyteller (1-2 crisp spoken sentences per scene).
-4. CAMBODIAN CULTURAL SETTING: Authentic Cambodian features, scenery, clean Khmer script on shop signboards (no floating subtitles/watermarks).
-5. FAST & PUNCHY GENERATION DIRECTIVE:
+3. COMPREHENSIVE EDUCATIONAL DEPTH & IN-DEPTH EXPLANATION (អត្ថន័យក្បោះក្បាយពេញលេញ & ស៊ីជម្រៅ):
+   - CRITICAL PEDAGOGICAL RULE: Every single scene must provide substantial, deep educational value, NOT shallow bullet slogans or rushed summaries!
+   - Explain the "WHY" (Root causes, underlying psychological triggers, scientific or financial mechanics, e.g. why habits fail, biological functions, compound math, market dynamics).
+   - Explain the "HOW" (Actionable, step-by-step practical methods, clear rules of thumb, formulas, and exact guidance that viewers can implement immediately).
+   - Relatable Cambodian Examples & Analogies: Ground every point in relatable Cambodian daily life (e.g. coffee purchases, small vendor stall bookkeeping, KHQR digital bank savings, farming techniques, student exam methods). Compare abstract ideas to familiar items (water streams, young tree saplings, clay piggy banks).
+   - Substantive Khmer Voiceover: In every scene, "narratorScriptKh" MUST contain 2 to 4 rich, well-developed, natural spoken Khmer sentences (~35–65 Khmer words) delivering complete, satisfying knowledge that leaves the listener enlightened.
+
+4. SEAMLESS SCENE-TO-SCENE NARRATIVE CONTINUITY (ការតភ្ជាប់សាច់រឿងរលូនពី Scene 1 ទៅ Scene 2, Scene 3... មិនដាច់កង់):
+   - The entire storyboard MUST flow as ONE unified progressive storytelling journey without disjointed leaps:
+     * Scene 1 (Hook & Relatable Dilemma): Begins with an intriguing question or realistic dilemma facing the characters, setting up the core puzzle.
+     * Scene 2+: Every scene's "narratorScriptKh" MUST start with or incorporate explicit narrative bridge words connecting directly to the preceding scene's insight (e.g. «ដើម្បីឆ្លើយតបនឹងសំណួរនេះ...», «បន្ទាប់ពីយើងបានយល់ពី... ជំហានបន្ទាប់ដែលត្រូវធ្វើគឺ...», «ប៉ុន្តែ តើចុះបើ... ត្រង់ចំណុចនេះហើយដែល...», «ក្រៅពីវិធីសាស្ត្រខាងលើ កត្តាមួយទៀតដែលសំខាន់មិនអាចខ្វះបានគឺ...», «នៅពេលដែលយើងអនុវត្តចំណុចនេះបានជោគជ័យ... សំណួរគឺថាតើ...», «តភ្ជាប់ពីចំណុចនេះ...»).
+     * Conclusion: Seamlessly unifies all earlier lessons into a powerful takeaway: «សរុបជារួម មកដល់ចំណុចនេះ យើងឃើញថា...».
+   - Visual Action Story Arc: Characters follow an unbroken physical journey (Problem Encountered ➔ Collaborative Meeting & Whiteboard Plan ➔ Hands-on Field Trial ➔ Encountering a Challenge ➔ Team Breakthrough ➔ Tangible Results & Lesson Shared).
+
+5. CAMBODIAN CULTURAL SETTING: Authentic Cambodian features, scenery, clean Khmer script on shop signboards (no floating subtitles/watermarks).
+6. FAST & STRUCTURED JSON DIRECTIVE:
    - Output valid JSON immediately with zero preamble.
-   - Keep descriptions, actions, and image prompts punchy, visual, and concise (1-2 crisp sentences per field) — avoid repetitive filler paragraphs to ensure ultra-fast generation.
-6. RETURN ONLY VALID JSON inside a single \`\`\`json code block matching the exact structure below (no extra explanation outside the JSON):
+   - Keep "aiImagePromptEn" and "aiVideoPromptEn" focused, visual, and concise while ensuring "narratorScriptKh" is rich, comprehensive, and connected.
+7. RETURN ONLY VALID JSON inside a single \`\`\`json code block matching the exact structure below (no extra explanation outside the JSON):
 
 \`\`\`json
 {
@@ -970,41 +996,93 @@ export function buildOfflineDraftProject(req: GenerationRequest): StoryboardProj
     characters = [characters[0]];
   }
 
+  const storySteps = [
+    {
+      title: 'ស្វែងយល់ពីឫសគល់ និងមូលហេតុពិត',
+      bridge: `ដើម្បីឆ្លើយតបនឹងសំណួរនេះ ជំហានដំបូងបំផុតគឺការស្វែងយល់ពីឫសគល់ពិតប្រាកដនៃ «${topicText}»។ មូលហេតុចម្បងដែលមនុស្សភាគច្រើនតែងជួបការលំបាក គឺដោយសារការខ្វះវិធីសាស្ត្រវិទ្យាសាស្ត្រ និងការរៀបចំប្រព័ន្ធតាមដានច្បាស់លាស់។`,
+      action: 'សុខា និងតារាអង្គុយពិភាក្សា យកឯកសារស្រាវជ្រាវ និងកត់ត្រាមូលហេតុចម្បងលើសៀវភៅការងារយ៉ាងយកចិត្តទុកដាក់',
+      dialogue: 'តារា៖ «ពិតមែនហើយសុខា! បើយើងមិនយល់ពីឫសគល់បញ្ហាទេ យើងនឹងពិបាកដោះស្រាយណាស់!»',
+    },
+    {
+      title: 'វិធីសាស្ត្រអនុវត្តជាក់ស្តែងទី ១',
+      bridge: `បន្ទាប់ពីយើងបានដឹងពីមូលហេតុច្បាស់លាស់ហើយ វិធីសាស្ត្រជាក់ស្តែងទីមួយដែលត្រូវចាប់ផ្តើម គឺការរៀបចំក្បួនអនុវត្តសាមញ្ញៗដែលអាចធ្វើបានប្រចាំថ្ងៃ។ តាមរយៈការបែងចែកគោលដៅតូចៗ យើងអាចបង្កើតទម្លាប់ថ្មីដោយមិនមានអារម្មណ៍ថាតានតឹងឡើយ។`,
+      action: 'កញ្ញាចង្អុលបង្ហាញគំនូសបំព្រួញលើក្តារខៀន ពន្យល់ពីជំហានទីមួយដល់សមាជិកក្រុមដោយទឹកមុខស្វាហាប់',
+      dialogue: 'កញ្ញា៖ «ជំហានដំបូងនេះងាយស្រួលអនុវត្តណាស់ ហើយចំណាយពេលត្រឹមតែប៉ុន្មាននាទីប៉ុណ្ណោះក្នុងមួយថ្ងៃ!»',
+    },
+    {
+      title: 'ការសាកល្បងអនុវត្តផ្ទាល់ដៃ & ឧទាហរណ៍ជាក់ស្ដែង',
+      bridge: `ប៉ុន្តែ តើចុះបើជួបឧបសគ្គក្នុងពេលអនុវត្ត? ត្រង់ចំណុចនេះហើយដែលក្រុមយើងបានសាកល្បងចុះអនុវត្តផ្ទាល់ដៃ ជាមួយឧទាហរណ៍ជាក់ស្ដែងក្នុងជីវភាពរស់នៅ ដើម្បីផ្ទៀងផ្ទាត់ប្រសិទ្ធភាព និងបង្ហាញពីដំណោះស្រាយពិតៗ។`,
+      action: 'ក្រុមការងារចុះទៅកាន់ទីតាំងជាក់ស្តែង (ហាងទំនិញ ទីផ្សារ ឬកន្លែងការងារ) កំពុងកាន់ឧបករណ៍ធ្វើតេស្ត និងជជែកជាមួយមនុស្សជុំវិញ',
+      dialogue: 'សុខា៖ «តោះយើងសាកល្បងវាផ្ទាល់តែម្តង ដើម្បីដឹងថាតើវិធីសាស្ត្រនេះដំណើរការល្អកម្រិតណា!»',
+    },
+    {
+      title: 'វិធីសាស្ត្រអនុវត្តជាក់ស្តែងទី ២ & ក្បួនដោះស្រាយ',
+      bridge: `តភ្ជាប់ពីជំហានមុននេះ កត្តាសំខាន់ទីពីរដែលមិនអាចមើលរំលងបាន គឺការបង្កើតប្រព័ន្ធតាមដាន និងវិន័យជាប់លាប់។ នៅពេលដែលយើងមានឧបករណ៍ត្រួតពិនិត្យច្បាស់លាស់ យើងនឹងដឹងពីចំណុចខ្វះខាត និងអាចកែតម្រូវបានទាន់ពេលវេលា។`,
+      action: 'តារាបង្ហាញអេក្រង់កុំព្យូទ័រយួរដៃដែលមានក្រាហ្វិក និងតារាងទិន្នន័យច្បាស់លាស់ សមាជិកទាំងអស់ផ្ទៀងផ្ទាត់ដោយស្នាមញញឹម',
+      dialogue: 'តារា៖ «មើលចុះ! នៅពេលយើងតាមដានទិន្នន័យទៀងទាត់ យើងកាត់បន្ថយកំហុសបានច្រើនមែនទែន!»',
+    },
+    {
+      title: 'ការជម្នះឧបសគ្គ & កែសម្រួលវិធីសាស្ត្រ',
+      bridge: `ក្រៅពីវិធីសាស្ត្រខាងលើ បញ្ហាប្រឈមធំបំផុតដែលមនុស្សជាច្រើនបោះបង់ពាក់កណ្តាលទី គឺកង្វះការលើកទឹកចិត្ត។ ដូច្នេះ គន្លឹះដោះស្រាយគឺការបង្កើតបរិយាកាសគាំទ្រ និងការអបអរសាទរជ័យជម្នះតូចៗជារៀងរាល់សប្តាហ៍។`,
+      action: 'សមាជិកក្រុមទាំងអស់អង្គុយជុំវិញតុ លើកកែវទឹកតែជជែកគ្នាដោយរីករាយ និងចែករំលែកអារម្មណ៍វិជ្ជមាន',
+      dialogue: 'កញ្ញា៖ «ការលើកទឹកចិត្តគ្នាទៅវិញទៅមក ជួយឱ្យយើងមានកម្លាំងចិត្តបន្តទៅមុខឥតឈប់ឈរ!»',
+    },
+    {
+      title: 'ការវាស់វែងលទ្ធផល & ភាពរីកចម្រើនជាក់ស្ដែង',
+      bridge: `នៅពេលដែលយើងអនុវត្តចំណុចខាងលើនេះបានជោគជ័យ លទ្ធផលវិជ្ជមាននឹងចាប់ផ្តើមលេចចេញជារូបរាងយ៉ាងច្បាស់។ ការផ្លាស់ប្តូរតូចៗប្រចាំថ្ងៃ បានប្រែក្លាយទៅជាសមិទ្ធផលធំធេងដែលជួយលើកកម្ពស់គុណភាពជីវិត និងការងារ។`,
+      action: 'សុខាលើករបាយការណ៍លទ្ធផលបង្ហាញក្រុមការងារ គ្រប់គ្នាទះដៃអបអរសាទរ និងញញឹមដោយមោទនភាព',
+      dialogue: 'សុខា៖ «លទ្ធផលជាក់ស្តែងបានបញ្ជាក់ហើយថា វិធីសាស្ត្រនេះពិតជាមានប្រសិទ្ធភាពខ្ពស់!»',
+    },
+  ];
+
   const scenes: StoryboardScene[] = Array.from({ length: count }, (_, idx) => {
     const num = idx + 1;
     let section: StoryboardScene['section'] = 'MAIN_STORY';
-    let sceneTitle = `សកម្មភាព និងការអនុវត្តផ្នែកទី ${num - 2}`;
-    let narrator = `សរសេរអត្ថបទអ្នកនិទានពេញលេញសម្រាប់ឈុតទី ${num} ទាក់ទងនឹង «${topicText}» នៅទីនេះ។`;
-    let character = 'សុខា & ក្រុមការងារ';
-    let action = 'សមាជិកក្រុមកំពុងពិភាក្សា លើកដៃចង្អុលបង្ហាញក្រាហ្វិកលើក្តារខៀនយ៉ាងសកម្ម មិនឈរស្ងៀម';
-    let dialogue = '';
+    const mainIndex = num - 3;
+    const template = storySteps[mainIndex % storySteps.length] || storySteps[0];
+    let sceneTitle = `${template.title} (វគ្គទី ${Math.floor(mainIndex / storySteps.length) + 1})`;
+    if (mainIndex < storySteps.length) {
+      sceneTitle = template.title;
+    }
+    let narrator = template.bridge;
+    let character = 'សុខា, តារា & កញ្ញា';
+    let action = template.action;
+    let dialogue = template.dialogue;
 
-    if (num <= 2) {
+    if (num === 1) {
       section = 'INTRODUCTION';
-      sceneTitle = num === 1 ? 'សំណួរចាប់ផ្ដើម & បញ្ហាជាក់ស្តែង' : 'ក្រុមការងារជួបជុំណែនាំប្រធានបទ';
-      narrator =
-        num === 1
-          ? `តើអ្នកធ្លាប់ឆ្ងល់ទេអំពី «${topicText}»? នៅក្នុងវីដេអូនេះ ក្រុមការងារយើងនឹងនាំអ្នកទាំងអស់គ្នាទៅស្វែងយល់តាមរយៈសកម្មភាពជាក់ស្តែង។`
-          : `មនុស្សជាច្រើនតែងជួបបញ្ហានេះ ដូច្នេះថ្ងៃនេះក្រុមយើងបានរៀបចំវិធីសាស្ត្រងាយៗដើម្បីអនុវត្តជាមួយគ្នា។`;
+      sceneTitle = 'សំណួរចាប់ផ្ដើម & បញ្ហាជាក់ស្តែង (Hook)';
+      narrator = `តើអ្នកធ្លាប់ឆ្ងល់ទេថា ហេតុអ្វីបានជាមនុស្សជាច្រើនតែងជួបការលំបាកជាមួយ «${topicText}»? នៅក្នុងវីដេអូនេះ ក្រុមការងារយើងនឹងនាំអ្នកទាំងអស់គ្នាទៅស្វែងយល់ពីឫសគល់នៃបញ្ហា និងវិធីសាស្ត្រអនុវត្តជាក់ស្តែងដែលផ្លាស់ប្តូរលទ្ធផលពិតៗ។`;
       character = 'សុខា & តារា';
       action = 'សុខា និងតារាកំពុងដើរយ៉ាងស្វាហាប់តាមផ្លូវក្នុងទីក្រុងភ្នំពេញ ទឹកមុខរស់រវើក ចង្អុលបង្ហាញស្ថានភាពជុំវិញ';
       dialogue = 'សុខា៖ «តោះតារា! យើងទៅពិនិត្យមើលបញ្ហានេះជាក់ស្តែងទាំងអស់គ្នា!»';
+    } else if (num === 2) {
+      section = 'INTRODUCTION';
+      sceneTitle = 'ផលប៉ះពាល់ & ណែនាំដំណោះស្រាយ';
+      narrator = `ដើម្បីយល់ឱ្យកាន់តែច្បាស់ ប្រសិនបើយើងមិនយកចិត្តទុកដាក់ដោះស្រាយបញ្ហានេះទេ វានឹងជះឥទ្ធិពលអវិជ្ជមានដល់ពេលវេលា និងការរីកចម្រើន។ ដូច្នេះ ក្រុមការងារយើងបានស្រាវជ្រាវ និងចងក្រងនូវដំណោះស្រាយជាប្រព័ន្ធ ដើម្បីចែករំលែកជាមួយអ្នកទាំងអស់គ្នា។`;
+      character = 'កញ្ញា & សុខា';
+      action = 'កញ្ញាកាន់ថេប្លេតបង្ហាញក្រាហ្វិកបញ្ហាដល់សុខា ទាំងពីរនាក់ដើរចូលមកកាន់បន្ទប់ប្រជុំដោយទឹកមុខផ្តោតអារម្មណ៍';
+      dialogue = 'កញ្ញា៖ «បងសុខា មើលទិន្នន័យនេះចុះ! បើយើងមិនកែទម្លាប់នេះទេ បញ្ហានឹងកាន់តែរីកធំឡើង!»';
     } else if (num === count - 2) {
       section = 'IMPORTANT_LESSONS';
-      sceneTitle = 'សង្ខេបមេរៀន និងដំណោះស្រាយជាក់ស្តែង';
-      narrator = `សង្ខេបមកវិញ មេរៀនសំខាន់បំផុតពី «${topicText}» គឺការយកទៅអនុវត្តជាក់ស្ដែងជាមួយក្រុមការងារ និងជីវិតរស់នៅ។`;
+      sceneTitle = 'សង្ខេបមេរៀនសំខាន់ៗ & ក្បួនអនុវត្តមាស';
+      narrator = `សង្ខេបជារួម មេរៀនសំខាន់បំផុតដែលយើងស្រង់ចេញពី «${topicText}» គឺការរួមបញ្ចូលគ្នារវាងការយល់ដឹងស៊ីជម្រៅ និងសកម្មភាពជាក់ស្ដែង។ កុំរង់ចាំឱ្យគ្រប់យ៉ាងល្អឥតខ្ចោះ ទើបចាប់ផ្ដើម—ការចាប់ផ្ដើមនៅថ្ងៃនេះ ជាគ្រឹះនៃជោគជ័យថ្ងៃស្អែក។`;
       character = 'ក្រុមការងារទាំងមូល (សុខា, តារា, កញ្ញា)';
       action = 'តួអង្គទាំង ៣ នាក់ប្រជុំជុំវិញតុការងារ កញ្ញាចង្អុលបង្ហាញរបាយការណ៍ តារាសរសេរលើក្តារខៀន សុខាងក់ក្បាលគាំទ្រ';
       dialogue = 'កញ្ញា៖ «បើយើងអនុវត្តតាមជំហានទាំងនេះ លទ្ធផលនឹងកើនឡើងជាក់ជាមិនខាន!»';
-    } else if (num >= count - 1) {
+    } else if (num === count - 1) {
       section = 'CONCLUSION';
-      sceneTitle = num === count ? 'អញ្ជើញ Like, Share និង Subscribe' : 'សារដ៏មានអត្ថន័យចុងបញ្ចប់';
-      narrator =
-        num === count
-          ? 'សូមអរគុណសម្រាប់ការទស្សនា! កុំភ្លេចចុច Like, Share និង Subscribe ដើម្បីទទួលបានវីដេអូចំណេះដឹងថ្មីៗពីក្រុមយើងខ្ញុំ!'
-          : 'សូមចងចាំថា ការផ្លាស់ប្តូរដ៏អស្ចារ្យ តែងតែចាប់ផ្ដើមពីការសហការ និងជំហានដំបូងដែលអ្នកធ្វើនៅថ្ងៃនេះ។';
+      sceneTitle = 'សារដាស់តឿនចិត្ត & ជំហានបន្ត';
+      narrator = `សូមចងចាំថា គ្រប់ការផ្លាស់ប្តូរដ៏អស្ចារ្យ តែងតែចាប់ផ្ដើមពីការសម្រេចចិត្តមួយដ៏ត្រឹមត្រូវ និងការតាំងចិត្តធ្វើឱ្យបានសម្រេច។ មិនថាអ្នកស្ថិតក្នុងស្ថានភាពណាក៏ដោយ អ្នកតែងតែមានលទ្ធភាពបង្កើតលទ្ធផលថ្មីបានជានិច្ច។`;
       character = 'ក្រុមការងារទាំងមូល';
       action = 'សមាជិកក្រុមទាំងអស់ឈររួមគ្នាដោយទឹកមុខរីករាយ ញញឹម និងលើកដៃស្វាគមន៍អ្នកទស្សនា ក្រោមពន្លឺថ្ងៃកក់ក្តៅ';
+      dialogue = 'សុខា៖ «ជឿជាក់លើខ្លួនឯង ហើយចាប់ផ្តើមអនុវត្តពីថ្ងៃនេះទៅ!»';
+    } else if (num === count) {
+      section = 'CONCLUSION';
+      sceneTitle = 'អញ្ជើញ Like, Share និង Subscribe';
+      narrator = `សូមអរគុណសម្រាប់ការទស្សនា! ប្រសិនបើអ្នកយល់ថាវីដេអូនេះមានប្រយោជន៍ កុំភ្លេចចុច Like, Share និង Subscribe ដើម្បីទទួលបានចំណេះដឹង និងវិធីសាស្ត្រល្អៗថ្មីៗពីក្រុមការងារយើងខ្ញុំជារៀងរាល់សប្តាហ៍!`;
+      character = 'ក្រុមការងារទាំងមូល';
+      action = 'តួអង្គទាំងអស់ញញឹមស្រស់ លើកដៃលា និងចង្អុលទៅប៊ូតុង Subscribe យ៉ាងស្និទ្ធស្នាល';
       dialogue = 'សុខា & ក្រុមការងារ៖ «កុំភ្លេចចុច Subscribe ជួបគ្នានៅវីដេអូបន្ទាប់!»';
     }
 
@@ -1020,7 +1098,7 @@ export function buildOfflineDraftProject(req: GenerationRequest): StoryboardProj
       characterDialogue: dialogue,
       onScreenText: sceneTitle,
       aiImagePromptEn: `Authentic Cambodian educational storytelling animation scene of ${character}, actively engaged in: ${action}, topic: "${topicText}", vibrant authentic Cambodian setting, expressive body language and teamwork, natural warm cinematic lighting, ${styleObj.promptAnchor}.`,
-      aiVideoPromptEn: `Smooth dynamic 2D animation motion of ${character} actively moving and collaborating in authentic Cambodian setting, expressive gestures, camera slowly tracking, clear Khmer voiceover.`,
+      aiVideoPromptEn: `Smooth dynamic 2D animation motion of ${character} actively moving and collaborating in authentic Cambodian setting, expressive gestures, camera slowly tracking, clear Khmer voiceover: "${narrator}".`,
       cameraMovement: num === 1 ? 'Dynamic track shot following characters' : 'Medium two-shot with subtle push-in',
       bgmAndSfx: 'ភ្លេង Documentary ស្រទន់កក់ក្ដៅ + សំឡេងបរិយាកាសធម្មជាតិ',
     };

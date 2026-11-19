@@ -689,8 +689,11 @@ async function generateWithGemini({ apiKey, model, prompt }) {
     );
   }
 
-  const allowedModels = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-2.5-pro', 'gemini-3.8-flash', 'gemini-4-argon'];
-  const selectedModel = allowedModels.includes(model) ? model : 'gemini-2.5-flash';
+  const allowedModels = ['gemini-3.8-flash', 'gemini-2.0-flash', 'gemini-2.5-pro', 'gemini-1.5-flash'];
+  let selectedModel = (model || '').trim().replace(/^models\//, '');
+  if (!selectedModel || selectedModel === 'gemini-2.5-flash' || selectedModel.includes('2.5-flash') || !allowedModels.includes(selectedModel)) {
+    selectedModel = 'gemini-3.8-flash';
+  }
   const client = new GoogleGenAI({ apiKey: effectiveKey });
 
   const interaction = await client.interactions.create({

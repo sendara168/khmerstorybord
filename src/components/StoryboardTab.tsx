@@ -17,6 +17,7 @@ import {
   Image as ImageIcon,
   Video,
   Clock,
+  Link2,
 } from 'lucide-react';
 import type {
   StoryboardProject,
@@ -203,12 +204,14 @@ export const StoryboardTab: React.FC<StoryboardTabProps> = ({
 
       {/* Scene Cards */}
       <div className="scenes-list">
-        {filteredScenes.map((scene) => {
+        {filteredScenes.map((scene, idx) => {
           const isEditing = editingSceneNum === scene.sceneNumber;
           const sceneCode = String(scene.sceneNumber).padStart(2, '0');
+          const nextScene = filteredScenes[idx + 1];
 
           return (
-            <article key={scene.sceneNumber} className="scene-card">
+            <React.Fragment key={scene.sceneNumber}>
+              <article className="scene-card">
               <div className="scene-card-header">
                 <div className="scene-header-left">
                   <span className="scene-badge-number">Scene {sceneCode}</span>
@@ -450,7 +453,14 @@ export const StoryboardTab: React.FC<StoryboardTabProps> = ({
                 <div className="scene-card-body">
                   {/* Narrator Block */}
                   <div className="scene-narrator-box">
-                    <span className="box-micro-label">NARRATOR SCRIPT (KHMER)</span>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', flexWrap: 'wrap', marginBottom: '6px' }}>
+                      <span className="box-micro-label">NARRATOR SCRIPT (KHMER VOICEOVER)</span>
+                      {scene.sceneNumber > 1 && (
+                        <span className="narrator-bridge-badge" title="សាច់រឿងមានឃ្លាតភ្ជាប់ពីឈុតមុន">
+                          <Link2 size={11} /> តភ្ជាប់ពី Scene {String(scene.sceneNumber - 1).padStart(2, '0')}
+                        </span>
+                      )}
+                    </div>
                     <p className="scene-narrator-text">«{scene.narratorScriptKh}»</p>
                     {scene.characterDialogue?.trim() && (
                       <div className="scene-dialogue-pill">
@@ -553,6 +563,23 @@ export const StoryboardTab: React.FC<StoryboardTabProps> = ({
                 </div>
               )}
             </article>
+            {nextScene && (
+              <div
+                key={`flow-${scene.sceneNumber}`}
+                className="scene-flow-bridge"
+                title={`សាច់រឿងតភ្ជាប់រលូនពី Scene ${sceneCode} ទៅ Scene ${String(nextScene.sceneNumber).padStart(2, '0')}`}
+              >
+                <div className="scene-flow-line" />
+                <span className="scene-flow-pill">
+                  <Link2 size={12} />
+                  <span>
+                    តភ្ជាប់សាច់រឿងរលូន ➔ Scene {String(nextScene.sceneNumber).padStart(2, '0')} ({nextScene.sceneTitle.slice(0, 24)}...)
+                  </span>
+                </span>
+                <div className="scene-flow-line" />
+              </div>
+            )}
+            </React.Fragment>
           );
         })}
       </div>
