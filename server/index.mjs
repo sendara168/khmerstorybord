@@ -5,7 +5,12 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { GoogleGenAI } from '@google/genai';
-import { STORYBOARD_JSON_SCHEMA, buildGenerationPrompt } from './schema.mjs';
+import {
+  STORYBOARD_JSON_SCHEMA,
+  buildGenerationPrompt,
+  ensureCompleteNarrativeScenes,
+  STYLE_ANCHORS,
+} from './schema.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -297,6 +302,36 @@ function unwrapStoryboard(obj) {
   return obj;
 }
 
+function tryParseJsonCandidate(rawCandidate) {
+  if (!rawCandidate || !rawCandidate.trim()) return null;
+  const str = rawCandidate.trim();
+
+  // 1. Direct parse
+  try {
+    return JSON.parse(str);
+  } catch {}
+
+  // 2. Trailing commas
+  try {
+    const cleaned = str.replace(/,\s*([}\]])/g, '$1');
+    return JSON.parse(cleaned);
+  } catch {}
+
+  // 3. Sanitize control chars
+  try {
+    const sanitized = sanitizeJsonControlChars(str).replace(/,\s*([}\]])/g, '$1');
+    return JSON.parse(sanitized);
+  } catch {}
+
+  // 4. Auto-close truncated JSON
+  try {
+    const closed = autoCloseJson(sanitizeJsonControlChars(str));
+    return JSON.parse(closed);
+  } catch {}
+
+  return null;
+}
+
 function extractJsonFromText(rawText) {
   let text = String(rawText || '').trim();
   if (!text) {
@@ -308,56 +343,55 @@ function extractJsonFromText(rawText) {
   text = text.replace(/<thought>[\s\S]*?<\/thought>/gi, '').trim();
 
   // 1. Direct JSON parse
-  try {
-    const parsed = JSON.parse(text);
-    return unwrapStoryboard(parsed);
-  } catch {
-    // continue
+  const direct = tryParseJsonCandidate(text);
+  if (direct) {
+    return unwrapStoryboard(direct);
   }
 
   // 2. Extract from ```json ... ``` fenced block
   const fenceMatch = text.match(/```(?:json)?\s*([\s\S]*?)```/i);
-  let candidate = fenceMatch && fenceMatch[1] ? fenceMatch[1].trim() : text;
+  if (fenceMatch && fenceMatch[1]) {
+    const parsedFence = tryParseJsonCandidate(fenceMatch[1]);
+    if (parsedFence) {
+      return unwrapStoryboard(parsedFence);
+    }
+  }
 
   // 3. Find outermost { ... }
-  const firstBrace = candidate.indexOf('{');
-  const lastBrace = candidate.lastIndexOf('}');
+  const firstBrace = text.indexOf('{');
+  const lastBrace = text.lastIndexOf('}');
   if (firstBrace !== -1 && lastBrace > firstBrace) {
-    candidate = candidate.slice(firstBrace, lastBrace + 1);
+    const parsedObj = tryParseJsonCandidate(text.slice(firstBrace, lastBrace + 1));
+    if (parsedObj) {
+      return unwrapStoryboard(parsedObj);
+    }
   }
 
-  try {
-    const parsed = JSON.parse(candidate);
-    return unwrapStoryboard(parsed);
-  } catch {
-    // continue
+  // 4. Outermost array [ ... ]
+  const firstBracket = text.indexOf('[');
+  const lastBracket = text.lastIndexOf(']');
+  if (firstBracket !== -1 && lastBracket > firstBracket) {
+    const parsedArr = tryParseJsonCandidate(text.slice(firstBracket, lastBracket + 1));
+    if (parsedArr) {
+      return unwrapStoryboard(parsedArr);
+    }
   }
 
-  // 4. Trailing commas
-  try {
-    const cleaned = candidate.replace(/,\s*([}\]])/g, '$1');
-    const parsed = JSON.parse(cleaned);
-    return unwrapStoryboard(parsed);
-  } catch {
-    // continue
+  // 5. Regex scene-by-scene extractor fallback
+  const sceneRegex = /\{\s*"(?:sceneNumber|section|sceneTitle|narratorScriptKh)"[\s\S]*?\}(?=\s*[,\]\}]|\s*$)/g;
+  const matchedScenes = [];
+  let m;
+  while ((m = sceneRegex.exec(text)) !== null) {
+    const parsedScene = tryParseJsonCandidate(m[0]);
+    if (
+      parsedScene &&
+      (parsedScene.narratorScriptKh || parsedScene.sceneTitle || parsedScene.visualDescription)
+    ) {
+      matchedScenes.push(parsedScene);
+    }
   }
-
-  // 5. Sanitize control chars
-  try {
-    const sanitized = sanitizeJsonControlChars(candidate).replace(/,\s*([}\]])/g, '$1');
-    const parsed = JSON.parse(sanitized);
-    return unwrapStoryboard(parsed);
-  } catch {
-    // continue
-  }
-
-  // 6. Auto-close truncated JSON
-  try {
-    const closed = autoCloseJson(sanitizeJsonControlChars(candidate));
-    const parsed = JSON.parse(closed);
-    return unwrapStoryboard(parsed);
-  } catch {
-    // continue
+  if (matchedScenes.length > 0) {
+    return { scenes: matchedScenes };
   }
 
   throw new Error(
@@ -400,6 +434,21 @@ function normalizeProjectPayload(parsed, meta = {}) {
   }));
 
   const topicText = String(meta.topic || parsed.topic || parsed.videoTitle || 'ប្រធានបទថ្មី').trim();
+  const targetScenes = Number(meta.targetScenes) || Number(parsed.targetScenes) || normalizedScenes.length;
+  const characters = Array.isArray(parsed.characters) ? parsed.characters : [];
+  const styleAnchor =
+    STYLE_ANCHORS[meta.animationStyle || parsed.animationStyle || '2d-cartoon'] ||
+    STYLE_ANCHORS['2d-cartoon'];
+
+  const completeScenes = ensureCompleteNarrativeScenes(normalizedScenes, {
+    topic: topicText,
+    categoryLabelKh: meta.categoryLabelKh || parsed.categoryLabelKh || '',
+    targetScenes,
+    characters,
+    animationStyleLabel:
+      meta.animationStyleLabel || parsed.animationStyleLabel || '2D Cartoon Educational Animation',
+    styleAnchor,
+  });
 
   return {
     id: sanitizeId(parsed.id) || `sb-${Date.now()}`,
@@ -465,7 +514,7 @@ function normalizeProjectPayload(parsed, meta = {}) {
           keyPoints: Array.isArray(o.keyPoints) ? o.keyPoints.map(String) : [],
         }))
       : [],
-    scenes: normalizedScenes,
+    scenes: completeScenes,
     musicSuggestions: Array.isArray(parsed.musicSuggestions) ? parsed.musicSuggestions : [],
     thumbnail: parsed.thumbnail || {
       headlineKh: String(parsed.videoTitle || topicText),
@@ -609,7 +658,7 @@ async function generateWithOpenAICompatible({ provider, baseUrl, apiKey, model, 
         { role: 'user', content: prompt },
       ],
       temperature: 0.7,
-      max_tokens: 4096,
+      max_tokens: 8192,
     };
 
     // Use json_object response_format for providers that reliably support it
@@ -692,9 +741,15 @@ async function generateWithGemini({ apiKey, model, prompt }) {
     );
   }
 
-  const allowedModels = ['gemini-3.8-flash', 'gemini-2.0-flash', 'gemini-2.5-pro', 'gemini-1.5-flash'];
+  const allowedModels = ['gemini-3.8-flash', 'gemini-3.5-flash-lite', 'gemini-4-argon'];
   let selectedModel = (model || '').trim().replace(/^models\//, '');
-  if (!selectedModel || selectedModel === 'gemini-2.5-flash' || selectedModel.includes('2.5-flash') || !allowedModels.includes(selectedModel)) {
+  if (
+    !selectedModel ||
+    selectedModel.includes('2.5') ||
+    selectedModel.includes('2.0') ||
+    selectedModel.includes('1.5') ||
+    !allowedModels.includes(selectedModel)
+  ) {
     selectedModel = 'gemini-3.8-flash';
   }
   const client = new GoogleGenAI({ apiKey: effectiveKey });
@@ -939,6 +994,7 @@ app.post('/api/generate', async (req, res) => {
       topic,
       durationPreset,
       durationLabel,
+      targetScenes: promptInput.targetScenes,
       animationStyle,
       animationStyleLabel,
       narratorVoice,

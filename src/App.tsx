@@ -38,30 +38,46 @@ function loadInitialConfig(): AiProviderConfig {
     if (raw) {
       const parsed = JSON.parse(raw) as Partial<AiProviderConfig>;
       if (parsed.provider) {
+        let provider = parsed.provider;
+        const apiKey = (parsed.apiKey || '').trim();
+
+        // Auto-correct provider based on distinct key prefixes
+        if (apiKey.startsWith('AQ.') || apiKey.startsWith('AIza')) {
+          provider = 'gemini';
+        } else if (apiKey.startsWith('gsk_')) {
+          provider = 'groq';
+        } else if (apiKey.startsWith('sk-or-')) {
+          provider = 'openrouter';
+        }
+
         const preset =
-          AI_PROVIDER_PRESETS.find((p) => p.id === parsed.provider) ||
+          AI_PROVIDER_PRESETS.find((p) => p.id === provider) ||
           AI_PROVIDER_PRESETS[0];
-        let model = parsed.model || preset.defaultModel;
+        let model = (parsed.model || preset.defaultModel).trim().replace(/^models\//, '');
+
         // Automatically upgrade deprecated/rate-limited free model slug to openrouter/free
         if (
           model === 'google/gemma-3-27b-it:free' ||
-          (parsed.provider === 'openrouter' && model === 'google/gemma-4-31b-it:free')
+          (provider === 'openrouter' && (model.includes('gemma-4') || model.includes('gemma-3')))
         ) {
           model = 'openrouter/free';
         }
+
+        // Automatically upgrade deprecated Gemini models to the official current model
         if (
-          parsed.provider === 'gemini' &&
-          (model === 'gemini-2.5-flash' || model === 'gemini-4-argon' || !model)
+          provider === 'gemini' &&
+          (model.includes('2.5') || model.includes('2.0') || model.includes('1.5') || !model)
         ) {
           model = 'gemini-3.8-flash';
         }
+
         const updatedConfig: AiProviderConfig = {
           provider: preset.id,
-          apiKey: parsed.apiKey || '',
+          apiKey,
           model,
           baseUrl: parsed.baseUrl || preset.defaultBaseUrl,
         };
-        if (parsed.model !== model) {
+        if (parsed.model !== model || parsed.provider !== provider) {
           persistConfig(updatedConfig);
         }
         return updatedConfig;

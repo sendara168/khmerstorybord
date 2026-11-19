@@ -25,6 +25,7 @@ import type {
   StoryboardScene,
   StorySection,
 } from '../types/storyboard';
+import { ensureCompleteNarrativeScenes } from '../utils/narrativeEngine';
 import {
   buildKhmerSpeakingVideoPrompt,
   getCharacterImagePrompt,
@@ -156,6 +157,19 @@ export const StoryboardTab: React.FC<StoryboardTabProps> = ({
     setEditingSceneNum(currentLen + 1);
   };
 
+  const handleCompleteRemainingScenes = () => {
+    const target = project.targetScenes || Math.max(24, project.scenes.length);
+    const expanded = ensureCompleteNarrativeScenes(project.scenes, {
+      topic: project.topic,
+      categoryLabelKh: project.categoryLabelKh,
+      targetScenes: target,
+      characters: project.characters,
+      animationStyleLabel: project.animationStyleLabel,
+      styleAnchor: '',
+    });
+    onUpdateProject({ ...project, scenes: expanded });
+  };
+
   const duplicateScene = (sceneNumber: number) => {
     const idx = project.scenes.findIndex((s) => s.sceneNumber === sceneNumber);
     if (idx < 0) return;
@@ -251,6 +265,54 @@ export const StoryboardTab: React.FC<StoryboardTabProps> = ({
             </button>
           </div>
         </div>
+      </div>
+
+      {/* Narrative Completion Status & Scene Counter */}
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: 12,
+          padding: '8px 14px',
+          background: '#f8fafc',
+          border: '1px solid #e2e8f0',
+          borderRadius: 10,
+          marginBottom: 16,
+          fontSize: '0.83rem',
+          flexWrap: 'wrap',
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+          <span
+            style={{
+              fontWeight: 600,
+              color: '#065f46',
+              background: '#ecfdf5',
+              padding: '3px 10px',
+              borderRadius: 999,
+              border: '1px solid #a7f3d0',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 4,
+            }}
+          >
+            ✅ {project.scenes.length} ឈុតពេញលេញ
+          </span>
+          <span style={{ color: '#475569' }}>
+            ដំណើររឿង ៤ វគ្គ៖ ចាប់ផ្ដើម ➔ សាច់រឿងចម្បង ➔ មេរៀនសំខាន់ៗ ➔ សេចក្ដីសន្និដ្ឋាន & បញ្ចប់ (ចប់សេចក្តី ១០០%)
+          </span>
+        </div>
+        {project.targetScenes && project.scenes.length < project.targetScenes && (
+          <button
+            type="button"
+            className="btn-primary btn-sm"
+            style={{ fontSize: '0.78rem', padding: '4px 12px' }}
+            onClick={handleCompleteRemainingScenes}
+          >
+            ⚡ បំពេញឱ្យគ្រប់ {project.targetScenes} ឈុត & ចប់សេចក្តី
+          </button>
+        )}
       </div>
 
       {/* Scene Cards */}

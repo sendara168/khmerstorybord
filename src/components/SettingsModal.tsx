@@ -344,11 +344,24 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           <button
             className="btn-primary"
             onClick={() => {
+              let finalProvider = provider;
+              if (detectedProvider && detectedProvider !== provider && provider !== 'ollama') {
+                finalProvider = detectedProvider;
+              }
+              const finalPreset =
+                AI_PROVIDER_PRESETS.find((p) => p.id === finalProvider) || preset;
+              let finalModel = model.trim().replace(/^models\//, '');
+              if (
+                finalProvider === 'gemini' &&
+                (finalModel.includes('2.5') || finalModel.includes('2.0') || finalModel.includes('1.5') || !finalModel)
+              ) {
+                finalModel = 'gemini-3.8-flash';
+              }
               onSave({
-                provider,
+                provider: finalProvider,
                 apiKey: trimmedKey,
-                model: model.trim() || preset.defaultModel,
-                baseUrl: baseUrl.trim() || preset.defaultBaseUrl,
+                model: finalModel || finalPreset.defaultModel,
+                baseUrl: finalProvider === provider ? (baseUrl.trim() || preset.defaultBaseUrl) : finalPreset.defaultBaseUrl,
               });
               onClose();
             }}

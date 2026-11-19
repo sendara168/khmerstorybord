@@ -9,6 +9,7 @@ import type {
   StoryboardScene,
   TopicCategory,
 } from '../types/storyboard';
+import { computeStoryMilestones, ensureCompleteNarrativeScenes } from '../utils/narrativeEngine';
 
 export interface ProviderPreset {
   id: AiProviderId;
@@ -74,7 +75,7 @@ export const AI_PROVIDER_PRESETS: ProviderPreset[] = [
     requiresKey: true,
     defaultBaseUrl: '',
     defaultModel: 'gemini-3.8-flash',
-    suggestedModels: ['gemini-3.8-flash', 'gemini-2.0-flash', 'gemini-1.5-flash'],
+    suggestedModels: ['gemini-3.8-flash', 'gemini-3.5-flash-lite', 'gemini-4-argon'],
     keyPlaceholder: 'AQ.... ឬ AIzaSy...',
     docsUrl: 'https://aistudio.google.com/apikey',
     descriptionKh: 'ម៉ូដែល Google Gemini 3.8 Flash ផ្លូវការ លឿន និងសរសេរភាសាខ្មែរច្បាស់រលូនបំផុត។',
@@ -1022,6 +1023,7 @@ export function buildMasterPrompt(req?: Partial<GenerationRequest>): string {
   const topicText = req?.topic?.trim() || '[បញ្ចូលប្រធានបទ]';
   const categoryText = req?.categoryLabelKh || 'Business & Money – មុខជំនួញ និងហិរញ្ញវត្ថុ';
   const targetScenes = req?.targetScenes || durationObj.defaultScenes;
+  const milestones = computeStoryMilestones(targetScenes);
   const narratorVoice = req?.narratorVoice || 'Khmer Male Voice';
   const hasTopic = Boolean(req?.topic?.trim());
 
@@ -1035,7 +1037,7 @@ export function buildMasterPrompt(req?: Partial<GenerationRequest>): string {
 - Topic: ${topicText}
 - Video Title: [បង្កើតចំណងជើងគួរឱ្យចាប់អារម្មណ៍ជាភាសាខ្មែរ]
 - Language: Khmer
-- Video Duration: ${durationObj.labelEn} (${targetScenes} ឈុត / 5–10 វិនាទីក្នុងមួយឈុត)
+- Video Duration: ${durationObj.labelEn} (កំណត់ចំនួនពិតប្រាកដ៖ ${milestones.targetScenes} ឈុត / 5–10 វិនាទីក្នុងមួយឈុត)
 - Video Format: 16:9 (1920 × 1080)
 - Animation Style: ${styleObj.labelEn}
 - Presenter & Cast Setup: ${presenterObj.labelEn} — ${presenterObj.labelKh} (${presenterObj.castCount})
@@ -1047,6 +1049,14 @@ export function buildMasterPrompt(req?: Partial<GenerationRequest>): string {
 - Storytelling: Educational, Dynamic Real-world Action, Practical Demonstrations${
     req?.customNotes?.trim() ? `\n- Additional Notes: ${req.customNotes.trim()}` : ''
   }
+
+0. លក្ខខណ្ឌកំហិតដាច់ខាត៖ ចំនួនឈុតពិតប្រាកដ និងចប់សេចក្តី ១០០% (CRITICAL MANDATE)
+- ត្រូវតែបង្កើតឱ្យបានគ្រប់ចំនួន ${milestones.targetScenes} ឈុតពិតប្រាកដ គ្មានការកាត់បន្ថយ ឬឈប់ពាក់កណ្តាលទីឡើយ។
+- ការបែងចែកវគ្គនៃឈុតទាំង ${milestones.targetScenes}៖
+  * Scenes 1 ដល់ ${milestones.introCount}៖ INTRODUCTION (The Hook, បញ្ហាជាក់ស្តែង, និងណែនាំប្រធានបទ)
+  * Scenes ${milestones.introCount + 1} ដល់ ${milestones.mainEnd}៖ MAIN STORY (ឫសគល់បញ្ហា, ដំណោះស្រាយជាជំហានៗ, ឧទាហរណ៍ជាក់ស្តែងក្នុងសង្គមកម្ពុជា)
+  * Scenes ${milestones.mainEnd + 1} ដល់ ${milestones.lessonsEnd}៖ IMPORTANT LESSONS (ក្បួនអនុវត្តមាស, ការផ្លាស់ប្តូរផ្នត់គំនិត, មេរៀនសំខាន់ៗ)
+  * Scenes ${milestones.lessonsEnd + 1} ដល់ ${milestones.targetScenes}៖ CONCLUSION (សេចក្តីបញ្ចប់ពេញលេញ, សារដាស់តឿនចិត្ត, និងការអញ្ជើញ Like/Share មិនដាច់កង់)
 
 2. របៀបសរសេរ Script & ការពន្យល់ខ្លឹមសារឱ្យក្បោះក្បាយពេញលេញ (COMPREHENSIVE EDUCATIONAL DEPTH)
 គ្រប់ Topic ទាំងអស់ ត្រូវតែពន្យល់ឱ្យបានស៊ីជម្រៅ ក្បោះក្បាយ ងាយយល់ និងមានតម្លៃចំណេះដឹងពិតប្រាកដ មិនមែនសរសេរត្រឹមតែពាក្យស្លោក ឬចំណុចត្រួសៗឡើយ៖
@@ -1163,6 +1173,7 @@ export function buildJsonImportPrompt(req: GenerationRequest): string {
   const actionObj =
     SCENE_ACTION_DYNAMICS.find((a) => a.id === req.actionDynamic) || SCENE_ACTION_DYNAMICS[0];
   const topicText = req.topic.trim() || '៧ វិធីគ្រប់គ្រងលុយឱ្យមានប្រសិទ្ធភាព';
+  const milestones = computeStoryMilestones(req.targetScenes);
 
   return `You are an expert Khmer Educational Storytelling Animation director, documentary researcher, scriptwriter, and narrator.
 Create a complete, production-ready Khmer Educational Animation storyboard for:
@@ -1170,13 +1181,26 @@ Create a complete, production-ready Khmer Educational Animation storyboard for:
 - Topic: ${topicText}
 - Presenter & Cast Setup: ${presenterObj.labelEn} (${presenterObj.labelKh} — ${presenterObj.castCount})
 - Scene Action Dynamics: ${actionObj.labelEn} (${actionObj.labelKh})
-- Duration: ${durationObj.labelEn} (${req.targetScenes} sequential scenes, 6–10 seconds per scene)
+- Exact Scene Count Required: ${milestones.targetScenes} sequential scenes (from Scene 1 to Scene ${milestones.targetScenes}, 6–10 seconds per scene)
+- Duration: ${durationObj.labelEn}
 - Animation Style: ${styleObj.labelEn}
 - Visual Anchor (include in every aiImagePromptEn): "${styleObj.promptAnchor}"
 - Narrator: ${req.narratorVoice} (Natural, Clear, Professional, Engaging Khmer)
 ${req.customNotes?.trim() ? `- Additional Notes: ${req.customNotes.trim()}` : ''}
 
 STRICT PRODUCTION RULES:
+0. CRITICAL MANDATORY REQUIREMENT: EXACT SCENE COUNT & COMPLETE CLOSURE (ហាមកាត់បន្ថយ ឬឈប់មុនដាច់ខាត):
+   - You MUST generate EXACTLY ${milestones.targetScenes} complete scenes in the "scenes" array (strictly numbered 1 to ${milestones.targetScenes}).
+   - DO NOT stop early. DO NOT generate fewer than ${milestones.targetScenes} scenes. DO NOT skip scene numbers.
+   - EXACT STORY PROGRESSION & MILESTONES (បែងចែកវគ្គ និងបញ្ចប់សេចក្តី ១០០%):
+     * Scenes 1 to ${milestones.introCount}: INTRODUCTION & HOOK (សំណួរចាក់ដោត បញ្ហាជាក់ស្តែង និងណែនាំប្រធានបទ)
+     * Scenes ${milestones.introCount + 1} to ${milestones.mainEnd}: MAIN STORY & PRACTICAL METHODS (ឫសគល់បញ្ហា ដំណោះស្រាយជាជំហានៗ ឧទាហរណ៍ជាក់ស្តែងក្នុងសង្គមកម្ពុជា)
+     * Scenes ${milestones.mainEnd + 1} to ${milestones.lessonsEnd}: IMPORTANT LESSONS (សង្ខេបក្បួនមាស ការផ្លាស់ប្តូរផ្នត់គំនិត និងមេរៀនសំខាន់ៗ)
+     * Scenes ${milestones.lessonsEnd + 1} to ${milestones.targetScenes}: CONCLUSION & COMPLETE OUTRO (សេចក្តីបញ្ចប់ពេញលេញ ចប់សេចក្តី សារដាស់តឿនចិត្ត និងការអញ្ជើញ Like/Share)
+   - TO PREVENT TOKEN TRUNCATION & ENSURE ALL ${milestones.targetScenes} SCENES FIT WITHIN THE OUTPUT:
+     * Keep "aiImagePromptEn" and "aiVideoPromptEn" dense, sharp, and concise (1–2 sentences).
+     * Keep "visualDescription" and "characterAction" direct and active (no fluff).
+     * Focus maximum richness on "narratorScriptKh" (2–3 substantive spoken Khmer sentences with smooth narrative bridges).
 1. MULTI-CHARACTER CAST SETUP (${presenterObj.labelEn}):
    - In "characters", define multiple distinct Cambodian (Khmer) characters (${presenterObj.castHintKh}).
    - Give each character a distinct role (e.g. Team Leader, Technical Specialist, Practitioner, Curious Learner), distinct natural Cambodian appearance, consistent everyday outfits, and distinct personalities.
@@ -1291,7 +1315,7 @@ STRICT PRODUCTION RULES:
 }
 \`\`\`
 
-Generate ALL ${req.targetScenes} scenes completely in the "scenes" array now.`;
+Generate ALL ${milestones.targetScenes} scenes completely in the "scenes" array right now (strictly numbered from scene 1 to scene ${milestones.targetScenes}), reaching a complete, satisfying ending and conclusion. Do NOT stop early.`;
 }
 
 export function buildOfflineDraftProject(req: GenerationRequest): StoryboardProject {
@@ -1501,7 +1525,14 @@ export function buildOfflineDraftProject(req: GenerationRequest): StoryboardProj
         keyPoints: ['សារលើកទឹកចិត្ត', 'Like, Share, Subscribe'],
       },
     ],
-    scenes,
+    scenes: ensureCompleteNarrativeScenes(scenes, {
+      topic: topicText,
+      categoryLabelKh: req.categoryLabelKh,
+      targetScenes: count,
+      characters,
+      animationStyleLabel: styleObj.labelEn,
+      styleAnchor: styleObj.promptAnchor,
+    }),
     musicSuggestions: [
       {
         section: 'វីដេអូទាំងមូល',

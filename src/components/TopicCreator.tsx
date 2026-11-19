@@ -850,11 +850,13 @@ export const TopicCreator: React.FC<TopicCreatorProps> = ({
             <div>
               <strong>មានបញ្ហាក្នុងការបង្កើត៖</strong> {errorMessage}
             </div>
-            {aiConfig.provider !== 'gemini' &&
+
+            {/* Smart Recovery Action 1: Gemini Key entered in OpenAI or another provider */}
+            {(aiConfig.provider !== 'gemini' &&
               (aiConfig.apiKey?.trim().startsWith('AQ.') ||
                 aiConfig.apiKey?.trim().startsWith('AIza') ||
                 errorMessage.includes('AQ.') ||
-                (errorMessage.includes('401') && aiConfig.apiKey?.trim().startsWith('AQ.'))) &&
+                errorMessage.includes('Incorrect API key provided: AQ.'))) &&
               onUpdateAiConfig && (
                 <div
                   style={{
@@ -889,7 +891,86 @@ export const TopicCreator: React.FC<TopicCreatorProps> = ({
                   </button>
                 </div>
               )}
-            <div style={{ marginTop: 8, display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+
+            {/* Smart Recovery Action 2: Gemini 404 / Deprecated model */}
+            {(errorMessage.includes('404') ||
+              errorMessage.includes('gemini-2.5-flash') ||
+              errorMessage.includes('no longer available') ||
+              errorMessage.includes('update your code to use')) &&
+              onUpdateAiConfig && (
+                <div
+                  style={{
+                    marginTop: 10,
+                    padding: '10px 14px',
+                    background: '#fef3c7',
+                    border: '1px solid #fcd34d',
+                    borderRadius: 8,
+                    color: '#92400e',
+                  }}
+                >
+                  <div style={{ fontWeight: 700, marginBottom: 4 }}>
+                    🔄 ម៉ូដែលចាស់លែងដំណើរការ៖ Google បានប្ដូរទៅប្រើ <code>gemini-3.8-flash</code>!
+                  </div>
+                  <div style={{ fontSize: '0.85rem', marginBottom: 8 }}>
+                    សូមចុចប៊ូតុងខាងក្រោមដើម្បីធ្វើបច្ចុប្បន្នភាពទៅម៉ូដែលចុងក្រោយបង្អស់ដោយស្វ័យប្រវត្តិ៖
+                  </div>
+                  <button
+                    type="button"
+                    className="btn-primary"
+                    style={{ fontSize: '0.84rem', padding: '6px 16px' }}
+                    onClick={() => {
+                      onUpdateAiConfig({
+                        ...aiConfig,
+                        provider: 'gemini',
+                        model: 'gemini-3.8-flash',
+                      });
+                    }}
+                  >
+                    🚀 ប្ដូរទៅប្រើ Gemini 3.8 Flash ផ្លូវការភ្លាមៗ
+                  </button>
+                </div>
+              )}
+
+            {/* Smart Recovery Action 3: OpenRouter 429 Rate Limit */}
+            {(errorMessage.includes('429') || errorMessage.includes('Rate Limit')) && (
+              <div
+                style={{
+                  marginTop: 10,
+                  padding: '10px 14px',
+                  background: '#fef3c7',
+                  border: '1px solid #fcd34d',
+                  borderRadius: 8,
+                  color: '#92400e',
+                }}
+              >
+                <div style={{ fontWeight: 700, marginBottom: 4 }}>
+                  ⚡ OpenRouter ជាប់ Rate Limit (កូតាឥតគិតថ្លៃកំពុងមមាញឹក)
+                </div>
+                <div style={{ fontSize: '0.85rem', marginBottom: 8 }}>
+                  អ្នកអាចប្ដូរទៅប្រើ <strong>Google Gemini API</strong> (ឥតគិតថ្លៃ លឿនបំផុត & មិនជាប់កូតា) ឬបង្កើតជា <strong>Offline Draft</strong> ភ្លាមៗ៖
+                </div>
+                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                  <button
+                    type="button"
+                    className="btn-primary"
+                    style={{ fontSize: '0.84rem', padding: '6px 14px' }}
+                    onClick={onOpenSettings}
+                  >
+                    🔑 ដាក់ Gemini API Key (ទទួលឥតគិតថ្លៃ)
+                  </button>
+                  <button
+                    type="button"
+                    className="btn-secondary"
+                    style={{ fontSize: '0.84rem', padding: '6px 14px', background: '#fff' }}
+                    onClick={() => onCreateOfflineDraft(currentRequest)}
+                  >
+                    📄 បង្កើតជា Offline Draft ភ្លាមៗ (មិនបាច់ចាំ AI)
+                  </button>
+                </div>
+              </div>
+            )}
+
+            <div style={{ marginTop: 10, display: 'flex', gap: 8, flexWrap: 'wrap' }}>
               <button
                 type="button"
                 className="btn-secondary"
@@ -905,6 +986,14 @@ export const TopicCreator: React.FC<TopicCreatorProps> = ({
                 onClick={() => setShowWebBridge(true)}
               >
                 📋 ប្រើ ChatGPT / Gemini Web (មិនបាច់ Key)
+              </button>
+              <button
+                type="button"
+                className="btn-secondary"
+                style={{ fontSize: '0.82rem', padding: '5px 12px', background: '#ffffff', borderColor: '#fca5a5' }}
+                onClick={() => onCreateOfflineDraft(currentRequest)}
+              >
+                📄 បង្កើតជា Offline Draft
               </button>
             </div>
           </div>

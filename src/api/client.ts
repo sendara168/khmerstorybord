@@ -8,6 +8,7 @@ import type {
 import { ANIMATION_STYLES, DURATION_PRESETS, buildJsonImportPrompt } from '../data/topics';
 import { BUNDLED_PROJECTS } from '../data/bundledProjects';
 import { buildSyncPromptsForWeb, getCharacterImagePrompt } from '../utils/exporters';
+import { ensureCompleteNarrativeScenes } from '../utils/narrativeEngine';
 
 export interface HealthResponse {
   ok: boolean;
@@ -155,6 +156,36 @@ function autoCloseJson(jsonStr: string): string {
   return str;
 }
 
+function tryParseJsonCandidate(rawCandidate: string): any {
+  if (!rawCandidate || !rawCandidate.trim()) return null;
+  const str = rawCandidate.trim();
+
+  // 1. Direct parse
+  try {
+    return JSON.parse(str);
+  } catch {}
+
+  // 2. Trailing commas
+  try {
+    const cleaned = str.replace(/,\s*([}\]])/g, '$1');
+    return JSON.parse(cleaned);
+  } catch {}
+
+  // 3. Sanitize control chars
+  try {
+    const sanitized = sanitizeJsonControlChars(str).replace(/,\s*([}\]])/g, '$1');
+    return JSON.parse(sanitized);
+  } catch {}
+
+  // 4. Auto-close truncated JSON
+  try {
+    const closed = autoCloseJson(sanitizeJsonControlChars(str));
+    return JSON.parse(closed);
+  } catch {}
+
+  return null;
+}
+
 function unwrapStoryboard(obj: any): Record<string, any> {
   if (!obj || typeof obj !== 'object') {
     throw new Error('ទិន្នន័យ JSON មិនត្រឹមត្រូវ។');
@@ -178,57 +209,58 @@ function extractJsonInBrowser(rawText: string): Record<string, any> {
   text = text.replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
   text = text.replace(/<thought>[\s\S]*?<\/thought>/gi, '').trim();
 
-  // Attempt 1: Direct JSON parse on clean text
-  try {
-    const parsed = JSON.parse(text);
-    return unwrapStoryboard(parsed);
-  } catch {
-    // continue
+  // Attempt 1: Direct parse
+  const direct = tryParseJsonCandidate(text);
+  if (direct) {
+    return unwrapStoryboard(direct);
   }
 
-  // Attempt 2: Extract from markdown code fences ```json ... ```
+  // Attempt 2: Extract from markdown code fences ```json ... ``` or ``` ... ```
   const fence = text.match(/```(?:json)?\s*([\s\S]*?)```/i);
-  let candidate = fence && fence[1] ? fence[1].trim() : text;
-
-  // Extract from first { to last }
-  const first = candidate.indexOf('{');
-  const last = candidate.lastIndexOf('}');
-  if (first !== -1 && last > first) {
-    candidate = candidate.slice(first, last + 1);
+  if (fence && fence[1]) {
+    const parsedFence = tryParseJsonCandidate(fence[1]);
+    if (parsedFence) {
+      return unwrapStoryboard(parsedFence);
+    }
   }
 
-  try {
-    const parsed = JSON.parse(candidate);
-    return unwrapStoryboard(parsed);
-  } catch {
-    // continue
+  // Attempt 3: Outermost object { ... }
+  const firstBrace = text.indexOf('{');
+  const lastBrace = text.lastIndexOf('}');
+  if (firstBrace !== -1 && lastBrace > firstBrace) {
+    const candidateObj = text.slice(firstBrace, lastBrace + 1);
+    const parsedObj = tryParseJsonCandidate(candidateObj);
+    if (parsedObj) {
+      return unwrapStoryboard(parsedObj);
+    }
   }
 
-  // Attempt 3: Trailing commas cleanup
-  try {
-    const cleaned = candidate.replace(/,\s*([}\]])/g, '$1');
-    const parsed = JSON.parse(cleaned);
-    return unwrapStoryboard(parsed);
-  } catch {
-    // continue
+  // Attempt 4: Outermost array [ ... ] (if AI returns an array of scenes directly)
+  const firstBracket = text.indexOf('[');
+  const lastBracket = text.lastIndexOf(']');
+  if (firstBracket !== -1 && lastBracket > firstBracket) {
+    const candidateArr = text.slice(firstBracket, lastBracket + 1);
+    const parsedArr = tryParseJsonCandidate(candidateArr);
+    if (parsedArr) {
+      return unwrapStoryboard(parsedArr);
+    }
   }
 
-  // Attempt 4: Sanitize control chars (literal newlines/tabs inside quotes) + trailing commas
-  try {
-    const sanitized = sanitizeJsonControlChars(candidate).replace(/,\s*([}\]])/g, '$1');
-    const parsed = JSON.parse(sanitized);
-    return unwrapStoryboard(parsed);
-  } catch {
-    // continue
+  // Attempt 5: Regex scene-by-scene extractor fallback (resilient to severe truncation or malformed wrapper)
+  const sceneRegex = /\{\s*"(?:sceneNumber|section|sceneTitle|narratorScriptKh)"[\s\S]*?\}(?=\s*[,\]\}]|\s*$)/g;
+  const matchedScenes: any[] = [];
+  let m: RegExpExecArray | null;
+  while ((m = sceneRegex.exec(text)) !== null) {
+    const parsedScene = tryParseJsonCandidate(m[0]);
+    if (
+      parsedScene &&
+      (parsedScene.narratorScriptKh || parsedScene.sceneTitle || parsedScene.visualDescription)
+    ) {
+      matchedScenes.push(parsedScene);
+    }
   }
-
-  // Attempt 5: Auto-close truncated JSON (if model ran out of tokens)
-  try {
-    const closed = autoCloseJson(sanitizeJsonControlChars(candidate));
-    const parsed = JSON.parse(closed);
-    return unwrapStoryboard(parsed);
-  } catch {
-    // continue
+  if (matchedScenes.length > 0) {
+    return { scenes: matchedScenes };
   }
 
   throw new Error('មិនអាចអានទម្រង់ JSON បានទេ។ សូមពិនិត្យមើលចម្លើយរបស់ AI ម្ដងទៀត។');
@@ -282,7 +314,7 @@ async function callOpenRouterInBrowser(prompt: string, config: AiProviderConfig)
         { role: 'user', content: prompt },
       ],
       temperature: 0.6,
-      max_tokens: 4096,
+      max_tokens: 8192,
     };
 
     let res: Response;
@@ -386,7 +418,7 @@ async function callGroqInBrowser(prompt: string, config: AiProviderConfig): Prom
         ],
         response_format: { type: 'json_object' },
         temperature: 0.6,
-        max_tokens: 6000,
+        max_tokens: 8192,
       }),
     });
   } catch (err) {
@@ -436,7 +468,7 @@ async function callOpenAICompatibleInBrowser(
         ],
         response_format: { type: 'json_object' },
         temperature: 0.6,
-        max_tokens: 6000,
+        max_tokens: 8192,
       }),
     });
   } catch (err) {
@@ -464,9 +496,9 @@ async function callGeminiInBrowser(prompt: string, config: AiProviderConfig): Pr
 
   let requestedModel = (config.model || 'gemini-3.8-flash').trim().replace(/^models\//, '');
   if (
-    requestedModel === 'gemini-2.5-flash' ||
-    requestedModel.includes('2.5-flash') ||
-    requestedModel === 'gemini-4-argon' ||
+    requestedModel.includes('2.5') ||
+    requestedModel.includes('2.0') ||
+    requestedModel.includes('1.5') ||
     !requestedModel
   ) {
     requestedModel = 'gemini-3.8-flash';
@@ -492,10 +524,10 @@ async function callGeminiInBrowser(prompt: string, config: AiProviderConfig): Pr
   };
 
   const candidateModels = [
-    requestedModel,
     'gemini-3.8-flash',
-    'gemini-2.0-flash',
-    'gemini-1.5-flash',
+    'gemini-3.5-flash-lite',
+    'gemini-4-argon',
+    requestedModel,
   ].filter((m, idx, arr) => Boolean(m) && arr.indexOf(m) === idx);
 
   let lastError: Error | null = null;
@@ -603,6 +635,37 @@ async function callOllamaInBrowser(prompt: string, config: AiProviderConfig): Pr
 }
 
 async function callAiProviderInBrowser(prompt: string, config: AiProviderConfig): Promise<string> {
+  const key = (config.apiKey || '').trim();
+
+  // Smart Provider Auto-Correction:
+  // If key prefix unambiguously belongs to a different provider, automatically route to the right provider
+  if (config.provider !== 'gemini' && (key.startsWith('AQ.') || key.startsWith('AIza'))) {
+    console.warn(`[Auto-Route] API Key starts with '${key.slice(0, 4)}', switching from ${config.provider} to Gemini API`);
+    return callGeminiInBrowser(prompt, {
+      ...config,
+      provider: 'gemini',
+      model: 'gemini-3.8-flash',
+    });
+  }
+
+  if (config.provider !== 'groq' && key.startsWith('gsk_')) {
+    console.warn(`[Auto-Route] API Key starts with 'gsk_', switching from ${config.provider} to Groq Cloud`);
+    return callGroqInBrowser(prompt, {
+      ...config,
+      provider: 'groq',
+      model: 'llama-3.3-70b-versatile',
+    });
+  }
+
+  if (config.provider !== 'openrouter' && key.startsWith('sk-or-')) {
+    console.warn(`[Auto-Route] API Key starts with 'sk-or-', switching from ${config.provider} to OpenRouter`);
+    return callOpenRouterInBrowser(prompt, {
+      ...config,
+      provider: 'openrouter',
+      model: 'openrouter/free',
+    });
+  }
+
   switch (config.provider) {
     case 'openrouter':
       return callOpenRouterInBrowser(prompt, config);
@@ -656,6 +719,7 @@ function normalizeParsedInBrowser(
     language: 'Khmer',
     durationPreset: req.durationPreset || '5-10',
     durationLabel: durationObj.labelKh,
+    targetScenes: req.targetScenes || rawScenes.length,
     videoFormat: '16:9',
     resolution: '1920 × 1080',
     animationStyle: req.animationStyle || '2d-cartoon',
@@ -691,22 +755,32 @@ function normalizeParsedInBrowser(
           keyPoints: Array.isArray(o.keyPoints) ? o.keyPoints.map(String) : [],
         }))
       : [],
-    scenes: rawScenes.map((s: any, idx: number) => ({
-      sceneNumber: idx + 1,
-      section: normalizeSection(s.section),
-      sceneTitle: String(s.sceneTitle || s.title || `ឈុតទី ${idx + 1}`),
-      durationSeconds: Math.max(4, Math.min(20, Number(s.durationSeconds || s.duration) || 8)),
-      visualDescription: String(s.visualDescription || ''),
-      character: String(s.character || ''),
-      characterAction: String(s.characterAction || ''),
-      narratorScriptKh: String(s.narratorScriptKh || s.narratorScript || ''),
-      characterDialogue: String(s.characterDialogue || ''),
-      onScreenText: String(s.onScreenText || ''),
-      aiImagePromptEn: String(s.aiImagePromptEn || s.aiImagePrompt || ''),
-      aiVideoPromptEn: String(s.aiVideoPromptEn || s.aiVideoPrompt || ''),
-      cameraMovement: String(s.cameraMovement || 'Gentle slow zoom in'),
-      bgmAndSfx: String(s.bgmAndSfx || 'Warm documentary background music'),
-    })),
+    scenes: ensureCompleteNarrativeScenes(
+      rawScenes.map((s: any, idx: number) => ({
+        sceneNumber: idx + 1,
+        section: normalizeSection(s.section),
+        sceneTitle: String(s.sceneTitle || s.title || `ឈុតទី ${idx + 1}`),
+        durationSeconds: Math.max(4, Math.min(20, Number(s.durationSeconds || s.duration) || 8)),
+        visualDescription: String(s.visualDescription || ''),
+        character: String(s.character || ''),
+        characterAction: String(s.characterAction || ''),
+        narratorScriptKh: String(s.narratorScriptKh || s.narratorScript || ''),
+        characterDialogue: String(s.characterDialogue || ''),
+        onScreenText: String(s.onScreenText || ''),
+        aiImagePromptEn: String(s.aiImagePromptEn || s.aiImagePrompt || ''),
+        aiVideoPromptEn: String(s.aiVideoPromptEn || s.aiVideoPrompt || ''),
+        cameraMovement: String(s.cameraMovement || 'Gentle slow zoom in'),
+        bgmAndSfx: String(s.bgmAndSfx || 'Warm documentary background music'),
+      })),
+      {
+        topic: topicText,
+        categoryLabelKh: req.categoryLabelKh,
+        targetScenes: req.targetScenes || rawScenes.length,
+        characters: Array.isArray(parsed.characters) ? parsed.characters : [],
+        animationStyleLabel: styleObj.labelEn,
+        styleAnchor: styleObj.promptAnchor,
+      }
+    ),
     musicSuggestions: Array.isArray(parsed.musicSuggestions) ? parsed.musicSuggestions : [],
     thumbnail: parsed.thumbnail || {
       headlineKh: String(parsed.videoTitle || topicText),

@@ -107,6 +107,7 @@ export interface StoryboardProject {
   language: string;
   durationPreset: DurationPresetId;
   durationLabel: string;
+  targetScenes?: number;
   videoFormat: string;
   resolution: string;
   animationStyle: AnimationStyleId;
