@@ -18,6 +18,7 @@ import {
   Video,
   Clock,
   Link2,
+  Mic,
 } from 'lucide-react';
 import type {
   StoryboardProject,
@@ -451,23 +452,60 @@ export const StoryboardTab: React.FC<StoryboardTabProps> = ({
                 </div>
               ) : (
                 <div className="scene-card-body">
-                  {/* Narrator Block */}
-                  <div className="scene-narrator-box">
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', flexWrap: 'wrap', marginBottom: '6px' }}>
-                      <span className="box-micro-label">NARRATOR SCRIPT (KHMER VOICEOVER)</span>
-                      {scene.sceneNumber > 1 && (
-                        <span className="narrator-bridge-badge" title="សាច់រឿងមានឃ្លាតភ្ជាប់ពីឈុតមុន">
-                          <Link2 size={11} /> តភ្ជាប់ពី Scene {String(scene.sceneNumber - 1).padStart(2, '0')}
+                  {/* Form សម្រាប់ Copy Script សម្រាប់ Voice Over ខាងក្រៅ */}
+                  <div className="external-vo-form">
+                    <div className="external-vo-header">
+                      <div className="external-vo-title-group">
+                        <span className="external-vo-badge-tag">
+                          <Mic size={13} /> SCRIPT សម្រាប់ VOICE OVER ខាងក្រៅ
                         </span>
+                        {scene.sceneNumber > 1 && (
+                          <span className="narrator-bridge-badge" title="សាច់រឿងមានឃ្លាតភ្ជាប់ពីឈុតមុន">
+                            <Link2 size={11} /> តភ្ជាប់ពី Scene {String(scene.sceneNumber - 1).padStart(2, '0')}
+                          </span>
+                        )}
+                        <span className="vo-spec-tag">⏱️ ~{scene.durationSeconds}s</span>
+                        <span className="vo-spec-tag">
+                          📝 ~{scene.narratorScriptKh ? Math.max(scene.narratorScriptKh.trim().split(/\s+/).filter(Boolean).length, Math.round(scene.narratorScriptKh.trim().length / 4.5)) : 0} ពាក្យ
+                        </span>
+                      </div>
+
+                      <button
+                        className={`btn-copy-vo ${copiedKey === `vo-${scene.sceneNumber}` ? 'copied' : ''}`}
+                        onClick={() =>
+                          copyPrompt(`vo-${scene.sceneNumber}`, scene.narratorScriptKh)
+                        }
+                        title="ចម្លងអត្ថបទនេះយកទៅដាក់ក្នុង CapCut, ElevenLabs ឬអានថតសំឡេង"
+                      >
+                        {copiedKey === `vo-${scene.sceneNumber}` ? (
+                          <>
+                            <Check size={13} />
+                            <span>បានចម្លង Script!</span>
+                          </>
+                        ) : (
+                          <>
+                            <Copy size={13} />
+                            <span>ចម្លង Script Voice Over</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
+
+                    <div className="external-vo-body">
+                      <p className="scene-narrator-text">«{scene.narratorScriptKh}»</p>
+                      {scene.characterDialogue?.trim() && (
+                        <div className="scene-dialogue-pill">
+                          <MessageSquare size={13} />
+                          <span>សន្ទនាតួអង្គ៖ {scene.characterDialogue}</span>
+                        </div>
                       )}
                     </div>
-                    <p className="scene-narrator-text">«{scene.narratorScriptKh}»</p>
-                    {scene.characterDialogue?.trim() && (
-                      <div className="scene-dialogue-pill">
-                        <MessageSquare size={13} />
-                        <span>{scene.characterDialogue}</span>
-                      </div>
-                    )}
+
+                    <div className="external-vo-footer">
+                      <span className="vo-hint-text">
+                        💡 <strong>គន្លឹះ៖</strong> ចម្លង Script នេះយកទៅដាក់ក្នុង CapCut / ElevenLabs / AI Voice ឬអានថតសំឡេងខាងក្រៅ រួចយកមកកាត់តពីលើវីដេអូ AI Action។
+                      </span>
+                    </div>
                   </div>
 
                   {/* Visual & Metadata */}
@@ -534,7 +572,7 @@ export const StoryboardTab: React.FC<StoryboardTabProps> = ({
                     <div className="prompt-dark-box video-box">
                       <div className="prompt-dark-head">
                         <span>
-                          <Video size={12} /> AI VIDEO PROMPT (និយាយភាសាខ្មែរ)
+                          <Video size={12} /> AI VIDEO PROMPT (សកម្មភាពទាក់ទង TOPIC • មិននិយាយ)
                         </span>
                         <button
                           className="btn-copy-dark"

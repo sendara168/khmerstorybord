@@ -41,8 +41,9 @@ export const FullDocumentTab: React.FC<FullDocumentTabProps> = ({ project }) => 
 
   const allKhmerVideoPrompts = useMemo(() => {
     const lines = [
-      `=== PROMPT បង្កើតវីដេអូនិយាយភាសាខ្មែរទាំងអស់ (${project.scenes.length} ឈុត) ===`,
-      `ប្រធានបទ៖ ${project.videoTitle}`,
+      `=== AI VIDEO ACTION PROMPTS (សកម្មភាពទាក់ទង TOPIC • តួអង្គមិននិយាយ) ===`,
+      `ចំណងជើង៖ ${project.videoTitle}`,
+      `កំណត់សម្គាល់៖ វីដេអូផ្តោតលើសកម្មភាពរស់រវើកទាក់ទងនឹង Topic តួអង្គមិននិយាយទេ ដើម្បីងាយស្រួលយក Script ទៅដាក់ Voice Over ខាងក្រៅ។`,
       ``,
     ];
     project.scenes.forEach((s) => {
@@ -161,7 +162,7 @@ export const FullDocumentTab: React.FC<FullDocumentTabProps> = ({ project }) => 
             onClick={() => setViewMode('video-khmer')}
           >
             <Video size={14} />
-            <span>Prompt វីដេអូនិយាយភាសាខ្មែរ ({project.scenes.length} ឈុត)</span>
+            <span>Prompt វីដេអូសកម្មភាព Topic ({project.scenes.length} ឈុត)</span>
           </button>
           <button
             className={`subtab-pill ${viewMode === 'images' ? 'active' : ''}`}

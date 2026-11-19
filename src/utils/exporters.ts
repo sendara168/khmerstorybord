@@ -26,54 +26,51 @@ export function getCharacterImagePrompt(
   return `Authentic Cambodian (Khmer) 2D cartoon character design turnaround reference sheet of ${character.name} (${character.role}), natural Cambodian facial features and warm light-tan Southeast Asian skin tone, ${character.appearance}, wearing ${character.outfit}, ${character.personality}. Full-body front view, 3/4 view, and 3 expressive facial expressions (happy, thoughtful, surprised), clean solid neutral light cream background, ${animationStyleLabel}, clean cel-shaded vector style, warm cinematic lighting, consistent proportions and colors, 16:9 composition, no floating watermarks.`;
 }
 
-export function buildKhmerSpeakingVideoPrompt(
+export function buildAiVideoActionPrompt(
   scene: StoryboardScene,
   project: Pick<
     StoryboardProject,
-    'narratorVoice' | 'voiceTone' | 'animationStyleLabel' | 'videoFormat'
+    'animationStyleLabel' | 'videoFormat' | 'topic'
   >
 ): string {
-  const baseMotion = (scene.aiVideoPromptEn || '').trim();
-  const hasKhmerBlock =
-    /Spoken Khmer|Khmer Narration|Khmer Male Voice|និយាយជាភាសាខ្មែរ/i.test(baseMotion) &&
-    scene.narratorScriptKh &&
-    baseMotion.includes(scene.narratorScriptKh.slice(0, 18));
+  let baseMotion = (scene.aiVideoPromptEn || '').trim();
 
-  if (hasKhmerBlock) {
-    return baseMotion;
-  }
+  // Strip any legacy spoken Khmer audio/lip-sync instructions
+  baseMotion = baseMotion
+    .replace(/\s*Spoken Khmer Narration\s*\([^)]*\)\s*:\s*["“][^"”]*["”]/gi, '')
+    .replace(/\s*Character Dialogue\s*\([^)]*\)\s*:\s*["“][^"”]*["”]/gi, '')
+    .replace(/\s*clear Khmer audio pronunciation/gi, '')
+    .trim();
 
-  const narratorVoice = project.narratorVoice || 'Khmer Male Voice';
-  const voiceTone = project.voiceTone || 'Natural, Clear, Professional, Engaging';
   const styleLabel = project.animationStyleLabel || '2D Cartoon Educational Animation';
   const format = project.videoFormat || '16:9';
 
   const parts: string[] = [];
   if (baseMotion) {
-    parts.push(`Visual Motion: ${baseMotion}`);
+    parts.push(`Visual Action: ${baseMotion}`);
+  } else {
+    parts.push(
+      `Visual Action: Authentic Cambodian characters actively engaged in ${scene.characterAction || 'topic demonstration'}, smoothly illustrating "${project.topic || ''}", expressive purposeful gestures and team collaboration.`
+    );
   }
+
   if (scene.cameraMovement?.trim()) {
     parts.push(`Camera Movement: ${scene.cameraMovement.trim()}.`);
   }
-  if (scene.narratorScriptKh?.trim()) {
-    parts.push(
-      `Spoken Khmer Narration (${narratorVoice}, ${voiceTone}, speak clearly in natural Khmer language): "${scene.narratorScriptKh.trim()}"`
-    );
-  }
-  if (scene.characterDialogue?.trim()) {
-    parts.push(
-      `Character Dialogue (spoken in natural Khmer language with matching lip-sync): "${scene.characterDialogue.trim()}"`
-    );
-  }
+
   if (scene.bgmAndSfx?.trim()) {
-    parts.push(`Background Music & SFX: ${scene.bgmAndSfx.trim()}.`);
+    parts.push(`Ambient SFX / Atmosphere: ${scene.bgmAndSfx.trim()}.`);
   }
+
   parts.push(
-    `Style & Specs: ${styleLabel}, authentic Cambodian (Khmer) characters and Cambodian scenery, keep natural Khmer script on shop/school signboards legible if present, ${format}, ${scene.durationSeconds || 8} seconds, smooth consistent character motion, clear Khmer audio pronunciation, no floating subtitles or English watermarks.`
+    `Direction & Specs: ${styleLabel}, authentic Cambodian (Khmer) characters and scenery, ${format}, ${scene.durationSeconds || 8} seconds, smooth cinematic 24fps animation. NOTE: Silent cinematic action, characters DO NOT speak, no dialogue or lip-sync (designed for external voiceover overlay in video editor), no floating text or subtitles.`
   );
 
   return parts.join('\n');
 }
+
+// Backward-compatible alias for existing callers
+export const buildKhmerSpeakingVideoPrompt = buildAiVideoActionPrompt;
 
 export function formatSrtTime(totalSeconds: number): string {
   const hrs = Math.floor(totalSeconds / 3600);
@@ -202,7 +199,7 @@ export function generatePromptsBatch(project: StoryboardProject): string {
   }
 
   lines.push(`====================================================================`);
-  lines.push(`PART 3: AI VIDEO PROMPTS WITH KHMER VOICEOVER (វីដេអូនិយាយភាសាខ្មែរតាម Scenes នីមួយៗ)`);
+  lines.push(`PART 3: AI VIDEO ACTION PROMPTS (វីដេអូសកម្មភាព TOPIC • តួអង្គមិននិយាយ — សម្រាប់ RUNWAY / KLING / LUMA / SORA)`);
   lines.push(`====================================================================`);
 
   for (const scene of project.scenes) {
@@ -422,7 +419,7 @@ Rewrite and synchronize ALL AI prompts below so that:
 2. ALL landscapes and environments are authentically Cambodian — both rural Cambodian countryside (sugar palm trees, rice paddies, wooden stilt houses, lotus ponds, village schools) and Cambodian cities (Phnom Penh shophouses, Chaktomuk riverside, tuk-tuks, Cambodian cafés).
 3. Whenever a shop, café, cart, market, or school appears, include authentic clean Khmer script on the natural storefront signboard (e.g., signboard reading "កាហ្វេតារា", "ហាងសុខា", "វិទ្យាល័យ"), with NO floating subtitles or English watermarks.
 4. EVERY Scene Image Prompt strictly illustrates what the Khmer Narrator Script is saying in that scene.
-5. EVERY Scene Video Prompt describes smooth visual motion, camera movement, AND explicitly instructs the AI video generator to SPEAK IN NATURAL KHMER LANGUAGE using the exact Khmer Narrator Script (and any Khmer character dialogue) for that scene!
+5. EVERY Scene Video Prompt describes smooth cinematic visual motion and camera movement illustrating the topic. CHARACTERS DO NOT SPEAK: Do NOT include spoken narration or lip-sync inside the video prompt. The voiceover script is managed separately for external voiceover tools (CapCut / ElevenLabs / Voice Actors). End with: "Silent cinematic action, characters do not speak, no dialogue or lip-sync, smooth animation for external voiceover overlay, 16:9, no floating text."
 6. ACTIVE DYNAMIC ACTIONS (NO STATIC TALKING HEADS): Ensure all Scene Image Prompts and Video Prompts depict tangible active physical movements (team members collaborating around desks/whiteboards, walking briskly through Cambodian streets/markets, demonstrating tools/workflows hands-on, expressive gestures and lively interactions) rather than characters standing still facing the camera.
 
 VIDEO INFO:

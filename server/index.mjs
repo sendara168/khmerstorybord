@@ -92,31 +92,34 @@ function generateNarratorText(project) {
 }
 
 function formatKhmerVideoPrompt(scene, project) {
-  const baseMotion = String(scene.aiVideoPromptEn || '').trim();
-  const script = String(scene.narratorScriptKh || '').trim();
-  if (
-    /Spoken Khmer|Khmer Narration|និយាយជាភាសាខ្មែរ/i.test(baseMotion) &&
-    script &&
-    baseMotion.includes(script.slice(0, 18))
-  ) {
-    return baseMotion;
-  }
+  let baseMotion = String(scene.aiVideoPromptEn || '').trim();
+
+  // Strip any legacy spoken Khmer audio/lip-sync instructions
+  baseMotion = baseMotion
+    .replace(/\s*Spoken Khmer Narration\s*\([^)]*\)\s*:\s*["“][^"”]*["”]/gi, '')
+    .replace(/\s*Character Dialogue\s*\([^)]*\)\s*:\s*["“][^"”]*["”]/gi, '')
+    .replace(/\s*clear Khmer audio pronunciation/gi, '')
+    .trim();
+
   const parts = [];
-  if (baseMotion) parts.push(`Visual Motion: ${baseMotion}`);
-  if (scene.cameraMovement) parts.push(`Camera Movement: ${scene.cameraMovement}.`);
-  if (script) {
+  if (baseMotion) {
+    parts.push(`Visual Action: ${baseMotion}`);
+  } else {
     parts.push(
-      `Spoken Khmer Narration (${project.narratorVoice || 'Khmer Male Voice'}, ${project.voiceTone || 'Natural, Clear, Professional, Engaging'}, speak clearly in natural Khmer language): "${script}"`
+      `Visual Action: Authentic Cambodian characters actively engaged in ${scene.characterAction || 'topic demonstration'}, smoothly illustrating "${project.topic || ''}", expressive purposeful gestures and team collaboration.`
     );
   }
-  if (scene.characterDialogue && String(scene.characterDialogue).trim()) {
-    parts.push(
-      `Character Dialogue (spoken in natural Khmer language with matching lip-sync): "${String(scene.characterDialogue).trim()}"`
-    );
+
+  if (scene.cameraMovement) {
+    parts.push(`Camera Movement: ${scene.cameraMovement}.`);
   }
-  if (scene.bgmAndSfx) parts.push(`Background Music & SFX: ${scene.bgmAndSfx}.`);
+
+  if (scene.bgmAndSfx) {
+    parts.push(`Ambient SFX / Atmosphere: ${scene.bgmAndSfx}.`);
+  }
+
   parts.push(
-    `Style & Specs: ${project.animationStyleLabel || '2D Cartoon Cambodian Educational Animation'}, authentic Cambodian (Khmer) characters and Cambodian scenery, keep natural Khmer script on shop/school signboards legible if present, ${project.videoFormat || '16:9'}, ${scene.durationSeconds || 8} seconds, clear Khmer pronunciation, no floating subtitles or English watermarks.`
+    `Direction & Specs: ${project.animationStyleLabel || '2D Cartoon Cambodian Educational Animation'}, authentic Cambodian (Khmer) characters and scenery, ${project.videoFormat || '16:9'}, ${scene.durationSeconds || 8} seconds, smooth cinematic 24fps animation. NOTE: Silent cinematic action, characters DO NOT speak, no dialogue or lip-sync (designed for external voiceover overlay in video editor), no floating text or subtitles.`
   );
   return parts.join('\n');
 }

@@ -14,6 +14,7 @@ interface NarratorScriptTabProps {
 
 export const NarratorScriptTab: React.FC<NarratorScriptTabProps> = ({ project }) => {
   const [copied, setCopied] = useState(false);
+  const [copiedSceneNum, setCopiedSceneNum] = useState<number | null>(null);
   const [teleprompterMode, setTeleprompterMode] = useState(false);
 
   const plainScript = useMemo(
@@ -39,6 +40,12 @@ export const NarratorScriptTab: React.FC<NarratorScriptTabProps> = ({ project })
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const handleCopySingleScene = async (num: number, text: string) => {
+    await navigator.clipboard.writeText(text);
+    setCopiedSceneNum(num);
+    setTimeout(() => setCopiedSceneNum(null), 1600);
+  };
+
   let lastSection: StorySection | null = null;
 
   return (
@@ -48,9 +55,9 @@ export const NarratorScriptTab: React.FC<NarratorScriptTabProps> = ({ project })
           <div className="title-with-icon">
             <Mic size={20} className="text-amber" />
             <div>
-              <h3>Script អ្នកនិទានពេញលេញ (ដាច់ដោយឡែកពី AI Prompts)</h3>
+              <h3>Script សម្រាប់ Voice Over ខាងក្រៅ (CapCut / ElevenLabs / ថតសំឡេង)</h3>
               <p className="muted-text">
-                អត្ថបទសម្រាប់អានថតសំឡេង ឬដាក់ចូល AI Voiceover ភាសាខ្មែរភ្លាមៗ — សរុប{' '}
+                អត្ថបទសម្រាប់យកទៅដាក់ក្នុង CapCut / ElevenLabs / AI Voiceover ឬអានថតសំឡេងខាងក្រៅ រួចយកមកដាក់ពីលើ Video AI — សរុប{' '}
                 <strong>{project.scenes.length} ឈុត</strong> ({formatClock(totalSeconds)})
               </p>
             </div>
@@ -103,10 +110,28 @@ export const NarratorScriptTab: React.FC<NarratorScriptTabProps> = ({ project })
                     <span className="scene-mini-title">{scene.sceneTitle}</span>
                     <span className="scene-dur-pill">{scene.durationSeconds}s</span>
                     {scene.sceneNumber > 1 && (
-                      <span className="narrator-bridge-badge" style={{ marginLeft: 'auto' }}>
+                      <span className="narrator-bridge-badge">
                         <Link2 size={11} /> តភ្ជាប់ពី Scene {String(scene.sceneNumber - 1).padStart(2, '0')}
                       </span>
                     )}
+                    <button
+                      className="btn-icon-subtle"
+                      style={{ marginLeft: 'auto', padding: '3px 9px', fontSize: '0.74rem', gap: 4 }}
+                      onClick={() => handleCopySingleScene(scene.sceneNumber, scene.narratorScriptKh)}
+                      title="ចម្លង Script ឈុតនេះសម្រាប់ Voice Over"
+                    >
+                      {copiedSceneNum === scene.sceneNumber ? (
+                        <>
+                          <Check size={12} className="text-teal" />
+                          <span className="text-teal">បានចម្លង!</span>
+                        </>
+                      ) : (
+                        <>
+                          <Copy size={12} />
+                          <span>ចម្លង Script</span>
+                        </>
+                      )}
+                    </button>
                   </div>
                   <p className="narrator-spoken-text">«{scene.narratorScriptKh}»</p>
                   {scene.characterDialogue?.trim() && (

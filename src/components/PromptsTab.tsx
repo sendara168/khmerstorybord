@@ -12,10 +12,12 @@ import {
   ClipboardPaste,
   Loader2,
   AlertCircle,
+  Mic,
 } from 'lucide-react';
 import type { AiProviderConfig, StoryboardProject } from '../types/storyboard';
 import {
   buildKhmerSpeakingVideoPrompt,
+  buildAiVideoActionPrompt,
   buildSyncPromptsForWeb,
   downloadTextFile,
   generatePromptsBatch,
@@ -33,7 +35,7 @@ interface PromptsTabProps {
   onOpenSettings: () => void;
 }
 
-type PromptSubTab = 'characters' | 'paired' | 'image' | 'video' | 'thumbnail';
+type PromptSubTab = 'characters' | 'paired' | 'voiceover' | 'image' | 'video' | 'thumbnail';
 
 export const PromptsTab: React.FC<PromptsTabProps> = ({
   project,
@@ -74,10 +76,20 @@ export const PromptsTab: React.FC<PromptsTabProps> = ({
       const all = project.scenes
         .map((s) => {
           const num = String(s.sceneNumber).padStart(2, '0');
-          return `[Scene ${num} - ${s.sceneTitle} | ${s.durationSeconds}s]\nKHMER SCRIPT: ${s.narratorScriptKh}\n\nIMAGE PROMPT:\n${s.aiImagePromptEn}\n\nVIDEO PROMPT (KHMER VOICEOVER):\n${buildKhmerSpeakingVideoPrompt(s, project)}`;
+          return `[Scene ${num} - ${s.sceneTitle} | ${s.durationSeconds}s]\nVOICEOVER SCRIPT (KHMER):\n${s.narratorScriptKh}\n\nIMAGE PROMPT (ENGLISH):\n${s.aiImagePromptEn}\n\nVIDEO ACTION PROMPT (TOPIC ACTION — SILENT):\n${buildAiVideoActionPrompt(s, project)}`;
         })
         .join('\n\n----------------------------------------\n\n');
       await copyText('all-paired', all);
+    } else if (subTab === 'voiceover') {
+      const all = project.scenes
+        .map((s) => {
+          const num = String(s.sceneNumber).padStart(2, '0');
+          return `[Scene ${num} - ${s.sceneTitle} | ${s.durationSeconds}s]\n${s.narratorScriptKh}${
+            s.characterDialogue?.trim() ? `\n(សន្ទនា: ${s.characterDialogue.trim()})` : ''
+          }`;
+        })
+        .join('\n\n');
+      await copyText('all-vo', all);
     } else if (subTab === 'image') {
       const all = project.scenes
         .map(
@@ -90,7 +102,7 @@ export const PromptsTab: React.FC<PromptsTabProps> = ({
       const all = project.scenes
         .map(
           (s) =>
-            `[Scene ${String(s.sceneNumber).padStart(2, '0')} - ${s.sceneTitle} | ${s.durationSeconds}s]\n${buildKhmerSpeakingVideoPrompt(s, project)}`
+            `[Scene ${String(s.sceneNumber).padStart(2, '0')} - ${s.sceneTitle} | ${s.durationSeconds}s]\n${buildAiVideoActionPrompt(s, project)}`
         )
         .join('\n\n');
       await copyText('all-vid', all);
@@ -204,7 +216,14 @@ export const PromptsTab: React.FC<PromptsTabProps> = ({
               onClick={() => setSubTab('paired')}
             >
               <Layers size={15} />
-              <span>រូបភាព + វីដេអូតាមឈុត ({project.scenes.length})</span>
+              <span>Voice Over + រូបភាព + វីដេអូ ({project.scenes.length})</span>
+            </button>
+            <button
+              className={`subtab-pill ${subTab === 'voiceover' ? 'active' : ''}`}
+              onClick={() => setSubTab('voiceover')}
+            >
+              <Mic size={15} />
+              <span>Script Voice Over ខាងក្រៅ ({project.scenes.length})</span>
             </button>
             <button
               className={`subtab-pill ${subTab === 'image' ? 'active' : ''}`}
@@ -218,7 +237,7 @@ export const PromptsTab: React.FC<PromptsTabProps> = ({
               onClick={() => setSubTab('video')}
             >
               <Video size={15} />
-              <span>Prompt វីដេអូនិយាយខ្មែរ ({project.scenes.length})</span>
+              <span>Prompt វីដេអូសកម្មភាព Topic ({project.scenes.length})</span>
             </button>
             <button
               className={`subtab-pill ${subTab === 'thumbnail' ? 'active' : ''}`}
@@ -321,7 +340,54 @@ export const PromptsTab: React.FC<PromptsTabProps> = ({
                       </span>
                     </div>
                   </div>
-                  <p className="paired-narrator-preview">«{scene.narratorScriptKh}»</p>
+                  {/* Form សម្រាប់ Copy Script សម្រាប់ Voice Over ខាងក្រៅ */}
+                  <div className="external-vo-form" style={{ marginBottom: 14 }}>
+                    <div className="external-vo-header">
+                      <div className="external-vo-title-group">
+                        <span className="external-vo-badge-tag">
+                          <Mic size={13} /> SCRIPT សម្រាប់ VOICE OVER ខាងក្រៅ
+                        </span>
+                        <span className="vo-spec-tag">⏱️ ~{scene.durationSeconds}s</span>
+                        <span className="vo-spec-tag">
+                          📝 ~{scene.narratorScriptKh ? Math.max(scene.narratorScriptKh.trim().split(/\s+/).filter(Boolean).length, Math.round(scene.narratorScriptKh.trim().length / 4.5)) : 0} ពាក្យ
+                        </span>
+                      </div>
+
+                      <button
+                        className={`btn-copy-vo ${copiedId === `p-vo-${scene.sceneNumber}` ? 'copied' : ''}`}
+                        onClick={() => copyText(`p-vo-${scene.sceneNumber}`, scene.narratorScriptKh)}
+                        title="ចម្លងអត្ថបទនេះយកទៅដាក់ក្នុង CapCut, ElevenLabs ឬអានថតសំឡេង"
+                      >
+                        {copiedId === `p-vo-${scene.sceneNumber}` ? (
+                          <>
+                            <Check size={13} />
+                            <span>បានចម្លង Script!</span>
+                          </>
+                        ) : (
+                          <>
+                            <Copy size={13} />
+                            <span>ចម្លង Script Voice Over</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
+
+                    <div className="external-vo-body">
+                      <p className="scene-narrator-text">«{scene.narratorScriptKh}»</p>
+                      {scene.characterDialogue?.trim() && (
+                        <div className="scene-dialogue-pill">
+                          <span>សន្ទនាតួអង្គ៖ {scene.characterDialogue}</span>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="external-vo-footer">
+                      <span className="vo-hint-text">
+                        💡 ចម្លង Script នេះយកទៅដាក់ក្នុង CapCut / ElevenLabs / AI Voice ឬអានថតសំឡេងខាងក្រៅ
+                      </span>
+                    </div>
+                  </div>
+
                   <div className="scene-prompts-grid">
                     <div className="prompt-dark-box">
                       <div className="prompt-dark-head">
@@ -350,14 +416,14 @@ export const PromptsTab: React.FC<PromptsTabProps> = ({
                     <div className="prompt-dark-box video-box">
                       <div className="prompt-dark-head">
                         <span>
-                          <Video size={12} /> SCENE {num} — AI VIDEO PROMPT (និយាយភាសាខ្មែរ)
+                          <Video size={12} /> SCENE {num} — AI VIDEO PROMPT (សកម្មភាព TOPIC • មិននិយាយ)
                         </span>
                         <button
                           className="btn-copy-dark"
                           onClick={() =>
                             copyText(
                               `p-vid-${scene.sceneNumber}`,
-                              buildKhmerSpeakingVideoPrompt(scene, project)
+                              buildAiVideoActionPrompt(scene, project)
                             )
                           }
                         >
@@ -372,7 +438,7 @@ export const PromptsTab: React.FC<PromptsTabProps> = ({
                         </button>
                       </div>
                       <p style={{ whiteSpace: 'pre-wrap' }}>
-                        {buildKhmerSpeakingVideoPrompt(scene, project)}
+                        {buildAiVideoActionPrompt(scene, project)}
                       </p>
                     </div>
                   </div>
@@ -417,6 +483,65 @@ export const PromptsTab: React.FC<PromptsTabProps> = ({
           </div>
         )}
 
+        {/* Voiceover-Only Batch List */}
+        {subTab === 'voiceover' && (
+          <div className="prompt-batch-list">
+            <p className="muted-text" style={{ marginBottom: 8 }}>
+              បញ្ជី Script សម្រាប់ Voice Over ខាងក្រៅតាមឈុតនីមួយៗ — ចុច «ចម្លង Script Voice Over» លើឈុតណាមួយ ឬចុច «ចម្លងទាំងអស់» ខាងលើ ដើម្បីយកទៅដាក់ក្នុង CapCut, ElevenLabs, AI Voiceover ឬអានថតសំឡេងផ្ទាល់។
+            </p>
+            {project.scenes.map((scene) => {
+              const num = String(scene.sceneNumber).padStart(2, '0');
+              const keyId = `vo-batch-${scene.sceneNumber}`;
+              const wordCount = scene.narratorScriptKh
+                ? Math.max(
+                    scene.narratorScriptKh.trim().split(/\s+/).filter(Boolean).length,
+                    Math.round(scene.narratorScriptKh.trim().length / 4.5)
+                  )
+                : 0;
+
+              return (
+                <div key={scene.sceneNumber} className="external-vo-form" style={{ marginBottom: 12 }}>
+                  <div className="external-vo-header">
+                    <div className="external-vo-title-group">
+                      <span className="scene-num-pill">Scene {num}</span>
+                      <strong>{scene.sceneTitle}</strong>
+                      <span className="vo-spec-tag">⏱️ ~{scene.durationSeconds}s</span>
+                      <span className="vo-spec-tag">📝 ~{wordCount} ពាក្យ</span>
+                    </div>
+
+                    <button
+                      className={`btn-copy-vo ${copiedId === keyId ? 'copied' : ''}`}
+                      onClick={() => copyText(keyId, scene.narratorScriptKh)}
+                      title="ចម្លងអត្ថបទនេះយកទៅដាក់ក្នុង CapCut ឬ ElevenLabs"
+                    >
+                      {copiedId === keyId ? (
+                        <>
+                          <Check size={13} />
+                          <span>បានចម្លង Script!</span>
+                        </>
+                      ) : (
+                        <>
+                          <Copy size={13} />
+                          <span>ចម្លង Script Voice Over</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+
+                  <div className="external-vo-body">
+                    <p className="scene-narrator-text">«{scene.narratorScriptKh}»</p>
+                    {scene.characterDialogue?.trim() && (
+                      <div className="scene-dialogue-pill">
+                        <span>សន្ទនាតួអង្គ៖ {scene.characterDialogue}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+
         {/* 4 & 5. Image-Only or Video-Only Batch Lists */}
         {(subTab === 'image' || subTab === 'video') && (
           <div className="prompt-batch-list">
@@ -424,7 +549,7 @@ export const PromptsTab: React.FC<PromptsTabProps> = ({
               const promptText =
                 subTab === 'image'
                   ? scene.aiImagePromptEn
-                  : buildKhmerSpeakingVideoPrompt(scene, project);
+                  : buildAiVideoActionPrompt(scene, project);
               const keyId = `${subTab}-${scene.sceneNumber}`;
               return (
                 <div
@@ -439,7 +564,7 @@ export const PromptsTab: React.FC<PromptsTabProps> = ({
                       <strong>{scene.sceneTitle}</strong>
                       <span className="muted-inline" style={{ color: '#a8a29e' }}>
                         ({scene.durationSeconds}s • {scene.cameraMovement}
-                        {subTab === 'video' ? ' • និយាយភាសាខ្មែរ' : ''})
+                        {subTab === 'video' ? ' • សកម្មភាព Topic មិននិយាយ' : ''})
                       </span>
                     </div>
                     <button

@@ -765,7 +765,7 @@ D. CONCLUSION (~10% នៃឈុត)
 - Character Dialogue (សន្ទនាខ្លីៗរវាងតួអង្គ)
 - On-screen Text
 - AI Image Prompt (English — active poses, multi-character composition, Cambodian setting)
-- AI Video Animation Prompt (English + Spoken Khmer Narration instruction)
+- AI Video Animation Prompt (English — Topic Visual Action ONLY: Smooth visual motion, dynamic physical gestures illustrating the topic hands-on, camera movement, Cambodian setting. CHARACTERS DO NOT SPEAK, no dialogue or lip-sync, silent cinematic action ready for external voiceover overlay in CapCut/Premiere)
 - Camera Movement (Track shot, dynamic panning, over-the-shoulder, etc.)
 - Background Music / Sound Effects
 
@@ -924,7 +924,7 @@ STRICT PRODUCTION RULES:
       "characterDialogue": "ឃ្លាសន្ទនាខ្លីៗរវាងតួអង្គ (បើមាន)",
       "onScreenText": "អក្សរខ្លីលើអេក្រង់",
       "aiImagePromptEn": "Detailed English 2D illustration prompt depicting active poses, multi-character teamwork, authentic Cambodian countryside/city background + ${styleObj.promptAnchor}",
-      "aiVideoPromptEn": "Visual Motion: smooth character motion, walking, gesturing, camera tracking. Spoken Khmer Narration (${req.narratorVoice}, natural clear Khmer language): \\"<exact Khmer narratorScriptKh for this scene>\\". Background Music & SFX: warm documentary music. No floating subtitles.",
+      "aiVideoPromptEn": "Visual Action: smooth character movement and gestures demonstrating topic concepts hands-on, camera tracking. Authentic Cambodian setting, warm lighting. Silent cinematic action, characters do not speak, no dialogue or lip-sync, smooth 24fps motion for external voiceover overlay, 16:9, no floating text.",
       "cameraMovement": "Dynamic tracking shot / over-the-shoulder angle",
       "bgmAndSfx": "ភ្លេង Documentary ស្រទន់ + SFX"
     }
@@ -1098,7 +1098,7 @@ export function buildOfflineDraftProject(req: GenerationRequest): StoryboardProj
       characterDialogue: dialogue,
       onScreenText: sceneTitle,
       aiImagePromptEn: `Authentic Cambodian educational storytelling animation scene of ${character}, actively engaged in: ${action}, topic: "${topicText}", vibrant authentic Cambodian setting, expressive body language and teamwork, natural warm cinematic lighting, ${styleObj.promptAnchor}.`,
-      aiVideoPromptEn: `Smooth dynamic 2D animation motion of ${character} actively moving and collaborating in authentic Cambodian setting, expressive gestures, camera slowly tracking, clear Khmer voiceover: "${narrator}".`,
+      aiVideoPromptEn: `Smooth dynamic 2D animation motion of ${character} actively engaged in: ${action}, topic: "${topicText}". Expressive physical movements in authentic Cambodian setting, smooth camera motion. Silent cinematic action, characters do not speak, no dialogue or lip-sync, optimized for external voiceover overlay in CapCut or video editing software, 16:9 composition, no floating text.`,
       cameraMovement: num === 1 ? 'Dynamic track shot following characters' : 'Medium two-shot with subtle push-in',
       bgmAndSfx: 'ភ្លេង Documentary ស្រទន់កក់ក្ដៅ + សំឡេងបរិយាកាសធម្មជាតិ',
     };

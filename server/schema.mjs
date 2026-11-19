@@ -118,7 +118,7 @@ export const STORYBOARD_JSON_SCHEMA = {
           aiVideoPromptEn: {
             type: 'string',
             description:
-              'Detailed AI video animation prompt combining smooth 2D character movement, camera motion, AND explicit spoken Khmer narration instruction: Spoken Khmer Narration (Khmer Male Voice, clear natural Khmer): "<exact Khmer narratorScriptKh>" plus any Khmer character dialogue and background SFX.',
+              'Detailed English AI video animation prompt focusing purely on dynamic visual action, character physical gestures, and camera motion illustrating the topic. CHARACTERS DO NOT SPEAK (silent cinematic action, no dialogue or lip-sync, designed for external voiceover overlay in CapCut/Premiere).',
           },
           cameraMovement: { type: 'string' },
           bgmAndSfx: { type: 'string' },
@@ -281,7 +281,13 @@ STRICT QUALITY RULES:
 
 6. RESEARCH & ACCURACY RULES:
    - Use verifiable facts; never invent fake statistics or fake historical quotes.
-   - If illustrating a principle with fictional characters, clearly state in \`isFictionalNote\` that the characters/story are fictional educational examples.${jsonShapeBlock}
+   - If illustrating a principle with fictional characters, clearly state in \`isFictionalNote\` that the characters/story are fictional educational examples.
+
+7. AI VIDEO PROMPT RULES (TOPIC ACTION ONLY — CHARACTERS DO NOT SPEAK):
+   - In \`aiVideoPromptEn\`, focus strictly on dynamic physical actions, gestures, workflows, and camera motion illustrating the topic.
+   - CHARACTERS DO NOT SPEAK: Do NOT instruct characters to talk or mouth words. No speech, no dialogue, no lip-sync inside video prompts!
+   - Modern AI video generators (Runway, Kling, Luma, Sora, Pika) perform best with pure cinematic visual action. The voiceover script is managed separately for external voiceover tools (CapCut / ElevenLabs / Voice Actors).
+   - End \`aiVideoPromptEn\` with: "Silent cinematic action, characters do not speak, no dialogue or lip-sync, smooth 24fps motion for external voiceover overlay, 16:9, no floating text."${jsonShapeBlock}
 
 Return ONLY valid JSON.`;
 }
