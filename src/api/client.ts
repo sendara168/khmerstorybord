@@ -84,41 +84,153 @@ function toSummary(proj: StoryboardProject): ProjectSummary {
   };
 }
 
+function sanitizeJsonControlChars(jsonStr: string): string {
+  let inString = false;
+  let isEscaped = false;
+  let result = '';
+  for (let i = 0; i < jsonStr.length; i++) {
+    const char = jsonStr[i];
+    if (char === '"' && !isEscaped) {
+      inString = !inString;
+      result += char;
+    } else if (inString) {
+      if (char === '\\') {
+        isEscaped = !isEscaped;
+        result += char;
+      } else {
+        isEscaped = false;
+        if (char === '\n') {
+          result += '\\n';
+        } else if (char === '\r') {
+          // drop \r
+        } else if (char === '\t') {
+          result += '\\t';
+        } else if (char.charCodeAt(0) < 32) {
+          // drop other unprintable control characters
+        } else {
+          result += char;
+        }
+      }
+    } else {
+      isEscaped = false;
+      result += char;
+    }
+  }
+  return result;
+}
+
+function autoCloseJson(jsonStr: string): string {
+  let str = jsonStr.trim().replace(/,\s*$/, '');
+  let inString = false;
+  let isEscaped = false;
+  const stack: string[] = [];
+
+  for (let i = 0; i < str.length; i++) {
+    const char = str[i];
+    if (char === '"' && !isEscaped) {
+      inString = !inString;
+    } else if (!inString) {
+      if (char === '{') stack.push('}');
+      else if (char === '[') stack.push(']');
+      else if (char === '}' || char === ']') {
+        if (stack.length > 0 && stack[stack.length - 1] === char) {
+          stack.pop();
+        }
+      }
+    }
+    if (char === '\\' && inString) {
+      isEscaped = !isEscaped;
+    } else {
+      isEscaped = false;
+    }
+  }
+
+  if (inString) {
+    str += '"';
+  }
+  str = str.replace(/,\s*$/, '');
+  while (stack.length > 0) {
+    str += stack.pop();
+  }
+  return str;
+}
+
+function unwrapStoryboard(obj: any): Record<string, any> {
+  if (!obj || typeof obj !== 'object') {
+    throw new Error('ទិន្នន័យ JSON មិនត្រឹមត្រូវ។');
+  }
+  if (Array.isArray(obj)) {
+    return { scenes: obj };
+  }
+  if (!obj.scenes) {
+    if (obj.storyboard && Array.isArray(obj.storyboard.scenes)) return obj.storyboard;
+    if (obj.project && Array.isArray(obj.project.scenes)) return obj.project;
+    if (obj.data && Array.isArray(obj.data.scenes)) return obj.data;
+  }
+  return obj;
+}
+
 function extractJsonInBrowser(rawText: string): Record<string, any> {
   let text = String(rawText || '').trim();
   if (!text) throw new Error('ទិន្នន័យទទេ — មិនមាន JSON សម្រាប់បម្លែងទេ។');
 
-  // Strip <think>...</think> from reasoning models (e.g. DeepSeek R1, Qwen etc.)
+  // Strip <think>...</think> and <thought>...</thought> from reasoning models
   text = text.replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
+  text = text.replace(/<thought>[\s\S]*?<\/thought>/gi, '').trim();
 
+  // Attempt 1: Direct JSON parse on clean text
   try {
-    return JSON.parse(text);
+    const parsed = JSON.parse(text);
+    return unwrapStoryboard(parsed);
   } catch {
     // continue
   }
+
+  // Attempt 2: Extract from markdown code fences ```json ... ```
   const fence = text.match(/```(?:json)?\s*([\s\S]*?)```/i);
-  if (fence && fence[1]) {
-    try {
-      return JSON.parse(fence[1].trim());
-    } catch {
-      // continue
-    }
-  }
-  const first = text.indexOf('{');
-  const last = text.lastIndexOf('}');
+  let candidate = fence && fence[1] ? fence[1].trim() : text;
+
+  // Extract from first { to last }
+  const first = candidate.indexOf('{');
+  const last = candidate.lastIndexOf('}');
   if (first !== -1 && last > first) {
-    const candidate = text.slice(first, last + 1);
-    try {
-      return JSON.parse(candidate);
-    } catch {
-      const cleaned = candidate.replace(/,\s*([}\]])/g, '$1');
-      try {
-        return JSON.parse(cleaned);
-      } catch {
-        // continue
-      }
-    }
+    candidate = candidate.slice(first, last + 1);
   }
+
+  try {
+    const parsed = JSON.parse(candidate);
+    return unwrapStoryboard(parsed);
+  } catch {
+    // continue
+  }
+
+  // Attempt 3: Trailing commas cleanup
+  try {
+    const cleaned = candidate.replace(/,\s*([}\]])/g, '$1');
+    const parsed = JSON.parse(cleaned);
+    return unwrapStoryboard(parsed);
+  } catch {
+    // continue
+  }
+
+  // Attempt 4: Sanitize control chars (literal newlines/tabs inside quotes) + trailing commas
+  try {
+    const sanitized = sanitizeJsonControlChars(candidate).replace(/,\s*([}\]])/g, '$1');
+    const parsed = JSON.parse(sanitized);
+    return unwrapStoryboard(parsed);
+  } catch {
+    // continue
+  }
+
+  // Attempt 5: Auto-close truncated JSON (if model ran out of tokens)
+  try {
+    const closed = autoCloseJson(sanitizeJsonControlChars(candidate));
+    const parsed = JSON.parse(closed);
+    return unwrapStoryboard(parsed);
+  } catch {
+    // continue
+  }
+
   throw new Error('មិនអាចអានទម្រង់ JSON បានទេ។ សូមពិនិត្យមើលចម្លើយរបស់ AI ម្ដងទៀត។');
 }
 
@@ -350,28 +462,37 @@ async function callGeminiInBrowser(prompt: string, config: AiProviderConfig): Pr
     );
   }
   let model = (config.model || 'gemini-2.5-flash').trim();
+  if (model === 'gemini-3.8-flash' || model === 'gemini-4-argon' || !model) {
+    model = 'gemini-2.5-flash';
+  }
+
   const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(
     apiKey
   )}`;
+
+  const requestBody = {
+    contents: [
+      {
+        role: 'user',
+        parts: [{ text: prompt }],
+      },
+    ],
+    generationConfig: {
+      responseMimeType: 'application/json',
+      temperature: 0.7,
+      maxOutputTokens: 8192,
+      thinkingConfig: {
+        thinkingBudget: 0,
+      },
+    },
+  };
 
   let res: Response;
   try {
     res = await fetch(endpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [
-          {
-            role: 'user',
-            parts: [{ text: prompt }],
-          },
-        ],
-        generationConfig: {
-          responseMimeType: 'application/json',
-          temperature: 0.7,
-          maxOutputTokens: 8192,
-        },
-      }),
+      body: JSON.stringify(requestBody),
     });
   } catch (err) {
     throw new Error(
@@ -386,10 +507,7 @@ async function callGeminiInBrowser(prompt: string, config: AiProviderConfig): Pr
     res = await fetch(fallbackEndpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [{ role: 'user', parts: [{ text: prompt }] }],
-        generationConfig: { responseMimeType: 'application/json', temperature: 0.7, maxOutputTokens: 8192 },
-      }),
+      body: JSON.stringify(requestBody),
     });
   }
 
@@ -399,8 +517,20 @@ async function callGeminiInBrowser(prompt: string, config: AiProviderConfig): Pr
     throw new Error(`Gemini API Error (${res.status}): ${errMsg}`);
   }
 
-  const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-  if (!text) throw new Error('Gemini API បានត្រឡប់លទ្ធផលទទេ។');
+  const candidate = data?.candidates?.[0];
+  const parts = candidate?.content?.parts || [];
+  // Exclude reasoning thoughts and join all actual text parts
+  const nonThoughtParts = parts.filter((p: any) => !p.thought);
+  let text = '';
+  if (nonThoughtParts.length > 0) {
+    text = nonThoughtParts.map((p: any) => p.text || '').join('');
+  } else {
+    text = parts.map((p: any) => p.text || '').join('');
+  }
+
+  if (!text.trim()) {
+    throw new Error('Gemini API បានត្រឡប់លទ្ធផលទទេ។ សូមសាកល្បងម្ដងទៀត។');
+  }
   return text;
 }
 

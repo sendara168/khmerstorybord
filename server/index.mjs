@@ -208,35 +208,153 @@ function generateMarkdownText(project) {
   return lines.join('\n');
 }
 
+function sanitizeJsonControlChars(jsonStr) {
+  let inString = false;
+  let isEscaped = false;
+  let result = '';
+  for (let i = 0; i < jsonStr.length; i++) {
+    const char = jsonStr[i];
+    if (char === '"' && !isEscaped) {
+      inString = !inString;
+      result += char;
+    } else if (inString) {
+      if (char === '\\') {
+        isEscaped = !isEscaped;
+        result += char;
+      } else {
+        isEscaped = false;
+        if (char === '\n') {
+          result += '\\n';
+        } else if (char === '\r') {
+          // ignore
+        } else if (char === '\t') {
+          result += '\\t';
+        } else if (char.charCodeAt(0) < 32) {
+          // drop control chars
+        } else {
+          result += char;
+        }
+      }
+    } else {
+      isEscaped = false;
+      result += char;
+    }
+  }
+  return result;
+}
+
+function autoCloseJson(jsonStr) {
+  let str = jsonStr.trim().replace(/,\s*$/, '');
+  let inString = false;
+  let isEscaped = false;
+  const stack = [];
+
+  for (let i = 0; i < str.length; i++) {
+    const char = str[i];
+    if (char === '"' && !isEscaped) {
+      inString = !inString;
+    } else if (!inString) {
+      if (char === '{') stack.push('}');
+      else if (char === '[') stack.push(']');
+      else if (char === '}' || char === ']') {
+        if (stack.length > 0 && stack[stack.length - 1] === char) {
+          stack.pop();
+        }
+      }
+    }
+    if (char === '\\' && inString) {
+      isEscaped = !isEscaped;
+    } else {
+      isEscaped = false;
+    }
+  }
+
+  if (inString) {
+    str += '"';
+  }
+  str = str.replace(/,\s*$/, '');
+  while (stack.length > 0) {
+    str += stack.pop();
+  }
+  return str;
+}
+
+function unwrapStoryboard(obj) {
+  if (!obj || typeof obj !== 'object') {
+    throw new Error('ទិន្នន័យ JSON មិនត្រឹមត្រូវ។');
+  }
+  if (Array.isArray(obj)) {
+    return { scenes: obj };
+  }
+  if (!obj.scenes) {
+    if (obj.storyboard && Array.isArray(obj.storyboard.scenes)) return obj.storyboard;
+    if (obj.project && Array.isArray(obj.project.scenes)) return obj.project;
+    if (obj.data && Array.isArray(obj.data.scenes)) return obj.data;
+  }
+  return obj;
+}
+
 function extractJsonFromText(rawText) {
-  const text = String(rawText || '').trim();
+  let text = String(rawText || '').trim();
   if (!text) {
     throw new Error('ទិន្នន័យទទេ — មិនមាន JSON សម្រាប់បម្លែងទេ។');
   }
 
+  // Strip thinking blocks
+  text = text.replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
+  text = text.replace(/<thought>[\s\S]*?<\/thought>/gi, '').trim();
+
   // 1. Direct JSON parse
   try {
-    return JSON.parse(text);
+    const parsed = JSON.parse(text);
+    return unwrapStoryboard(parsed);
   } catch {
     // continue
   }
 
   // 2. Extract from ```json ... ``` fenced block
   const fenceMatch = text.match(/```(?:json)?\s*([\s\S]*?)```/i);
-  if (fenceMatch && fenceMatch[1]) {
-    try {
-      return JSON.parse(fenceMatch[1].trim());
-    } catch {
-      // continue
-    }
-  }
+  let candidate = fenceMatch && fenceMatch[1] ? fenceMatch[1].trim() : text;
 
   // 3. Find outermost { ... }
-  const firstBrace = text.indexOf('{');
-  const lastBrace = text.lastIndexOf('}');
+  const firstBrace = candidate.indexOf('{');
+  const lastBrace = candidate.lastIndexOf('}');
   if (firstBrace !== -1 && lastBrace > firstBrace) {
-    const slice = text.slice(firstBrace, lastBrace + 1);
-    return JSON.parse(slice);
+    candidate = candidate.slice(firstBrace, lastBrace + 1);
+  }
+
+  try {
+    const parsed = JSON.parse(candidate);
+    return unwrapStoryboard(parsed);
+  } catch {
+    // continue
+  }
+
+  // 4. Trailing commas
+  try {
+    const cleaned = candidate.replace(/,\s*([}\]])/g, '$1');
+    const parsed = JSON.parse(cleaned);
+    return unwrapStoryboard(parsed);
+  } catch {
+    // continue
+  }
+
+  // 5. Sanitize control chars
+  try {
+    const sanitized = sanitizeJsonControlChars(candidate).replace(/,\s*([}\]])/g, '$1');
+    const parsed = JSON.parse(sanitized);
+    return unwrapStoryboard(parsed);
+  } catch {
+    // continue
+  }
+
+  // 6. Auto-close truncated JSON
+  try {
+    const closed = autoCloseJson(sanitizeJsonControlChars(candidate));
+    const parsed = JSON.parse(closed);
+    return unwrapStoryboard(parsed);
+  } catch {
+    // continue
   }
 
   throw new Error(
@@ -571,8 +689,8 @@ async function generateWithGemini({ apiKey, model, prompt }) {
     );
   }
 
-  const allowedModels = ['gemini-3.8-flash', 'gemini-4-argon'];
-  const selectedModel = allowedModels.includes(model) ? model : 'gemini-3.8-flash';
+  const allowedModels = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-2.5-pro', 'gemini-3.8-flash', 'gemini-4-argon'];
+  const selectedModel = allowedModels.includes(model) ? model : 'gemini-2.5-flash';
   const client = new GoogleGenAI({ apiKey: effectiveKey });
 
   const interaction = await client.interactions.create({

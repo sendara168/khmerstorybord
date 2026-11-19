@@ -49,6 +49,12 @@ function loadInitialConfig(): AiProviderConfig {
         ) {
           model = 'openrouter/free';
         }
+        if (
+          parsed.provider === 'gemini' &&
+          (model === 'gemini-3.8-flash' || model === 'gemini-4-argon' || !model)
+        ) {
+          model = 'gemini-2.5-flash';
+        }
         const updatedConfig: AiProviderConfig = {
           provider: preset.id,
           apiKey: parsed.apiKey || '',
