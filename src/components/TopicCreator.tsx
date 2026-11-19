@@ -24,6 +24,9 @@ import {
   MessageSquare,
   Compass,
   Zap,
+  Edit3,
+  BookOpen,
+  Trash2,
 } from 'lucide-react';
 import {
   AI_PROVIDER_PRESETS,
@@ -57,6 +60,17 @@ interface TopicCreatorProps {
   onUpdateAiConfig?: (config: AiProviderConfig) => void;
 }
 
+export const TOPIC_STARTER_TEMPLATES = [
+  { label: '៧ វិធី...', text: '៧ វិធី' },
+  { label: '៥ កំហុស...', text: '៥ កំហុសធ្ងន់ធ្ងរដែល' },
+  { label: 'ហេតុអ្វី...', text: 'ហេតុអ្វីបានជា' },
+  { label: 'របៀប...', text: 'របៀប' },
+  { label: 'មេរៀនពី...', text: 'មេរៀនជីវិត និងបទពិសោធន៍ពី' },
+  { label: 'ប្រវត្តិនៃ...', text: 'ប្រវត្តិនៃ' },
+  { label: 'គន្លឹះ...', text: '៥ គន្លឹះសំខាន់ៗសម្រាប់' },
+  { label: 'រឿងនិទាន...', text: 'រឿងនិទានអប់រំអំពី' },
+];
+
 export const TopicCreator: React.FC<TopicCreatorProps> = ({
   isGenerating,
   isImporting,
@@ -85,7 +99,15 @@ export const TopicCreator: React.FC<TopicCreatorProps> = ({
   const [copiedPrompt, setCopiedPrompt] = useState<boolean>(false);
   const [copiedJsonPrompt, setCopiedJsonPrompt] = useState<boolean>(false);
   const [topicSearch, setTopicSearch] = useState<string>('');
+  const [step2CategoryTab, setStep2CategoryTab] = useState<string>('business-money');
+  const [step2Search, setStep2Search] = useState<string>('');
   const [elapsedSeconds, setElapsedSeconds] = useState<number>(0);
+
+  useEffect(() => {
+    if (categoryId) {
+      setStep2CategoryTab(categoryId);
+    }
+  }, [categoryId]);
 
   useEffect(() => {
     let timer: any = null;
@@ -132,6 +154,30 @@ export const TopicCreator: React.FC<TopicCreatorProps> = ({
     }
     return matches.slice(0, 18);
   }, [topicSearch]);
+
+  const visibleStep2Topics = useMemo(() => {
+    const q = step2Search.trim().toLowerCase();
+    const list: Array<{ categoryId: string; categoryName: string; topic: string }> = [];
+
+    const targetCategories =
+      step2CategoryTab === 'all'
+        ? TOPIC_CATEGORIES
+        : TOPIC_CATEGORIES.filter((c) => c.id === step2CategoryTab);
+
+    for (const cat of targetCategories) {
+      for (const t of cat.sampleTopics) {
+        if (!q || t.toLowerCase().includes(q) || cat.nameKh.toLowerCase().includes(q)) {
+          list.push({ categoryId: cat.id, categoryName: cat.nameKh, topic: t });
+        }
+      }
+    }
+
+    if (step2CategoryTab === 'all' && !q) {
+      return list.slice(0, 48);
+    }
+
+    return list;
+  }, [step2CategoryTab, step2Search]);
 
   const handlePickRandomTopic = () => {
     const withTopics = TOPIC_CATEGORIES.filter((c) => c.sampleTopics.length > 0);
@@ -324,6 +370,7 @@ export const TopicCreator: React.FC<TopicCreatorProps> = ({
                 style={{ '--cat-accent': cat.accent } as React.CSSProperties}
                 onClick={() => {
                   setCategoryId(cat.id);
+                  setStep2CategoryTab(cat.id);
                   if (cat.sampleTopics.length > 0) {
                     setTopic(cat.sampleTopics[0]);
                   } else {
@@ -346,43 +393,186 @@ export const TopicCreator: React.FC<TopicCreatorProps> = ({
         </div>
       </section>
 
-      {/* Step 2: Topic Input + Quick Suggestions */}
-      <section className="studio-card">
-        <div className="card-header-row">
+      {/* Step 2: Topic Input + Custom Workspace + Quick Suggestions */}
+      <section className="studio-card step2-topic-studio">
+        <div className="card-header-row wrap">
           <div>
-            <span className="step-pill">ជំហានទី ២</span>
-            <h2>កំណត់ប្រធានបទវីដេអូ (Video Topic)</h2>
+            <span className="step-pill">ជំហានទី ២ • ប្រអប់វាយ & ជ្រើសរើសប្រធានបទ</span>
+            <h2>កំណត់ប្រធានបទវីដេអូ (Video Topic Workspace)</h2>
+            <p className="muted-text">
+              អ្នកអាច<strong>វាយបញ្ចូលប្រធានបទផ្ទាល់ខ្លួន</strong>ណាមួយដែលចង់ផលិត ឬ<strong>ជ្រើសរើសពីប្រធានបទគំរូ ៤៩៥+</strong> ខាងក្រោមដោយគ្រាន់តែចុចមួយដង។
+            </p>
+          </div>
+          <div className="toolbar-right">
+            <button
+              type="button"
+              className="btn-outline btn-sm"
+              onClick={handlePickRandomTopic}
+              title="ជ្រើសរើសប្រធានបទចៃដន្យពីបណ្ណាល័យ"
+            >
+              <Shuffle size={14} />
+              <span>រើសប្រធានបទចៃដន្យ</span>
+            </button>
+            {topic && (
+              <button
+                type="button"
+                className="btn-ghost btn-sm text-muted"
+                onClick={() => setTopic('')}
+                title="សម្អាតប្រធានបទ"
+              >
+                <Trash2 size={14} />
+                <span>សម្អាត</span>
+              </button>
+            )}
           </div>
         </div>
 
-        <div className="form-group">
-          <label>ប្រធានបទដែលចង់ផលិត (ភាសាខ្មែរ ឬអង់គ្លេស)</label>
-          <input
-            type="text"
-            className="input-field input-lg"
-            value={topic}
-            onChange={(e) => setTopic(e.target.value)}
-            placeholder="ឧទាហរណ៍៖ ៧ វិធីគ្រប់គ្រងលុយឱ្យមានប្រសិទ្ធភាព..."
-          />
-        </div>
-
-        {selectedCategory.sampleTopics.length > 0 && (
-          <div className="sample-topics-wrap">
-            <span className="sample-label">ឧទាហរណ៍ប្រធានបទពេញនិយម៖</span>
-            <div className="chip-row">
-              {selectedCategory.sampleTopics.map((sample) => (
+        {/* Dedicated Custom Topic Input & Typing Workspace */}
+        <div className="custom-topic-box">
+          <div className="custom-topic-box-header">
+            <div className="custom-topic-title">
+              <Edit3 size={16} className="text-amber" />
+              <strong>ប្រអប់វាយប្រធានបទផ្ទាល់ខ្លួន (Custom Topic Input)</strong>
+            </div>
+            <div className="custom-topic-header-actions">
+              {topic && (
                 <button
-                  key={sample}
                   type="button"
-                  className={`topic-chip ${topic === sample ? 'active' : ''}`}
-                  onClick={() => setTopic(sample)}
+                  className="btn-ghost btn-xs text-muted"
+                  onClick={() => setTopic('')}
+                  title="សម្អាតអត្ថបទប្រធានបទ"
                 >
-                  {sample}
+                  <Trash2 size={13} />
+                  <span>សម្អាត</span>
+                </button>
+              )}
+              <span className="custom-topic-badge">
+                {topic.trim().length > 0 ? `បានបញ្ចូល ${topic.trim().length} អក្សរ` : 'មិនទាន់វាយប្រធានបទ'}
+              </span>
+            </div>
+          </div>
+
+          <div className="custom-topic-textarea-wrap">
+            <textarea
+              className="custom-topic-textarea"
+              rows={2}
+              value={topic}
+              onChange={(e) => setTopic(e.target.value)}
+              placeholder="វាយបញ្ចូលប្រធានបទវីដេអូដែលអ្នកចង់បាននៅទីនេះ (ភាសាខ្មែរ ឬអង់គ្លេស)... ឧទាហរណ៍៖ ៧ វិធីគ្រប់គ្រងលុយឱ្យមានប្រសិទ្ធភាព, របៀបចាប់ផ្ដើមអាជីវកម្មតូច, មេរៀនជីវិតពី..."
+            />
+          </div>
+
+          <div className="starter-templates-row">
+            <span className="starter-label">គំរូចាប់ផ្ដើមរហ័ស (ចុចដើម្បីបន្ថែម)៖</span>
+            <div className="starter-chips-wrap">
+              {TOPIC_STARTER_TEMPLATES.map((tmpl) => (
+                <button
+                  key={tmpl.label}
+                  type="button"
+                  className="starter-chip"
+                  onClick={() => {
+                    if (!topic.trim()) {
+                      setTopic(tmpl.text + ' ');
+                    } else if (!topic.startsWith(tmpl.text)) {
+                      setTopic(tmpl.text + ' ' + topic.trim());
+                    }
+                  }}
+                  title={`បន្ថែមពាក្យ «${tmpl.text}» នៅដើមប្រធានបទ`}
+                >
+                  + {tmpl.label}
                 </button>
               ))}
             </div>
           </div>
-        )}
+        </div>
+
+        {/* Step 2 Topic Browser & Category Filter */}
+        <div className="step2-browser-card">
+          <div className="step2-browser-header wrap">
+            <div className="step2-browser-title">
+              <BookOpen size={16} className="text-amber" />
+              <strong>បណ្ណាល័យប្រធានបទគំរូ ({totalTopicCount} ប្រធានបទ)</strong>
+              <span className="badge-pill-light">ចុចលើប្រធានបទដើម្បីជ្រើសរើសភ្លាម</span>
+            </div>
+
+            <div className="search-box sm">
+              <Search size={14} />
+              <input
+                type="text"
+                placeholder="ស្វែងរកក្នុងបណ្ណាល័យប្រធានបទ..."
+                value={step2Search}
+                onChange={(e) => setStep2Search(e.target.value)}
+              />
+              {step2Search && (
+                <button
+                  type="button"
+                  className="search-clear-btn"
+                  onClick={() => setStep2Search('')}
+                  title="សម្អាតការស្វែងរក"
+                >
+                  ✕
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Category Tabs for direct switching in Step 2 */}
+          <div className="category-tabs-scroll">
+            <button
+              type="button"
+              className={`cat-tab-chip ${step2CategoryTab === 'all' ? 'active' : ''}`}
+              onClick={() => setStep2CategoryTab('all')}
+            >
+              🌐 ទាំងអស់ ({totalTopicCount})
+            </button>
+            {TOPIC_CATEGORIES.map((cat) => (
+              <button
+                key={cat.id}
+                type="button"
+                className={`cat-tab-chip ${step2CategoryTab === cat.id ? 'active' : ''}`}
+                onClick={() => {
+                  setStep2CategoryTab(cat.id);
+                  setCategoryId(cat.id);
+                }}
+              >
+                <span className="cat-code-dot">{cat.code}</span>
+                {cat.nameKh} ({cat.sampleTopics.length})
+              </button>
+            ))}
+          </div>
+
+          {/* Sample Topics Chips */}
+          <div className="step2-topics-list">
+            <div className="chip-row">
+              {visibleStep2Topics.map((item) => {
+                const isSelected = topic === item.topic;
+                return (
+                  <button
+                    key={`${item.categoryId}-${item.topic}`}
+                    type="button"
+                    className={`topic-chip ${isSelected ? 'active' : ''}`}
+                    onClick={() => {
+                      setTopic(item.topic);
+                      setCategoryId(item.categoryId);
+                    }}
+                    title={`ប្រភេទ៖ ${item.categoryName}`}
+                  >
+                    {step2CategoryTab === 'all' && (
+                      <span className="topic-cat-badge">[{item.categoryName.split(' ')[0]}]</span>
+                    )}
+                    <span>{item.topic}</span>
+                  </button>
+                );
+              })}
+            </div>
+            {visibleStep2Topics.length === 0 && (
+              <div className="empty-search-hint">
+                <AlertCircle size={16} />
+                <span>រកមិនឃើញប្រធានបទដែលត្រូវនឹង «{step2Search}» ឡើយ។ អ្នកអាចវាយប្រធានបទនេះដោយផ្ទាល់ក្នុងប្រអប់ខាងលើបាន!</span>
+              </div>
+            )}
+          </div>
+        </div>
 
         <div className="form-group" style={{ marginTop: 16 }}>
           <label>ចំណុចបន្ថែម / តួអង្គដែលចង់បាន (ជាជម្រើស)</label>
