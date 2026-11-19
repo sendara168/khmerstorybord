@@ -429,15 +429,15 @@ async function generateWithOllama({ baseUrl, model, prompt }) {
 
 async function generateWithOpenAICompatible({ provider, baseUrl, apiKey, model, prompt }) {
   const defaults = {
-    openrouter: { url: 'https://openrouter.ai/api/v1', model: 'google/gemma-4-31b-it:free' },
+    openrouter: { url: 'https://openrouter.ai/api/v1', model: 'openrouter/free' },
     groq: { url: 'https://api.groq.com/openai/v1', model: 'llama-3.3-70b-versatile' },
     openai: { url: 'https://api.openai.com/v1', model: 'gpt-4o-mini' },
   };
   const def = defaults[provider] || defaults.openai;
   const cleanBase = String(baseUrl || def.url).replace(/\/+$/, '');
   let selectedModel = String(model || def.model).trim();
-  if (provider === 'openrouter' && selectedModel === 'google/gemma-3-27b-it:free') {
-    selectedModel = 'google/gemma-4-31b-it:free';
+  if (provider === 'openrouter' && (selectedModel === 'google/gemma-3-27b-it:free' || !selectedModel)) {
+    selectedModel = 'openrouter/free';
   }
   const isLocal = /^https?:\/\/(localhost|127\.0\.0\.1)/i.test(cleanBase);
 
@@ -459,16 +459,26 @@ async function generateWithOpenAICompatible({ provider, baseUrl, apiKey, model, 
   }
 
   const candidateModels = provider === 'openrouter'
-    ? [selectedModel, 'google/gemma-4-31b-it:free', 'google/gemma-4-26b-a4b-it:free', 'google/gemma-3-27b-it']
-        .filter((m, idx, arr) => Boolean(m) && arr.indexOf(m) === idx)
+    ? [
+        selectedModel,
+        'openrouter/free',
+        'google/gemma-4-31b-it:free',
+        'google/gemma-4-26b-a4b-it:free',
+        'nvidia/nemotron-3.5-lightning:free',
+        'google/gemma-3-27b-it',
+      ].filter((m, idx, arr) => Boolean(m) && arr.indexOf(m) === idx)
     : [selectedModel];
 
   let lastError = null;
+  let has429 = false;
 
   for (let i = 0; i < candidateModels.length; i++) {
     const currentModel = candidateModels[i];
+    const serverFallbacks = candidateModels.slice(i);
+
     const body = {
       model: currentModel,
+      ...(provider === 'openrouter' ? { models: serverFallbacks } : {}),
       messages: [
         {
           role: 'system',
@@ -478,6 +488,7 @@ async function generateWithOpenAICompatible({ provider, baseUrl, apiKey, model, 
         { role: 'user', content: prompt },
       ],
       temperature: 0.7,
+      max_tokens: 4096,
     };
 
     // Use json_object response_format for providers that reliably support it
@@ -501,16 +512,38 @@ async function generateWithOpenAICompatible({ provider, baseUrl, apiKey, model, 
     const data = await res.json().catch(() => ({}));
     if (!res.ok) {
       const errMsg = String(data?.error?.message || data?.message || `HTTP ${res.status}`);
-      const isUnavailable =
+      const isRateLimit = res.status === 429 || errMsg.toLowerCase().includes('rate limit');
+      if (isRateLimit) {
+        has429 = true;
+      }
+
+      const isUnavailableOrRateLimited =
         res.status === 404 ||
+        res.status === 429 ||
+        res.status === 500 ||
+        res.status === 502 ||
+        res.status === 503 ||
+        res.status === 504 ||
         errMsg.toLowerCase().includes('unavailable') ||
         errMsg.toLowerCase().includes('not found') ||
-        errMsg.toLowerCase().includes('use this slug instead');
+        errMsg.toLowerCase().includes('use this slug instead') ||
+        errMsg.toLowerCase().includes('provider returned error') ||
+        errMsg.toLowerCase().includes('overloaded') ||
+        errMsg.toLowerCase().includes('rate limit') ||
+        errMsg.toLowerCase().includes('temporarily');
 
-      if (provider === 'openrouter' && isUnavailable && i < candidateModels.length - 1) {
+      if (provider === 'openrouter' && isUnavailableOrRateLimited && i < candidateModels.length - 1) {
         lastError = new Error(`${provider.toUpperCase()} Error (${res.status}): ${errMsg}`);
+        await new Promise((r) => setTimeout(r, 1000));
         continue;
       }
+
+      if (isRateLimit || errMsg.toLowerCase().includes('provider returned error')) {
+        throw new Error(
+          `OpenRouter ជាប់ Rate Limit (429): Provider ឥតគិតថ្លៃកំពុងមមាញឹក ឬអស់កូតាឥតគិតថ្លៃប្រចាំនាទី (${errMsg})។ សូមរង់ចាំប្រហែល ១ នាទី រួចចុចម្តងទៀត ឬប្ដូរទៅប្រើប្រអប់ «ប្រើ ChatGPT / Gemini Web (ឥតគិតថ្លៃ)» ខាងក្រោម ឬប្ដូរ Provider ទៅ Groq / Gemini API!`
+        );
+      }
+
       throw new Error(`${provider.toUpperCase()} Error (${res.status}): ${errMsg}`);
     }
 
@@ -519,6 +552,12 @@ async function generateWithOpenAICompatible({ provider, baseUrl, apiKey, model, 
       throw new Error(`${provider.toUpperCase()} បានត្រឡប់លទ្ធផលទទេ។`);
     }
     return extractJsonFromText(content);
+  }
+
+  if (has429) {
+    throw new Error(
+      'OpenRouter ជាប់ Rate Limit (429): ម៉ូដែលឥតគិតថ្លៃទាំងអស់កំពុងមានអ្នកប្រើច្រើន ឬអស់កូតាឥតគិតថ្លៃ។ សូមរង់ចាំប្រហែល ១ នាទី រួចចុចម្តងទៀត ឬប្ដូរទៅប្រើប្រអប់ «ប្រើ ChatGPT / Gemini Web (ឥតគិតថ្លៃ)» ខាងក្រោម!'
+    );
   }
 
   throw lastError || new Error(`${provider.toUpperCase()} មិនអាចដំណើរការបានទេ។`);

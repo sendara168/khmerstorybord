@@ -42,9 +42,12 @@ function loadInitialConfig(): AiProviderConfig {
           AI_PROVIDER_PRESETS.find((p) => p.id === parsed.provider) ||
           AI_PROVIDER_PRESETS[0];
         let model = parsed.model || preset.defaultModel;
-        // Automatically upgrade deprecated free model slug
-        if (model === 'google/gemma-3-27b-it:free') {
-          model = 'google/gemma-4-31b-it:free';
+        // Automatically upgrade deprecated/rate-limited free model slug to openrouter/free
+        if (
+          model === 'google/gemma-3-27b-it:free' ||
+          (parsed.provider === 'openrouter' && model === 'google/gemma-4-31b-it:free')
+        ) {
+          model = 'openrouter/free';
         }
         const updatedConfig: AiProviderConfig = {
           provider: preset.id,
@@ -52,7 +55,7 @@ function loadInitialConfig(): AiProviderConfig {
           model,
           baseUrl: parsed.baseUrl || preset.defaultBaseUrl,
         };
-        if (parsed.model === 'google/gemma-3-27b-it:free') {
+        if (parsed.model !== model) {
           persistConfig(updatedConfig);
         }
         return updatedConfig;

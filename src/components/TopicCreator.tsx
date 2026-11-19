@@ -530,8 +530,28 @@ export const TopicCreator: React.FC<TopicCreatorProps> = ({
       {errorMessage && (
         <div className="alert-error">
           <AlertCircle size={18} />
-          <div>
-            <strong>មានបញ្ហាក្នុងការបង្កើត៖</strong> {errorMessage}
+          <div style={{ flex: 1 }}>
+            <div>
+              <strong>មានបញ្ហាក្នុងការបង្កើត៖</strong> {errorMessage}
+            </div>
+            <div style={{ marginTop: 8, display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+              <button
+                type="button"
+                className="btn-secondary"
+                style={{ fontSize: '0.82rem', padding: '5px 12px', background: '#ffffff', borderColor: '#fca5a5' }}
+                onClick={onOpenSettings}
+              >
+                ⚙️ ប្ដូរ AI Provider / ម៉ូដែល
+              </button>
+              <button
+                type="button"
+                className="btn-secondary"
+                style={{ fontSize: '0.82rem', padding: '5px 12px', background: '#ffffff', borderColor: '#fca5a5' }}
+                onClick={() => setShowWebBridge(true)}
+              >
+                📋 ប្រើ ChatGPT / Gemini Web (មិនបាច់ Key)
+              </button>
+            </div>
           </div>
         </div>
       )}

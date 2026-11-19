@@ -128,11 +128,11 @@ async function callOpenRouterInBrowser(prompt: string, config: AiProviderConfig)
     throw new Error('សូមបញ្ចូល OpenRouter API Key នៅក្នុង «កំណត់ការភ្ជាប់ AI» (ប៊ូតុង Settings) ជាមុនសិន។');
   }
   const baseUrl = (config.baseUrl || 'https://openrouter.ai/api/v1').replace(/\/+$/, '');
-  let requestedModel = (config.model || 'google/gemma-4-31b-it:free').trim();
+  let requestedModel = (config.model || 'openrouter/free').trim();
 
-  // If old deprecated free model slug is passed, immediately rewrite to working free model
+  // If old deprecated free model slug is passed, immediately rewrite to openrouter/free
   if (requestedModel === 'google/gemma-3-27b-it:free') {
-    requestedModel = 'google/gemma-4-31b-it:free';
+    requestedModel = 'openrouter/free';
   }
 
   const headers: Record<string, string> = {
@@ -144,17 +144,23 @@ async function callOpenRouterInBrowser(prompt: string, config: AiProviderConfig)
 
   const candidateModels = [
     requestedModel,
+    'openrouter/free',
     'google/gemma-4-31b-it:free',
     'google/gemma-4-26b-a4b-it:free',
+    'nvidia/nemotron-3.5-lightning:free',
     'google/gemma-3-27b-it',
   ].filter((m, idx, arr) => Boolean(m) && arr.indexOf(m) === idx);
 
   let lastError: Error | null = null;
+  let encounteredRateLimit = false;
 
   for (let i = 0; i < candidateModels.length; i++) {
     const modelToTry = candidateModels[i];
-    const body = {
+    const serverFallbacks = candidateModels.slice(i);
+
+    const body: Record<string, any> = {
       model: modelToTry,
+      models: serverFallbacks, // OpenRouter native automatic failover across free providers
       messages: [
         {
           role: 'system',
@@ -164,7 +170,7 @@ async function callOpenRouterInBrowser(prompt: string, config: AiProviderConfig)
         { role: 'user', content: prompt },
       ],
       temperature: 0.7,
-      max_tokens: 8192,
+      max_tokens: 4096,
     };
 
     let res: Response;
@@ -183,17 +189,44 @@ async function callOpenRouterInBrowser(prompt: string, config: AiProviderConfig)
     const data = await res.json().catch(() => ({}));
     if (!res.ok) {
       const errMsg = String(data?.error?.message || data?.message || `HTTP ${res.status}`);
-      const isUnavailable =
+      const isRateLimit =
+        res.status === 429 ||
+        errMsg.toLowerCase().includes('rate limit') ||
+        errMsg.toLowerCase().includes('provider returned error');
+
+      if (isRateLimit) {
+        encounteredRateLimit = true;
+      }
+
+      const isUnavailableOrRateLimited =
         res.status === 404 ||
+        res.status === 429 ||
+        res.status === 500 ||
+        res.status === 502 ||
+        res.status === 503 ||
+        res.status === 504 ||
         errMsg.toLowerCase().includes('unavailable') ||
         errMsg.toLowerCase().includes('not found') ||
-        errMsg.toLowerCase().includes('use this slug instead');
+        errMsg.toLowerCase().includes('use this slug instead') ||
+        errMsg.toLowerCase().includes('provider returned error') ||
+        errMsg.toLowerCase().includes('rate limit') ||
+        errMsg.toLowerCase().includes('overloaded') ||
+        errMsg.toLowerCase().includes('temporarily');
 
-      if (isUnavailable && i < candidateModels.length - 1) {
-        console.warn(`OpenRouter model ${modelToTry} unavailable (${errMsg}), falling back to ${candidateModels[i + 1]}...`);
+      if (isUnavailableOrRateLimited && i < candidateModels.length - 1) {
+        console.warn(`OpenRouter model ${modelToTry} unavailable/rate-limited (${errMsg}), retrying with ${candidateModels[i + 1]}...`);
         lastError = new Error(`OpenRouter Error (${res.status}): ${errMsg}`);
+        // Small pause to avoid back-to-back spamming
+        await new Promise((r) => setTimeout(r, 1000));
         continue;
       }
+
+      if (isRateLimit) {
+        throw new Error(
+          `OpenRouter ជាប់ Rate Limit (429): Provider ឥតគិតថ្លៃកំពុងមមាញឹកខ្លាំង ឬអស់កូតាឥតគិតថ្លៃប្រចាំនាទី (${errMsg})។ សូមរង់ចាំប្រហែល ១ នាទី រួចចុចម្តងទៀត ឬប្ដូរទៅប្រើប្រអប់ «ប្រើ ChatGPT / Gemini Web (ឥតគិតថ្លៃ មិនបាច់ API Key)» ខាងក្រោម ឬប្ដូរ Provider ទៅ Groq / Gemini API!`
+        );
+      }
+
       throw new Error(`OpenRouter Error (${res.status}): ${errMsg}`);
     }
 
@@ -202,6 +235,12 @@ async function callOpenRouterInBrowser(prompt: string, config: AiProviderConfig)
       throw new Error('OpenRouter បានត្រឡប់លទ្ធផលទទេ។ សូមសាកល្បងម្ដងទៀត ឬប្ដូរម៉ូដែល។');
     }
     return content;
+  }
+
+  if (encounteredRateLimit) {
+    throw new Error(
+      'OpenRouter ជាប់ Rate Limit (429): ម៉ូដែលឥតគិតថ្លៃទាំងអស់កំពុងមានអ្នកប្រើច្រើន ឬអស់កូតាឥតគិតថ្លៃ។ សូមរង់ចាំប្រហែល ១ នាទី រួចចុចម្តងទៀត ឬប្ដូរទៅប្រើប្រអប់ «ប្រើ ChatGPT / Gemini Web (ឥតគិតថ្លៃ)» ខាងក្រោម!'
+    );
   }
 
   throw lastError || new Error('OpenRouter មិនអាចដំណើរការបានទេ។');
