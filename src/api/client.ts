@@ -735,18 +735,35 @@ function normalizeParsedInBrowser(
     isFictionalNote:
       parsed.isFictionalNote ||
       'តួអង្គ និងស្ថានភាពក្នុងរឿងនេះ ត្រូវបានប្រឌិតឡើងក្នុងគោលបំណងអប់រំ ដើម្បីងាយយល់។',
-    characters: Array.isArray(parsed.characters)
-      ? parsed.characters.map((c: any) => ({
-          name: String(c.name || 'តួអង្គ'),
-          role: String(c.role || ''),
-          appearance: String(c.appearance || ''),
-          outfit: String(c.outfit || ''),
-          personality: String(c.personality || ''),
-          aiCharacterImagePromptEn:
-            String(c.aiCharacterImagePromptEn || '').trim() ||
-            getCharacterImagePrompt(c, styleObj.labelEn),
-        }))
-      : [],
+    characters: (() => {
+      let charList = Array.isArray(parsed.characters) ? parsed.characters : [];
+      if (req.presenterSetup === 'solo' && charList.length > 0) {
+        const first = charList[0];
+        const rawName = String(first?.name || 'សុខា').split('(')[0].trim();
+        charList = [
+          {
+            name: `${rawName} (អ្នកធ្វើបទបង្ហាញទោល / Solo Presenter)`,
+            role: first?.role || 'អ្នកធ្វើបទបង្ហាញទោល ដឹកនាំសាច់រឿង និងពន្យល់ពីដើមដល់ចប់',
+            appearance: first?.appearance || 'យុវជនខ្មែរអាយុ ២៦ ឆ្នាំ ទឹកមុខរួសរាយ រស់រវើក សម្បុរស្រអែមធម្មជាតិ',
+            outfit: first?.outfit || 'អាវប៉ូឡូពណ៌ផ្ទៃមេឃស្រាល ខោខូវប៊យពណ៌ទឹកប៊ិចក្រមៅ',
+            personality: first?.personality || 'ស្វាហាប់ ពូកែពន្យល់ មានទំនុកចិត្ត និងរួសរាយរាក់ទាក់',
+            aiCharacterImagePromptEn:
+              first?.aiCharacterImagePromptEn ||
+              `Authentic Cambodian (Khmer) 2D cartoon character design turnaround reference sheet of ${rawName}, a friendly 26-year-old Cambodian solo presenter, natural Southeast Asian facial features, neat short black hair, warm light-tan skin tone. Full-body front view, 3/4 view, and 3 facial expressions.`,
+          },
+        ];
+      }
+      return charList.map((c: any) => ({
+        name: String(c.name || 'តួអង្គ'),
+        role: String(c.role || ''),
+        appearance: String(c.appearance || ''),
+        outfit: String(c.outfit || ''),
+        personality: String(c.personality || ''),
+        aiCharacterImagePromptEn:
+          String(c.aiCharacterImagePromptEn || '').trim() ||
+          getCharacterImagePrompt(c, styleObj.labelEn),
+      }));
+    })(),
     outline: Array.isArray(parsed.outline)
       ? parsed.outline.map((o: any) => ({
           section: normalizeSection(o.section),
@@ -776,7 +793,13 @@ function normalizeParsedInBrowser(
         topic: topicText,
         categoryLabelKh: req.categoryLabelKh,
         targetScenes: req.targetScenes || rawScenes.length,
-        characters: Array.isArray(parsed.characters) ? parsed.characters : [],
+        characters:
+          req.presenterSetup === 'solo' && Array.isArray(parsed.characters) && parsed.characters.length > 1
+            ? [parsed.characters[0]]
+            : Array.isArray(parsed.characters)
+            ? parsed.characters
+            : [],
+        presenterSetup: req.presenterSetup,
         animationStyleLabel: styleObj.labelEn,
         styleAnchor: styleObj.promptAnchor,
       }

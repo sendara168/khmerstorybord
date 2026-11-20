@@ -19,6 +19,8 @@ import {
   UserCheck,
   Clapperboard,
   User,
+  Image as ImageIcon,
+  Film,
   Activity,
   Wrench,
   MessageSquare,
@@ -60,7 +62,7 @@ interface TopicCreatorProps {
   onUpdateAiConfig?: (config: AiProviderConfig) => void;
 }
 
-export const TOPIC_STARTER_TEMPLATES = [
+const TOPIC_STARTER_TEMPLATES = [
   { label: '៧ វិធី...', text: '៧ វិធី' },
   { label: '៥ កំហុស...', text: '៥ កំហុសធ្ងន់ធ្ងរដែល' },
   { label: 'ហេតុអ្វី...', text: 'ហេតុអ្វីបានជា' },
@@ -69,6 +71,10 @@ export const TOPIC_STARTER_TEMPLATES = [
   { label: 'ប្រវត្តិនៃ...', text: 'ប្រវត្តិនៃ' },
   { label: 'គន្លឹះ...', text: '៥ គន្លឹះសំខាន់ៗសម្រាប់' },
   { label: 'រឿងនិទាន...', text: 'រឿងនិទានអប់រំអំពី' },
+  { label: 'រឿងខ្មោច...', text: 'រឿងខ្មោចព្រឺព្រួចអំពី' },
+  { label: 'រឿងព្រេង...', text: 'រឿងព្រេងនិទានបុរាណខ្មែរអំពី' },
+  { label: 'រឿងកំប្លែង...', text: 'រឿងកំប្លែងសើចចុកពោះអំពី' },
+  { label: 'រឿងមន្តអាគមន៍...', text: 'រឿងមន្តអាគមន៍ យុទ្ធសិល្ប៍បង្ក្រាប' },
 ];
 
 export const TopicCreator: React.FC<TopicCreatorProps> = ({
@@ -90,7 +96,7 @@ export const TopicCreator: React.FC<TopicCreatorProps> = ({
   const [animationStyle, setAnimationStyle] = useState<AnimationStyleId>('2d-cartoon');
   const [narratorVoice, setNarratorVoice] = useState<string>('Khmer Male Voice');
   const [presenterSetup, setPresenterSetup] = useState<PresenterSetupId>('group');
-  const [actionDynamic, setActionDynamic] = useState<SceneActionDynamicId>('cinematic-action');
+  const [actionDynamic, setActionDynamic] = useState<SceneActionDynamicId>('character-dialogue-speech');
   const [customNotes, setCustomNotes] = useState<string>('');
 
   const [showPromptPreview, setShowPromptPreview] = useState<boolean>(false);
@@ -204,7 +210,10 @@ export const TopicCreator: React.FC<TopicCreatorProps> = ({
     if (elapsedSeconds < 2) {
       return {
         percent: 25,
-        title: '⚡ ដំណាក់កាលទី ១/៤៖ កំពុងរៀបចំ Outline & តួអង្គជាក្រុម...',
+        title:
+          presenterSetup === 'no-characters'
+            ? '⚡ ដំណាក់កាលទី ១/៤៖ កំពុងរៀបចំ Outline & Visual Concepts តាម Topic...'
+            : '⚡ ដំណាក់កាលទី ១/៤៖ កំពុងរៀបចំ Outline & តួអង្គជាក្រុម...',
         sub: `ដំណើរការលើ ${activePreset.name} (ម៉ូដែល ${activePreset.defaultModel || 'AI'})...`,
       };
     }
@@ -575,13 +584,21 @@ export const TopicCreator: React.FC<TopicCreatorProps> = ({
         </div>
 
         <div className="form-group" style={{ marginTop: 16 }}>
-          <label>ចំណុចបន្ថែម / តួអង្គដែលចង់បាន (ជាជម្រើស)</label>
+          <label>
+            {presenterSetup === 'no-characters'
+              ? 'ចំណុចបន្ថែម / រូបភាព Visual & វត្ថុដែលចង់បង្ហាញ (ជាជម្រើស)'
+              : 'ចំណុចបន្ថែម / តួអង្គដែលចង់បាន (ជាជម្រើស)'}
+          </label>
           <input
             type="text"
             className="input-field"
             value={customNotes}
             onChange={(e) => setCustomNotes(e.target.value)}
-            placeholder="ឧទាហរណ៍៖ ចង់ឱ្យមានតួអង្គយុវជនខ្មែរឈ្មោះ ដារ៉ា និងគ្រូណែនាំ..."
+            placeholder={
+              presenterSetup === 'no-characters'
+                ? 'ឧទាហរណ៍៖ ចង់ផ្តោតលើរូបភាពឯកសារ ឧបករណ៍កុំព្យូទ័រ តារាងក្រាហ្វិក ទេសភាពភ្នំពេញ...'
+                : 'ឧទាហរណ៍៖ ចង់ឱ្យមានតួអង្គយុវជនខ្មែរឈ្មោះ ដារ៉ា និងគ្រូណែនាំ...'
+            }
           />
         </div>
       </section>
@@ -590,10 +607,10 @@ export const TopicCreator: React.FC<TopicCreatorProps> = ({
       <section className="studio-card">
         <div className="card-header-row">
           <div>
-            <span className="step-pill">ជំហានទី ៣ • ជម្រើសតួអង្គ</span>
-            <h2>ទម្រង់តួអង្គធ្វើបទបង្ហាញ (Presenter & Character Cast Setup)</h2>
+            <span className="step-pill">ជំហានទី ៣ • ជម្រើសតួអង្គ & រូបភាព Topic</span>
+            <h2>ទម្រង់តួអង្គ ឬរូបភាពធ្វើបទបង្ហាញ (Presenter & Character Cast Setup)</h2>
             <p className="muted-text">
-              ជ្រើសរើសទម្រង់តួអង្គធ្វើបទបង្ហាញក្នុងវីដេអូ — ជាក្រុមការងារច្រើននាក់ គូតួអង្គឆ្លើយឆ្លង ឬក្រុមតួអង្គដើរតួក្នុងសាច់រឿងជាក់ស្តែង។
+              ជ្រើសរើសទម្រង់តួអង្គធ្វើបទបង្ហាញក្នុងវីដេអូ — ជាក្រុមការងារច្រើននាក់ គូតួអង្គឆ្លើយឆ្លង ក្រុមតួអង្គដើរតួក្នុងសាច់រឿងជាក់ស្តែង ឬបង្ហាញតែរូបភាពតាម Topic ដោយមិនចាំបាច់ប្រើតួអង្គ។
             </p>
           </div>
         </div>
@@ -605,8 +622,13 @@ export const TopicCreator: React.FC<TopicCreatorProps> = ({
               <button
                 key={opt.id}
                 type="button"
-                className={`setup-card-choice ${active ? 'active' : ''}`}
-                onClick={() => setPresenterSetup(opt.id)}
+                className={`setup-card-choice ${opt.id === 'no-characters' ? 'card-no-characters' : ''} ${active ? 'active' : ''}`}
+                onClick={() => {
+                  setPresenterSetup(opt.id);
+                  if (opt.id === 'no-characters' && actionDynamic !== 'topic-broll') {
+                    setActionDynamic('topic-broll');
+                  }
+                }}
               >
                 <div className="setup-card-top">
                   <div className="setup-card-title">
@@ -614,6 +636,7 @@ export const TopicCreator: React.FC<TopicCreatorProps> = ({
                     {opt.id === 'duo' && <UserCheck size={18} className="text-amber" />}
                     {opt.id === 'drama-cast' && <Clapperboard size={18} className="text-amber" />}
                     {opt.id === 'solo' && <User size={18} className="text-amber" />}
+                    {opt.id === 'no-characters' && <ImageIcon size={18} className="text-amber" />}
                     <span>{opt.labelKh.split('(')[0]}</span>
                   </div>
                   <span className="setup-card-badge">{opt.badgeKh}</span>
@@ -627,16 +650,70 @@ export const TopicCreator: React.FC<TopicCreatorProps> = ({
             );
           })}
         </div>
+
+        {presenterSetup === 'no-characters' && (
+          <div
+            className="alert-banner-amber"
+            style={{
+              marginTop: 14,
+              padding: '12px 16px',
+              borderRadius: 10,
+              background: '#fef3c7',
+              border: '1.5px solid #fcd34d',
+              color: '#92400e',
+              display: 'flex',
+              alignItems: 'flex-start',
+              gap: 12,
+              fontSize: '0.88rem',
+              lineHeight: 1.5,
+            }}
+          >
+            <ImageIcon size={20} className="text-amber" style={{ flexShrink: 0, marginTop: 2 }} />
+            <div>
+              <strong>របៀបបង្ហាញតែរូបភាពតាម Topic (Topic Visuals Only — គ្មានតួអង្គ)៖</strong>
+              <div style={{ marginTop: 2, color: '#78350f' }}>
+                វីដេអូនឹងផ្តោតលើរូបភាព Visual, B-roll, ឧបករណ៍, ឯកសារ, ទេសភាព និងចលនាកាមេរ៉ាដែលទាក់ទងនឹងប្រធានបទ «<strong>{topic.trim() || 'Topic របស់អ្នក'}</strong>» សុទ្ធសាធ ដោយមិនចាំបាច់មានតួអង្គមនុស្ស ឬអ្នកនិយាយឡើយ (អមដោយសំឡេងអ្នកនិទាន Khmer Voiceover ពិស្ដារ និង Subtitle ពេញលេញ)។
+              </div>
+            </div>
+          </div>
+        )}
+
+        {presenterSetup === 'solo' && (
+          <div
+            className="alert-banner-amber"
+            style={{
+              marginTop: 14,
+              padding: '12px 16px',
+              borderRadius: 10,
+              background: '#eff6ff',
+              border: '1.5px solid #93c5fd',
+              color: '#1e40af',
+              display: 'flex',
+              alignItems: 'flex-start',
+              gap: 12,
+              fontSize: '0.88rem',
+              lineHeight: 1.5,
+            }}
+          >
+            <User size={20} style={{ flexShrink: 0, marginTop: 2, color: '#2563eb' }} />
+            <div>
+              <strong>របៀបអ្នកធ្វើបទបង្ហាញទោល (Solo Presenter • តួអង្គតែ ១ នាក់គត់)៖</strong>
+              <div style={{ marginTop: 2, color: '#1e3a8a' }}>
+                វីដេអូនឹងមានតួអង្គតែ ១ នាក់គត់ (Solo Presenter) ដឹកនាំសាច់រឿង ពន្យល់ និងធ្វើសកម្មភាពរស់រវើកពីដើមដល់ចប់ ដោយគ្មានតួអង្គដទៃទៀតមកជជែកឡើយ!
+              </div>
+            </div>
+          </div>
+        )}
       </section>
 
       {/* Step 4: Scene Action Dynamics */}
       <section className="studio-card">
         <div className="card-header-row">
           <div>
-            <span className="step-pill">ជំហានទី ៤ • ប្លង់សកម្មភាពរស់រវើក</span>
-            <h2>ស្ទីលប្លង់សកម្មភាព (Scene Action Dynamics — ហាមឈរនិយាយទទេ)</h2>
+            <span className="step-pill">ជំហានទី ៤ • ប្លង់សកម្មភាព & ការសម្ដែង</span>
+            <h2>ស្ទីលប្លង់សកម្មភាព & ការសម្ដែងតួអង្គ (Scene Action Dynamics & Acting)</h2>
             <p className="muted-text">
-              កំណត់របៀបដែលតួអង្គធ្វើសកម្មភាពក្នុងឈុតនីមួយៗ — ផ្តោតលើចលនារស់រវើក ការងារជាក់ស្តែង និងការសហការ មិនឈរនិយាយស្ងៀមមុខកាមេរ៉ា។
+              កំណត់របៀបដែលតួអង្គធ្វើសកម្មភាព និងនិយាយក្នុងឈុតនីមួយៗ — តួអង្គនិយាយផ្ទាល់តាម Script សាច់រឿងជាភាសាខ្មែរ អមដោយកាយវិការសម្ដែងរស់រវើក។
             </p>
           </div>
         </div>
@@ -657,6 +734,8 @@ export const TopicCreator: React.FC<TopicCreatorProps> = ({
                     {dyn.id === 'hands-on-demo' && <Wrench size={18} className="text-amber" />}
                     {dyn.id === 'dialogue-roleplay' && <MessageSquare size={18} className="text-amber" />}
                     {dyn.id === 'field-documentary' && <Compass size={18} className="text-amber" />}
+                    {dyn.id === 'topic-broll' && <Film size={18} className="text-amber" />}
+                    {dyn.id === 'character-dialogue-speech' && <Mic size={18} className="text-amber" />}
                     <span>{dyn.labelKh.split('(')[0]}</span>
                   </div>
                   <span className="setup-card-badge">{dyn.badgeKh}</span>
@@ -670,6 +749,33 @@ export const TopicCreator: React.FC<TopicCreatorProps> = ({
             );
           })}
         </div>
+
+        {actionDynamic === 'character-dialogue-speech' && (
+          <div
+            className="alert-banner-amber"
+            style={{
+              marginTop: 14,
+              padding: '12px 16px',
+              borderRadius: 10,
+              background: '#f0fdf4',
+              border: '1.5px solid #86efac',
+              color: '#166534',
+              display: 'flex',
+              alignItems: 'flex-start',
+              gap: 12,
+              fontSize: '0.88rem',
+              lineHeight: 1.5,
+            }}
+          >
+            <Mic size={20} style={{ flexShrink: 0, marginTop: 2, color: '#16a34a' }} />
+            <div>
+              <strong>របៀបតួអង្គនិយាយផ្ទាល់តាម Script សាច់រឿង (Character Speaking & Story Acting)៖</strong>
+              <div style={{ marginTop: 2, color: '#14532d' }}>
+                គ្រប់ឈុតទាំងអស់ តួអង្គជាអ្នកនិយាយផ្ទាល់មាត់តាម Script សាច់រឿងជាភាសាខ្មែរ (មានឃ្លានិយាយ [ឈ្មោះតួអង្គ]៖ «...» ច្បាស់លាស់) អមដោយកាយវិការសម្ដែង និងអារម្មណ៍រស់រវើក ងាយស្រួលអាន ថតសំឡេង ឬកាត់តបញ្ចូលគ្នាក្នុង CapCut / Premiere ដោយមិនចាំបាច់ប្រើកម្មវិធី AI Voice/Lip-Sync ឡើយ។
+              </div>
+            </div>
+          </div>
+        )}
       </section>
 
       {/* Step 5: Duration, Scene Count, Style, Voice */}
@@ -806,7 +912,7 @@ export const TopicCreator: React.FC<TopicCreatorProps> = ({
           <div>
             <label className="icon-label">
               <Palette size={15} />
-              <span>ស្ទីល Animation</span>
+              <span>ស្ទីលរូបភាព & Animation (Visual & Animation Style)</span>
             </label>
             <div className="stack-options">
               {ANIMATION_STYLES.map((s) => (

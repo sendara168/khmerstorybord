@@ -106,7 +106,7 @@ export const STORYBOARD_JSON_SCHEMA = {
           narratorScriptKh: {
             type: 'string',
             description:
-              'Comprehensive, substantive, natural Khmer narrator voiceover (2-4 well-developed sentences, ~35-65 words) that explains the core topic in depth with root causes, practical steps, and Cambodian analogies, matching the visual action, and explicitly beginning with or featuring narrative bridge words connecting smoothly from the preceding scene.',
+              'Direct spoken lines of the character in Khmer, formatted as [ឈ្មោះតួអង្គ]៖ «<សម្ដីតួអង្គនិយាយផ្ទាល់ជាភាសាខ្មែរ>». The character is the active speaker delivering the story directly in natural, engaging spoken Khmer (2-4 well-developed sentences, ~35-65 words) matching the scene\'s action.',
           },
           characterDialogue: { type: 'string' },
           onScreenText: { type: 'string' },
@@ -118,7 +118,7 @@ export const STORYBOARD_JSON_SCHEMA = {
           aiVideoPromptEn: {
             type: 'string',
             description:
-              'Detailed English AI video animation prompt focusing purely on dynamic visual action, character physical gestures, and camera motion illustrating the topic. CHARACTERS DO NOT SPEAK (silent cinematic action, no dialogue or lip-sync, designed for external voiceover overlay in CapCut/Premiere).',
+              'Detailed English AI video animation prompt describing authentic character acting and spoken delivery: Cambodian characters actively speaking on camera in Khmer with natural speech articulation, engaging facial expressions, and communicative hand gestures while illustrating the topic, smooth 24fps motion, 16:9, no floating text.',
           },
           cameraMovement: { type: 'string' },
           bgmAndSfx: { type: 'string' },
@@ -136,6 +136,7 @@ export const STORYBOARD_JSON_SCHEMA = {
           tempo: { type: 'string' },
           instruments: { type: 'string' },
           usageTip: { type: 'string' },
+          aiMusicPromptEn: { type: 'string' },
         },
       },
     },
@@ -159,6 +160,8 @@ export const STYLE_ANCHORS = {
     'Stylized 3D Pixar-inspired educational cartoon animation, authentic Cambodian (Khmer) characters and Cambodian rural/city environments, authentic Khmer script on natural storefront signboards where relevant, soft global illumination, warm cinematic lighting, 16:9 composition, no floating subtitles or watermarks',
   '2d-documentary':
     'Modern 2D editorial documentary illustration, authentic Cambodian (Khmer) people and real Cambodian countryside/urban architecture (Phnom Penh streets, Khmer shophouses, sugar palm rice fields), clean Khmer script on shop/street signs where relevant, textured gouache and clean ink outlines, warm cinematic lighting, consistent character design, 16:9 composition, no watermarks',
+  'photorealistic-real':
+    'Ultra-photorealistic cinematic live-action photography of authentic real Cambodian (Khmer) people, highly detailed natural skin texture, realistic human facial features and pores, authentic everyday Cambodian outfits and real Southeast Asian hairstyles, genuine authentic Cambodian settings (Phnom Penh urban streets, modern cafés, bustling markets, or rural Cambodian landscape with sugar palm trees and stilt houses), authentic Khmer signage on shops, shot on 35mm lens, f/1.8 aperture, soft cinematic background bokeh, natural warm golden hour sunlight, 8k resolution, photorealistic masterpiece, strictly no cartoon, no 3D render, no CGI, no floating watermarks or text',
 };
 
 export function computeStoryMilestones(targetCount) {
@@ -181,6 +184,181 @@ export function computeStoryMilestones(targetCount) {
   };
 }
 
+export function sanitizeScriptRepetitions(scenes, topic, videoTitle) {
+  const cleanTopic = String(topic || '').trim();
+  const cleanTitle = String(videoTitle || '').trim();
+  const escapeRegExp = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+  return (scenes || []).map((scene, idx) => {
+    let script = String(scene.narratorScriptKh || '').trim();
+
+    // Scene 1 can mention the topic once; Scene 2+ must NOT recite the topic or title repeatedly
+    if (idx > 0) {
+      const targets = [cleanTitle, cleanTopic].filter(Boolean);
+
+      for (const t of targets) {
+        if (!t || t.length < 3) continue;
+
+        const escaped = escapeRegExp(t);
+
+        // Replace repetitive title citations with natural contextual Khmer phrasing
+        script = script.replace(
+          new RegExp(`(?:នៃ|អំពី|ជាមួយ|ចំពោះ)\\s*«${escaped}»`, 'gi'),
+          'នៃបញ្ហានេះ'
+        );
+        script = script.replace(
+          new RegExp(`(?:ក្នុង|សម្រាប់)\\s*«${escaped}»`, 'gi'),
+          'ក្នុងចំណុចនេះ'
+        );
+        script = script.replace(new RegExp(`«${escaped}»`, 'gi'), 'ចំណុចនេះ');
+
+        // Without Khmer quotes
+        script = script.replace(
+          new RegExp(`(?:នៃ|អំពី|ជាមួយ|ចំពោះ)\\s+${escaped}`, 'gi'),
+          'នៃបញ្ហានេះ'
+        );
+        script = script.replace(
+          new RegExp(`(?:ក្នុង|សម្រាប់)\\s+${escaped}`, 'gi'),
+          'ក្នុងកិច្ចការនេះ'
+        );
+        script = script.replace(new RegExp(`\\b${escaped}\\b`, 'gi'), 'បញ្ហានេះ');
+      }
+
+      script = script
+        .replace(/\s{2,}/g, ' ')
+        .replace(/ចំណុចនេះ\s+ចំណុចនេះ/g, 'ចំណុចនេះ')
+        .replace(/បញ្ហានេះ\s+បញ្ហានេះ/g, 'បញ្ហានេះ');
+    }
+
+    return {
+      ...scene,
+      narratorScriptKh: script.trim(),
+    };
+  });
+}
+
+function isPhotorealisticStyle(styleAnchor) {
+  const sa = String(styleAnchor || '').toLowerCase();
+  return sa.includes('photorealistic') || sa.includes('real human') || sa.includes('live-action');
+}
+
+function buildSoloPresenterImagePrompt(leadChar, characterAction, styleAnchor, _isDialogueSpeech) {
+  if (isPhotorealisticStyle(styleAnchor)) {
+    return `Ultra-photorealistic cinematic 35mm photography featuring authentic real Cambodian solo presenter ${leadChar}, natural human skin texture and pores, authentic everyday Cambodian outfit, single person in frame, in an active expressive speaking pose with engaging facial expression, delivering story presentation and gesturing: ${characterAction}, authentic Cambodian setting, natural cinematic lighting, shot on 35mm lens, f/1.8 aperture, 8k resolution, photorealistic masterpiece, strictly real human, no cartoon, strictly no other characters in frame. ${styleAnchor || ''}`;
+  }
+  const sa = String(styleAnchor || '').toLowerCase();
+  const prefix = sa.includes('3d')
+    ? 'Stylized 3D Pixar-inspired educational cartoon animation'
+    : sa.includes('documentary')
+    ? 'Modern 2D editorial documentary illustration'
+    : 'Authentic Cambodian 2D illustration';
+  return `${prefix} featuring solo presenter ${leadChar}, single person in frame, in an active expressive speaking pose delivering presentation with engaging facial expression and communicative hand gestures: ${characterAction}, authentic Cambodian background, solo presenter shot, strictly no other characters in frame. ${styleAnchor || ''}`;
+}
+
+function buildSoloPresenterVideoPrompt(leadChar, characterAction, topicText, styleAnchor, _isDialogueSpeech, dialogueText) {
+  const speechLine = dialogueText ? ` while speaking line: "${dialogueText}"` : '';
+  if (isPhotorealisticStyle(styleAnchor)) {
+    return `Visual Action: Cinematic 4K live-action character acting and spoken delivery: authentic real Cambodian solo presenter ${leadChar}, actively speaking directly on camera in Khmer with natural mouth movements, genuine conversational expressions, and communicative hand gestures while presenting: ${characterAction}${speechLine}, illustrating "${topicText}". Single real person in frame, natural cinematic lighting, smooth 24fps motion, 16:9, no floating text.`;
+  }
+  return `Visual Action: Expressive animated character acting and spoken delivery: Cambodian solo presenter ${leadChar}, single person in frame, actively speaking on camera in Khmer with natural speech articulation, engaging facial expressions, and communicative gestures while presenting: ${characterAction}${speechLine}, illustrating "${topicText}". Single character in frame, smooth 24fps animation, authentic Cambodian setting, 16:9, no floating text.`;
+}
+
+function buildGroupPresenterImagePrompt(charNames, actionDesc, styleAnchor, _isDialogueSpeech) {
+  if (isPhotorealisticStyle(styleAnchor)) {
+    return `Ultra-photorealistic cinematic 35mm photography of authentic real Cambodian people (${charNames}), natural human skin texture and pores, authentic everyday Cambodian outfits, in a lively conversational scene with characters speaking, engaging facial expressions, and communicative gestures while interacting: ${actionDesc}, authentic Cambodian urban or rural setting, shot on 35mm lens, f/2.0 aperture, natural sunlight, 8k resolution, photorealistic masterpiece, strictly real humans, no cartoon, no 3D render. ${styleAnchor || ''}`;
+  }
+  const sa = String(styleAnchor || '').toLowerCase();
+  const prefix = sa.includes('3d')
+    ? 'Stylized 3D Pixar-inspired educational cartoon animation'
+    : sa.includes('documentary')
+    ? 'Modern 2D editorial documentary illustration'
+    : 'Authentic Cambodian 2D illustration';
+  return `${prefix} showing lively conversational scene with Cambodian characters (${charNames}) speaking and delivering dialogue with engaging facial expressions and communicative gestures: ${actionDesc}, authentic Cambodian urban or rural background, active collaborative poses. ${styleAnchor || ''}`;
+}
+
+function buildGroupPresenterVideoPrompt(charNames, actionDesc, topicText, styleAnchor, _isDialogueSpeech, dialogueText) {
+  const speechLine = dialogueText ? ` while delivering dialogue: "${dialogueText}"` : '';
+  if (isPhotorealisticStyle(styleAnchor)) {
+    return `Visual Action: Cinematic 4K live-action character acting and dialogue delivery: authentic real Cambodian characters (${charNames}), actively speaking and conversing on camera in Khmer with natural mouth movements, genuine conversational expressions, and communicative hand gestures while interacting: ${actionDesc}${speechLine}, illustrating "${topicText}". Smooth cinematic 24fps footage, natural lighting, 16:9, no floating text.`;
+  }
+  return `Visual Action: Expressive animated character acting and dialogue delivery: Cambodian characters (${charNames}), actively speaking and conversing on camera in Khmer with natural speech articulation, lively conversational expressions, and expressive gestures while interacting: ${actionDesc}${speechLine}, illustrating "${topicText}". Smooth 24fps animation, authentic Cambodian setting, 16:9, no floating text.`;
+}
+
+function sanitizeSceneForCast(s, idx, isSolo, isNoCharacters, leadChar, charNames, topicText, styleAnchor, isDialogueSpeech) {
+  let character = isNoCharacters
+    ? 'គ្មានតួអង្គ (Topic Visuals Only)'
+    : isSolo
+    ? leadChar
+    : s.character || charNames;
+
+  let characterAction = s.characterAction || '';
+  let characterDialogue = isNoCharacters ? '' : s.characterDialogue || '';
+  let visualDesc = s.visualDescription || '';
+  let imgPrompt = s.aiImagePromptEn || '';
+  let videoPrompt = s.aiVideoPromptEn || '';
+
+  if (isSolo) {
+    character = leadChar;
+    characterAction = characterAction
+      .replace(/សុខា\s*និង\s*តារា/g, `${leadChar}តែម្នាក់ឯង`)
+      .replace(/កញ្ញា\s*និង\s*សុខា/g, `${leadChar}តែម្នាក់ឯង`)
+      .replace(/វិចិត្រ\s*និង\s*បុប្ផា/g, `${leadChar}តែម្នាក់ឯង`)
+      .replace(/ក្រុមការងារទាំងមូល\s*\(.*?\)/g, leadChar)
+      .replace(/ក្រុមការងារ/g, `អ្នកធ្វើបទបង្ហាញទោល (${leadChar})`)
+      .replace(/សមាជិកទាំងអស់/g, leadChar)
+      .replace(/តួអង្គទាំងអស់/g, leadChar)
+      .replace(/តួអង្គទាំង\s*[០-៩0-9]+\s*នាក់/g, leadChar);
+
+    if (characterDialogue && !characterDialogue.startsWith(`${leadChar}៖`)) {
+      const colonIdx = characterDialogue.indexOf('៖');
+      if (colonIdx > 0 && colonIdx < 15) {
+        characterDialogue = `${leadChar}៖` + characterDialogue.slice(colonIdx + 1);
+      }
+    }
+
+    if (!imgPrompt.toLowerCase().includes('solo presenter') && !imgPrompt.toLowerCase().includes('single person')) {
+      imgPrompt = buildSoloPresenterImagePrompt(leadChar, characterAction, styleAnchor, isDialogueSpeech);
+    }
+
+    if (!videoPrompt.toLowerCase().includes('solo presenter') && !videoPrompt.toLowerCase().includes('single person')) {
+      videoPrompt = buildSoloPresenterVideoPrompt(leadChar, characterAction, topicText, styleAnchor, isDialogueSpeech, characterDialogue);
+    }
+  } else if (isNoCharacters) {
+    character = 'គ្មានតួអង្គ (Topic Visuals Only)';
+    characterDialogue = '';
+    if (!imgPrompt.toLowerCase().includes('no human characters')) {
+      imgPrompt = `${imgPrompt}, no human characters`;
+    }
+    if (!videoPrompt.toLowerCase().includes('no human characters')) {
+      videoPrompt = `${videoPrompt}, no human characters`;
+    }
+  }
+
+  let narratorScriptKh = (s.narratorScriptKh || '').trim();
+  if (!isNoCharacters) {
+    const speakerName = (character.split('(')[0] || leadChar).trim();
+    const hasSpeakerPrefix = /^[\u1780-\u17FF\w\s]+[៖:]/.test(narratorScriptKh);
+    if (!hasSpeakerPrefix && speakerName) {
+      narratorScriptKh = `${speakerName}៖ «${narratorScriptKh.replace(/^«|»$/g, '').trim()}»`;
+    }
+    if (!characterDialogue) {
+      characterDialogue = narratorScriptKh;
+    }
+  }
+
+  return {
+    ...s,
+    sceneNumber: idx + 1,
+    character,
+    characterAction,
+    narratorScriptKh,
+    characterDialogue,
+    visualDescription: visualDesc,
+    aiImagePromptEn: imgPrompt,
+    aiVideoPromptEn: videoPrompt,
+  };
+}
+
 export function ensureCompleteNarrativeScenes(rawScenes, ctx = {}) {
   const targetCount = Math.max(4, Math.min(120, Number(ctx.targetScenes) || 24));
   const topicText = String(ctx.topic || 'ប្រធានបទអប់រំ').trim();
@@ -190,19 +368,91 @@ export function ensureCompleteNarrativeScenes(rawScenes, ctx = {}) {
     '2D Cartoon Cambodian Educational Animation, authentic Cambodian setting, clean warm lighting, 16:9';
 
   const chars = Array.isArray(ctx.characters) && ctx.characters.length > 0 ? ctx.characters : [];
-  const charNames =
-    chars.length > 0
-      ? chars.map((c) => String(c.name || '').split('(')[0].trim()).filter(Boolean).join(', ')
-      : 'សុខា, តារា & កញ្ញា';
+  const isNoCharacters =
+    ctx.presenterSetup === 'no-characters' ||
+    (chars.length > 0 &&
+      chars.some(
+        (c) =>
+          String(c.name || '').includes('គ្មានតួអង្គ') ||
+          String(c.name || '').includes('Topic Visual') ||
+          String(c.role || '').includes('Topic Visual')
+      ));
+  const isSolo = ctx.presenterSetup === 'solo' || (!isNoCharacters && chars.length === 1);
+  const isDialogueSpeech = ctx.actionDynamic === 'character-dialogue-speech';
+
   const leadChar = chars[0]?.name ? String(chars[0].name).split('(')[0].trim() : 'សុខា';
+  const charNames = isNoCharacters
+    ? 'គ្មានតួអង្គ (Topic Visuals Only)'
+    : isSolo
+    ? leadChar
+    : chars.length > 0
+    ? chars.map((c) => String(c.name || '').split('(')[0].trim()).filter(Boolean).join(', ')
+    : 'សុខា, តារា & កញ្ញា';
 
   if (rawScenes.length >= targetCount) {
-    const adjusted = rawScenes.map((s, idx) => ({
-      ...s,
-      sceneNumber: idx + 1,
-      section: s.section || (idx === 0 ? 'INTRODUCTION' : idx >= rawScenes.length - 2 ? 'CONCLUSION' : 'MAIN_STORY'),
-      durationSeconds: Math.max(4, Math.min(20, Number(s.durationSeconds) || 8)),
-    }));
+    const adjusted = rawScenes.map((s, idx) => {
+      let character = isNoCharacters
+        ? 'គ្មានតួអង្គ (Topic Visuals Only)'
+        : isSolo
+        ? leadChar
+        : s.character || charNames;
+
+      let characterAction = s.characterAction || '';
+      let characterDialogue = isNoCharacters ? '' : s.characterDialogue || '';
+      let visualDesc = s.visualDescription || '';
+      let imgPrompt = s.aiImagePromptEn || '';
+      let videoPrompt = s.aiVideoPromptEn || '';
+
+      if (isSolo) {
+        character = leadChar;
+        characterAction = characterAction
+          .replace(/សុខា\s*និង\s*តារា/g, `${leadChar}តែម្នាក់ឯង`)
+          .replace(/កញ្ញា\s*និង\s*សុខា/g, `${leadChar}តែម្នាក់ឯង`)
+          .replace(/វិចិត្រ\s*និង\s*បុប្ផា/g, `${leadChar}តែម្នាក់ឯង`)
+          .replace(/ក្រុមការងារទាំងមូល\s*\(.*?\)/g, leadChar)
+          .replace(/ក្រុមការងារ/g, `អ្នកធ្វើបទបង្ហាញទោល (${leadChar})`)
+          .replace(/សមាជិកទាំងអស់/g, leadChar)
+          .replace(/តួអង្គទាំងអស់/g, leadChar)
+          .replace(/តួអង្គទាំង\s*[០-៩0-9]+\s*នាក់/g, leadChar);
+
+        if (characterDialogue && !characterDialogue.startsWith(`${leadChar}៖`)) {
+          const colonIdx = characterDialogue.indexOf('៖');
+          if (colonIdx > 0 && colonIdx < 15) {
+            characterDialogue = `${leadChar}៖` + characterDialogue.slice(colonIdx + 1);
+          }
+        }
+
+        if (!imgPrompt.toLowerCase().includes('solo presenter') && !imgPrompt.toLowerCase().includes('single person')) {
+          imgPrompt = buildSoloPresenterImagePrompt(leadChar, characterAction, styleAnchor, isDialogueSpeech);
+        }
+
+        if (!videoPrompt.toLowerCase().includes('solo presenter') && !videoPrompt.toLowerCase().includes('single person')) {
+          videoPrompt = buildSoloPresenterVideoPrompt(leadChar, characterAction, topicText, styleAnchor, isDialogueSpeech, characterDialogue);
+        }
+      } else if (isNoCharacters) {
+        character = 'គ្មានតួអង្គ (Topic Visuals Only)';
+        characterDialogue = '';
+        if (!imgPrompt.toLowerCase().includes('no human characters')) {
+          imgPrompt = `${imgPrompt}, no human characters`;
+        }
+        if (!videoPrompt.toLowerCase().includes('no human characters')) {
+          videoPrompt = `${videoPrompt}, no human characters`;
+        }
+      }
+
+      return {
+        ...s,
+        sceneNumber: idx + 1,
+        section: s.section || (idx === 0 ? 'INTRODUCTION' : idx >= rawScenes.length - 2 ? 'CONCLUSION' : 'MAIN_STORY'),
+        durationSeconds: Math.max(4, Math.min(20, Number(s.durationSeconds) || 8)),
+        character,
+        characterAction,
+        characterDialogue,
+        visualDescription: visualDesc,
+        aiImagePromptEn: imgPrompt,
+        aiVideoPromptEn: videoPrompt,
+      };
+    });
 
     const lastIdx = adjusted.length - 1;
     if (adjusted[lastIdx].section !== 'CONCLUSION') {
@@ -211,7 +461,7 @@ export function ensureCompleteNarrativeScenes(rawScenes, ctx = {}) {
         adjusted[lastIdx].narratorScriptKh += ' សរុបជារួម មកដល់ចំណុចបញ្ចប់នេះ សូមអរគុណសម្រាប់ការទស្សនា និងសូមចុច Like, Share និង Subscribe ដើម្បីទទួលបានចំណេះដឹងថ្មីៗ!';
       }
     }
-    return adjusted;
+    return sanitizeScriptRepetitions(adjusted, topicText, ctx.topic);
   }
 
   const milestones = computeStoryMilestones(targetCount);
@@ -232,23 +482,48 @@ export function ensureCompleteNarrativeScenes(rawScenes, ctx = {}) {
 
   const createGeneratedScene = (num, tmpl, customTitle) => {
     const title = customTitle || `${tmpl.titleKh} (${num})`;
-    const narrator = `${tmpl.bridgeStarter} «${topicText}» ${tmpl.narratorBody}`;
-    const action = `${charNames} ${tmpl.actionDesc}`;
-    const dialogue = `${leadChar}៖ ${tmpl.dialogueKh}`;
+    const speaker = isNoCharacters ? '' : isSolo ? leadChar : (num % 2 === 1 ? leadChar : 'កញ្ញា');
+    const narrator = isNoCharacters
+      ? `${tmpl.bridgeStarter} ${tmpl.narratorBody}`
+      : `${speaker}៖ «${tmpl.bridgeStarter} ${tmpl.narratorBody}»`;
+    const action = isNoCharacters
+      ? `ប្លង់រូបភាព B-roll និងទេសភាពទាក់ទងនឹង ${tmpl.titleKh}`
+      : isSolo
+      ? `${leadChar} ${tmpl.actionDesc}`
+      : `${charNames} ${tmpl.actionDesc}`;
+    const dialogue = isNoCharacters ? '' : `${speaker}៖ «${tmpl.dialogueKh || tmpl.narratorBody}»`;
+
+    const visualDesc = isNoCharacters
+      ? `ប្លង់រូបភាពឯកសារ B-roll គ្មានតួអង្គមនុស្ស៖ ${tmpl.actionDesc} សម្រាប់ប្រធានបទ «${topicText}» ក្នុងបរិបទកម្ពុជាពិតប្រាកដ។`
+      : isSolo
+      ? `ប្លង់សកម្មភាពអ្នកធ្វើបទបង្ហាញទោល (Solo Host)៖ ${leadChar} ${tmpl.actionDesc} ក្នុងបរិយាកាសកម្ពុជាពិតប្រាកដ ដោយគ្មានតួអង្គដទៃឡើយ។`
+      : `ប្លង់សកម្មភាពរស់រវើកក្នុងបរិយាកាសកម្ពុជា៖ ${action}។ បរិយាកាសពោរពេញដោយថាមពលវិជ្ជមាន និងការសហការរវាងតួអង្គខ្មែរ។`;
+
+    const imgPrompt = isNoCharacters
+      ? `Cinematic documentary B-roll shot illustrating ${topicText} — ${tmpl.titleKh}, authentic Cambodian setting, detailed environmental and conceptual storytelling, clean composition, no human characters. ${styleAnchor}.`
+      : isSolo
+      ? buildSoloPresenterImagePrompt(leadChar, tmpl.actionDesc, styleAnchor, isDialogueSpeech)
+      : buildGroupPresenterImagePrompt(charNames, tmpl.actionDesc, styleAnchor, isDialogueSpeech);
+
+    const videoPrompt = isNoCharacters
+      ? `Visual Action: Cinematic camera motion (smooth pan and push-in) capturing visual details, objects, and authentic Cambodian environment for "${topicText} - ${tmpl.titleKh}". Clean documentary B-roll footage, authentic Cambodian setting, smooth 24fps motion, 16:9, no floating text.`
+      : isSolo
+      ? buildSoloPresenterVideoPrompt(leadChar, tmpl.actionDesc, topicText, styleAnchor, isDialogueSpeech, dialogue)
+      : buildGroupPresenterVideoPrompt(charNames, tmpl.actionDesc, topicText, styleAnchor, isDialogueSpeech, dialogue);
 
     return {
       sceneNumber: num,
       section: tmpl.section,
       sceneTitle: title,
       durationSeconds: 8,
-      visualDescription: `ប្លង់សកម្មភាពរស់រវើកក្នុងបរិយាកាសកម្ពុជា៖ ${action}។ បរិយាកាសពោរពេញដោយថាមពលវិជ្ជមាន និងការសហការរវាងតួអង្គខ្មែរ។`,
+      visualDescription: visualDesc,
       character: charNames,
       characterAction: action,
       narratorScriptKh: narrator,
       characterDialogue: dialogue,
       onScreenText: title,
-      aiImagePromptEn: `Authentic Cambodian 2D illustration showing ${tmpl.actionDesc}, featuring Cambodian characters (${charNames}), authentic Cambodian urban or rural background, active collaborative poses. ${styleAnchor}.`,
-      aiVideoPromptEn: `Visual Action: ${charNames} actively engaged in ${tmpl.actionDesc}, smooth natural body language and gestures illustrating "${topicText}". Silent cinematic action, characters do not speak, no dialogue or lip-sync, smooth 24fps motion for external voiceover overlay, 16:9, no floating text.`,
+      aiImagePromptEn: imgPrompt,
+      aiVideoPromptEn: videoPrompt,
       cameraMovement: tmpl.cameraMovement,
       bgmAndSfx: tmpl.bgm,
     };
@@ -422,10 +697,11 @@ export function ensureCompleteNarrativeScenes(rawScenes, ctx = {}) {
     }
   }
 
-  return resultScenes.map((s, idx) => ({
-    ...s,
-    sceneNumber: idx + 1,
-  }));
+  // Clean repetitive topic/title citations in scenes 2+ and guarantee sequential scene numbers
+  const cleanedScenes = sanitizeScriptRepetitions(resultScenes, topicText, ctx.topic);
+  return cleanedScenes.map((s, idx) =>
+    sanitizeSceneForCast(s, idx, isSolo, isNoCharacters, leadChar, charNames, topicText, styleAnchor, isDialogueSpeech)
+  );
 }
 
 export function buildGenerationPrompt(input, includeExplicitJsonShape = false) {
@@ -466,23 +742,23 @@ EXACT REQUIRED JSON OUTPUT STRUCTURE (return ONLY valid JSON, no markdown prose 
       "visualDescription": "string (Khmer)",
       "character": "string",
       "characterAction": "string (Khmer)",
-      "narratorScriptKh": "string (complete natural Khmer voiceover sentence)",
-      "characterDialogue": "string (optional Khmer dialogue or empty string)",
+      "narratorScriptKh": "string (direct spoken lines of character in Khmer: [ឈ្មោះតួអង្គ]៖ «...»)",
+      "characterDialogue": "string (spoken dialogue of character in Khmer: [ឈ្មោះតួអង្គ]៖ «...»)",
       "onScreenText": "string (short Khmer on-screen text)",
       "aiImagePromptEn": "string (detailed English AI image prompt ending with the visual style anchor)",
-      "aiVideoPromptEn": "string (detailed English AI video animation prompt)",
+      "aiVideoPromptEn": "string (detailed English AI video prompt describing character speaking on camera in Khmer with natural speech articulation and communicative gestures)",
       "cameraMovement": "string",
       "bgmAndSfx": "string"
     }
   ],
   "musicSuggestions": [
-    { "section": "string", "mood": "string", "tempo": "string", "instruments": "string", "usageTip": "string" }
+    { "section": "string", "mood": "string", "tempo": "string", "instruments": "string", "usageTip": "string", "aiMusicPromptEn": "string (Detailed English prompt for Suno/Udio/Stable Audio)" }
   ],
   "thumbnail": {
     "headlineKh": "string",
     "subTextKh": "string",
     "visualConcept": "string",
-    "aiThumbnailPromptEn": "string (English)"
+    "aiThumbnailPromptEn": "string (High-CTR English YouTube thumbnail AI prompt)"
   }
 }`
     : '';
@@ -516,8 +792,21 @@ STRICT QUALITY RULES:
    - TOKEN BUDGET DISCIPLINE: Keep English AI visual prompts focused (~20-35 words) so that the JSON response fits comfortably within output limits and NEVER truncates mid-sentence.
    - CRITICAL: Never stop early or summarize remaining scenes. You MUST complete all ${targetScenes} scenes up to scene ${targetScenes}.
 
-1. MULTI-CHARACTER CAST & PRESENTATION DYNAMICS:
-   - When Presenter & Cast Setup is a team or duo or drama cast, define MULTIPLE distinct Cambodian characters in \`characters\` with consistent names, distinct roles (e.g. Team Lead, Technical Specialist, Practitioner, Learner), distinct natural Cambodian appearances, everyday attire, and personalities.
+1. PRESENTER & CAST SETUP RULES (SOLO / TEAM / NO-CHARACTERS):
+   - When Presenter & Cast Setup is 'No Characters (Topic Visuals Only)' or 'no-characters':
+     * STRICT MANDATE: This video uses NO human character presenters or talking heads!
+     * In \`characters\`, define 2–3 conceptual visual assets / moodboard items representing the topic (e.g. Core Topic Visuals, Practical Tools/Artifacts, Cambodian Environmental Setting).
+     * In every scene, set \`character\` to 'គ្មានតួអង្គ (Topic Visuals Only)' and \`characterDialogue\` to ''.
+     * In \`visualDescription\`, \`characterAction\`, \`aiImagePromptEn\`, and \`aiVideoPromptEn\`, depict dynamic cinematic B-roll, Cambodian environmental shots, physical objects, equipment, diagrams, charts, and motion graphics illustrating the topic hands-on without human characters.
+   - When Presenter & Cast Setup is 'solo' or 'Solo Presenter (Strictly 1 Character)' or mentions 'តែម្នាក់' or 'ទោល':
+     * STRICT MANDATE: Define EXACTLY ONE single character in \`characters\` (1 solo Cambodian host/presenter, e.g. 'សុខា (អ្នកធ្វើបទបង្ហាញទោល / Solo Host)')!
+     * In EVERY SINGLE SCENE, \`character\` MUST be this ONE character only!
+     * STRICTLY FORBIDDEN: NEVER invent a second or third character! NO team meetings! NO group conversations! The entire video is carried 100% by this ONE solo presenter!
+     * \`characterAction\` and \`visualDescription\` must portray this solo presenter walking, pointing, writing on whiteboards, demonstrating tools, and acting hands-on alone without any partners.
+     * In \`characterDialogue\`, it is strictly monologue of the solo host addressing the audience directly or empty string, NEVER multiple characters talking to each other!
+     * In \`aiImagePromptEn\` and \`aiVideoPromptEn\`, explicitly specify: "featuring solo Cambodian presenter (<name>), single character in frame, strictly no other characters in frame".
+   - When Presenter & Cast Setup is 'duo', define EXACTLY 2 characters who converse and co-host.
+   - When Presenter & Cast Setup is a team or drama cast, define 3–5 distinct Cambodian characters in \`characters\` with consistent names, distinct roles (e.g. Team Lead, Technical Specialist, Practitioner, Learner), distinct natural Cambodian appearances, everyday attire, and personalities.
    - Actively showcase these characters interacting, collaborating, problem-solving, and discussing across the scenes!
 
 2. ANTI-TALKING-HEAD MANDATE & DYNAMIC SCENE ACTION:
@@ -528,11 +817,37 @@ STRICT QUALITY RULES:
      * Inspecting equipment, crops, books, documents, products, or laptops hands-on
      * Riding PassApp / bicycles / motorbikes while pointing out real-world landmarks
      * Gathering around tables in lively discussion, shaking hands, gesturing expressively, solving practical challenges
-   - The Khmer voiceover (narrator script) provides the educational storytelling narrative, while characters actively act out lively scenarios in the visual scenes.
-   - Include natural Khmer conversational dialogue between characters in \`characterDialogue\` whenever characters communicate!
+   - CRITICAL SPOKEN DIALOGUE FORMAT: The character(s) themselves deliver the story script directly in natural spoken Khmer! In EVERY SCENE, format \`narratorScriptKh\` as direct character speech: "[ឈ្មោះតួអង្គ]៖ «<ពាក្យសម្ដីតួអង្គនិយាយជាភាសាខ្មែរ>»".
+   - In \`characterDialogue\`, provide this exact same spoken dialogue line: "[ឈ្មោះតួអង្គ]៖ «...»".
 
-3. STORY STRUCTURE & COMPREHENSIVE EDUCATIONAL DEPTH:
+3. STORY STRUCTURE, COMPREHENSIVE EDUCATIONAL DEPTH & VISUAL SYNCHRONIZATION:
    - CRITICAL REQUIREMENT: Every topic must be deeply and thoroughly explained, never treated with shallow bullet points!
+   - STRICT SCRIPT & VISUAL SYNCHRONIZATION (ពាក្យដែលនិយាយ ត្រូវតែស៊ីសង្វាក់ ១០០% ជាមួយរូបភាព និងប្រធានបទ):
+     * In EVERY SINGLE SCENE, \`narratorScriptKh\` MUST DIRECTLY match, explain, and illuminate what is visibly happening in \`visualDescription\` and \`characterAction\` (or topic visual)!
+     * What the audience sees with their eyes MUST match what they hear with their ears:
+       - If the visual shows examining a financial spreadsheet or scanning a KHQR code on a smartphone, the script MUST explain budget tracking, digital recording, and calculations.
+       - If the visual shows testing a farming tool or inspecting crops in a field, the script MUST explain the agricultural technique and tangible results.
+       - If the visual shows writing workflows on a whiteboard with team members, the script MUST explain the exact step-by-step methodology and planning.
+     * FORBIDDEN: NEVER write generic, abstract text in \`narratorScriptKh\` that disconnects from the physical scene, objects, and actions shown!
+   - STRICT ANTI-TITLE-REPETITION MANDATE (ហាមដាច់ខាតយកចំណងជើង ឬឈ្មោះ TOPIC មកនិយាយឡើងវិញដដែលៗគ្រប់ឈុត):
+     * The video title or full topic phrase may ONLY be spoken ONCE in Scene 1 (The Hook & Introduction) to introduce the subject.
+     * From Scene 2 to Scene ${targetScenes}: ABSOLUTELY DO NOT repeat the full video title or topic phrase!
+     * DO NOT start or fill sentences with repetitive robotic phrases like "ចំពោះ «${input.topic}»", "ក្នុង «${input.topic}»", or "នៃ «${input.topic}»".
+     * Instead, speak naturally using contextual Khmer reference terms like «បញ្ហានេះ», «វិធីសាស្ត្រនេះ», «ដំណោះស្រាយនេះ», «ជំហានបន្ទាប់», «ការអនុវត្តនេះ» or dive straight into the practical explanation.
+   - GENRE-SPECIFIC STORYTELLING TONE (HORROR, COMEDY, FOLKTALES):
+     * When Topic or Category is Horror/Ghost (ខ្មោច, ព្រាយ, រន្ធត់, ព្រឺព្រួច, horror, ghost):
+       - Deliver spine-tingling Cambodian ghost story suspense, eerie rural or deserted Cambodian settings (creepy banyan trees, lonely midnight bridges, cold mist, distant barking dogs, haunting shadows).
+       - Balance scary hair-raising tension with moral respect for Cambodian spiritual beliefs and ancestors, ending with a profound moral lesson or resolution.
+     * When Topic or Category is Comedy/Humor (កំប្លែង, សើច, កំប្លុកកំប្លែង, comedy, humor):
+       - Deliver hilarious situational comedy, amusing misunderstandings, witty dialogue, funny physical slapstick gestures, and joyful Khmer village/city antics.
+       - Characters have comical expressions, shocked reactions, and lively banter that makes viewers laugh out loud while still providing heartwarming takeaways.
+     * When Topic or Category is Khmer Folktales & Legends (រឿងព្រេង, និទាន, បុរាណ, សម័យ, folktale, legend):
+       - For Ancient Legends: Recreate iconic Cambodian folklore (Tum Teav, Pos Keng Kang, Neang Kangrei, Thononchey, Phnum Pros Phnum Srei) with majestic cultural dignity, traditional attire, and ancestral moral wisdom.
+       - For Modern Folktales: Transform contemporary Cambodian life situations (technology, ambition, family, honesty) into inspiring moral fables with heartwarming life lessons.
+     * When Topic or Category is Khmer Magic, Sorcery & Mythic Battles (មន្តអាគមន៍, យុទ្ធសិល្ប៍, ខ្មោចព្រាយបីសាច, sorcery, magic, demon, battle):
+       - Deliver thrilling supernatural fantasy action combining ancient Khmer martial arts (Bokator / Yuthakun Khom) and sacred magic (Pali mantras, yantra tattoos, enchanted blades, holy amulets, element spells).
+       - Portray epic battles between righteous practitioners (Master sorcerers, heroic warriors) and dark occult evils (witches, Pretas, Pisach, Ahp, Krahang, evil spirits).
+       - Maintain deep respect for Khmer spiritual traditions, moral values of dharma overcoming adharma (ធម៌ឈ្នះអធម៌), and protecting villagers.
    - Explain the "WHY" (Root causes, underlying psychological triggers, scientific, financial, or mechanical principles).
    - Explain the "HOW" (Concrete practical steps, clear rules of thumb, formulas, and actionable techniques viewers can use immediately).
    - Ground every concept in relatable Cambodian real-world analogies (coffee expenses, family bookkeeping, KHQR banking, small trade, agriculture, school life).
@@ -550,6 +865,13 @@ STRICT QUALITY RULES:
    - In each scene, \`narratorScriptKh\` must be 2 to 4 rich, well-formed spoken Khmer sentences (~35–65 words) ready for voiceover.
 
 5. CAMBODIAN (KHMER) CULTURAL & VISUAL CONSISTENCY RULES:
+   - When the selected style is 'Photorealistic Live-Action Style (Real Cambodian Humans • 8K Photography)' or mentions 'photorealistic', 'Real Human', or 'មនុស្សពិត':
+     * STRICT MANDATE: This project features REAL HUMAN BEINGS (Ultra-Photorealistic Live-Action Photography)!
+     * STRICTLY FORBIDDEN: DO NOT describe characters or scenes as cartoon, anime, 2D vector, Pixar, or 3D CGI!
+     * Portray real human Cambodian actors with natural facial anatomy, real skin texture with visible skin pores, natural eye reflections, realistic everyday Cambodian clothing fabrics, and natural Southeast Asian hairstyles.
+     * In \`aiCharacterImagePromptEn\`, write prompts for photorealistic portrait photography turnaround (shot on 85mm portrait lens, natural studio lighting, 8k resolution).
+     * In every scene's \`aiImagePromptEn\`, generate prompts for ultra-photorealistic 35mm/85mm photography, natural golden hour lighting, depth of field, 8k resolution.
+     * In every scene's \`aiVideoPromptEn\`, describe cinematic live-action 4K camera footage featuring real people moving naturally at 24fps.
    - ALL characters MUST be authentically Cambodian (Khmer) with natural Cambodian facial features, warm light-brown/tan skin tone, black hair, and realistic Cambodian everyday attire (or Cambodian school uniforms / subtle Khmer krama scarf details where appropriate).
    - ALL landscapes, streets, homes, and backgrounds MUST reflect authentic Cambodia — including BOTH Cambodian countryside (golden rice fields, sugar palm trees / Borassus palms, traditional Khmer wooden stilt houses, lotus ponds, red-earth village paths, distant pagoda roofs) AND Cambodian cityscapes (Phnom Penh shophouses, Chaktomuk riverside promenade, Cambodian coffee shops, tuk-tuks / PassApp, tropical boulevard trees).
    - Whenever a shop, café, cart, market, school, or business appears in a scene, explicitly include authentic clean Khmer script on its natural storefront signboard (e.g., signboard reading "កាហ្វេតារា", "ហាងសុខា", "វិទ្យាល័យ", "ផ្សារទំនើប") while avoiding floating subtitles or random English watermarks.
@@ -561,11 +883,46 @@ STRICT QUALITY RULES:
    - Use verifiable facts; never invent fake statistics or fake historical quotes.
    - If illustrating a principle with fictional characters, clearly state in \`isFictionalNote\` that the characters/story are fictional educational examples.
 
-7. AI VIDEO PROMPT RULES (TOPIC ACTION ONLY — CHARACTERS DO NOT SPEAK):
-   - In \`aiVideoPromptEn\`, focus strictly on dynamic physical actions, gestures, workflows, and camera motion illustrating the topic.
-   - CHARACTERS DO NOT SPEAK: Do NOT instruct characters to talk or mouth words. No speech, no dialogue, no lip-sync inside video prompts!
-   - Modern AI video generators (Runway, Kling, Luma, Sora, Pika) perform best with pure cinematic visual action. The voiceover script is managed separately for external voiceover tools (CapCut / ElevenLabs / Voice Actors).
-   - End \`aiVideoPromptEn\` with: "Silent cinematic action, characters do not speak, no dialogue or lip-sync, smooth 24fps motion for external voiceover overlay, 16:9, no floating text."${jsonShapeBlock}
+${
+  input.presenterSetup === 'no-characters'
+    ? `7. TOPIC VISUALS & B-ROLL RULES (NO HUMAN CHARACTERS):
+   - In \`aiVideoPromptEn\`, focus purely on dynamic cinematic B-roll, objects, infographics, and camera movement illustrating «${input.topic}».
+   - No human characters appear. Clean 24fps motion, authentic Cambodian atmosphere, 16:9, no floating text.`
+    : `7. CHARACTER SPEAKING & ACTING DELIVERY IN KHMER (តួអង្គនិយាយផ្ទាល់តាម SCRIPT សាច់រឿង ជាភាសាខ្មែរ) — CRITICAL MANDATORY RULE:
+   - In EVERY scene where characters appear, the character MUST speak their lines directly in the scene according to the script!
+   - In \`narratorScriptKh\`, write the character's direct spoken lines formatted as: "[ឈ្មោះតួអង្គ]៖ «<សម្ដីតួអង្គនិយាយផ្ទាល់ជាភាសាខ្មែរ>»".
+   - In \`characterDialogue\`, write the same exact spoken dialogue line: "[ឈ្មោះតួអង្គ]៖ «<សម្ដីតួអង្គនិយាយផ្ទាល់ជាភាសាខ្មែរ>»".
+   - The character is the active speaker/storyteller! Do NOT write as a detached 3rd-person voiceover.
+   - If Solo Presenter: The single lead character speaks directly on camera to the viewers throughout the scenes (e.g. សុខា៖ «សួស្តីបងប្អូនទាំងអស់គ្នា! ថ្ងៃនេះខ្ញុំនឹងបង្ហាញពី...»).
+   - If Duo or Group: Characters alternate natural conversational dialogue between each other (e.g. Scene 1: វិចិត្រ៖ «...», Scene 2: បុប្ផា៖ «...»).
+   - In \`characterAction\`, describe the character on camera speaking with natural mouth movement, expressive facial animation, and lively communicative hand gestures.
+   - In \`aiVideoPromptEn\`, describe authentic on-camera character acting and spoken delivery:
+     Format: "Visual Action: Expressive animated character acting and spoken delivery: Cambodian character <character>, actively speaking on camera in Khmer with natural speech articulation, engaging facial expressions, and communicative hand gestures while acting out: <action>, illustrating \"${input.topic}\". Smooth cinematic 24fps motion, authentic Cambodian setting, 16:9, no floating text."
+     (If Photorealistic Real Human style: "Visual Action: Cinematic 4K live-action character acting and spoken delivery: authentic real Cambodian character <character>, actively speaking directly on camera in Khmer with natural mouth movements, genuine conversational expressions, and communicative hand gestures while presenting: <action>, illustrating \"${input.topic}\". Single real person in frame, natural lighting, smooth 24fps motion, 16:9, no floating text.")
+   - STRICTLY FORBIDDEN: NEVER write "characters do not speak", "silent cinematic action", or "no dialogue or lip-sync"!
+   - STRICTLY FORBIDDEN: DO NOT mention external "AI lip-sync software" or "Hedra / LivePortrait". Keep the video prompt as high-quality natural character performance for direct video generation!
+   - In \`aiImagePromptEn\`, portray the character in an active, engaging speaking pose with natural facial expression and communicative gestures.`
+}
+
+8. YOUTUBE THUMBNAIL & BACKGROUND MUSIC MANDATES (100% TOPIC-TAILORED):
+   - THUMBNAIL GENERATION MANDATE:
+     * Must be 100% specifically tailored to the topic «${input.topic}».
+     * \`headlineKh\`: Short, punchy, high-CTR Khmer text (3–6 words) suitable for thumbnail graphic text (e.g. «៧ មេរៀនរកស៊ីជោគជ័យ», «កុំធ្វើ ៥ កំហុសនេះ!»).
+     * \`subTextKh\`: Short curiosity hook badge in Khmer (e.g. «ក្បួនជោគជ័យពិត», «ដឹងមុនមិនស្តាយក្រោយ»).
+     * \`visualConcept\`: High-CTR visual concept plan in Khmer describing the composition, lighting, and focal point.
+     * \`aiThumbnailPromptEn\`: Ultra high-CTR professional YouTube thumbnail prompt in English formatted for Midjourney / Ideogram / Flux:
+       - If Presenter & Cast Setup is 'no-characters' (Topic Visuals Only): STRICTLY NO human characters! Create a breathtaking, glowing central visual metaphor, 3D infographic, or iconic Cambodian artifact representing «${input.topic}» under cinematic rim lighting and bokeh lights.
+       - If characters exist: Show an expressive Cambodian character with a dynamic, curious, or excited facial expression, wide eyes, pointing towards a luminous visual metaphor representing the core essence of «${input.topic}».
+       - Authentic Cambodian elements (sugar palm tree silhouettes, Angkorian accents, or modern Phnom Penh skyline in the distant warm background).
+       - Vibrant complementary colors (warm amber & deep teal, golden neon accents), rule of thirds, clean uncluttered focal subject.
+       - End with: "YouTube thumbnail composition, clean focal point, hyper-detailed, vibrant cinematic lighting, 16:9 aspect ratio, no blurry artifacts, no text watermarks, 8k render."
+   - BACKGROUND MUSIC SUGGESTIONS & AI MUSIC PROMPTS:
+     * Provide 2 to 3 distinct music cues in \`musicSuggestions\` matching the emotional journey of «${input.topic}»:
+       1) ផ្នែកផ្ដើម (Intro / Hook) — Captivating, intriguing, curiosity-inducing
+       2) សាច់រឿងកណ្ដាល (Main Story / Deep Dive) — Focused, rhythmic, professional educational groove
+       3) សង្ខេប & CTA (Conclusion / Climax) — Warm, inspiring, uplifting, motivating
+     * In each entry, \`aiMusicPromptEn\` MUST provide a ready-to-copy AI Music Prompt for Suno AI / Udio / Stable Audio specifying:
+       Format: "[Instrumental <Genre/Style>] [Tempo: <BPM>] [Mood: <Mood tags>] [Instruments: <Key instruments, e.g. soft acoustic piano, Khmer roneat or flutes if cultural, subtle ambient pads>] [Style: Clean educational documentary background music, balanced frequency range for voiceover, no vocals]"${jsonShapeBlock}
 
 Return ONLY valid JSON.`;
 }

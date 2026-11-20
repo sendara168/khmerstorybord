@@ -23,6 +23,14 @@ export function getCharacterImagePrompt(
   if (character.aiCharacterImagePromptEn && character.aiCharacterImagePromptEn.trim()) {
     return character.aiCharacterImagePromptEn.trim();
   }
+  const isReal =
+    animationStyleLabel.toLowerCase().includes('photorealistic') ||
+    animationStyleLabel.toLowerCase().includes('real human') ||
+    animationStyleLabel.toLowerCase().includes('មនុស្សពិត');
+
+  if (isReal) {
+    return `Authentic Cambodian (Khmer) photorealistic portrait and character reference photos of ${character.name} (${character.role}), natural Cambodian facial features and warm light-tan Southeast Asian skin tone, natural skin pores and realistic skin texture, ${character.appearance}, wearing ${character.outfit}, ${character.personality}. Front view portrait, 3/4 view angle, and 3 expressive natural human facial expressions (speaking, smiling, focused). Soft clean natural lighting, shot on 85mm portrait lens, f/2.0 aperture, ${animationStyleLabel}, hyper-realistic, 8k resolution, photorealistic masterpiece, strictly no cartoon, no 3D render, no CGI.`;
+  }
   return `Authentic Cambodian (Khmer) 2D cartoon character design turnaround reference sheet of ${character.name} (${character.role}), natural Cambodian facial features and warm light-tan Southeast Asian skin tone, ${character.appearance}, wearing ${character.outfit}, ${character.personality}. Full-body front view, 3/4 view, and 3 expressive facial expressions (happy, thoughtful, surprised), clean solid neutral light cream background, ${animationStyleLabel}, clean cel-shaded vector style, warm cinematic lighting, consistent proportions and colors, 16:9 composition, no floating watermarks.`;
 }
 
@@ -62,9 +70,20 @@ export function buildAiVideoActionPrompt(
     parts.push(`Ambient SFX / Atmosphere: ${scene.bgmAndSfx.trim()}.`);
   }
 
-  parts.push(
-    `Direction & Specs: ${styleLabel}, authentic Cambodian (Khmer) characters and scenery, ${format}, ${scene.durationSeconds || 8} seconds, smooth cinematic 24fps animation. NOTE: Silent cinematic action, characters DO NOT speak, no dialogue or lip-sync (designed for external voiceover overlay in video editor), no floating text or subtitles.`
-  );
+  const isNoChar =
+    (project as any)?.presenterSetup === 'no-characters' ||
+    scene.character?.includes('គ្មានតួអង្គ') ||
+    scene.character?.toLowerCase().includes('no characters');
+
+  if (isNoChar) {
+    parts.push(
+      `Direction & Specs: ${styleLabel}, authentic Cambodian scenery and topic B-roll visuals, ${format}, ${scene.durationSeconds || 8} seconds, smooth cinematic 24fps motion, no human characters, no floating text.`
+    );
+  } else {
+    parts.push(
+      `Direction & Specs: ${styleLabel}, authentic Cambodian (Khmer) characters and scenery, ${format}, ${scene.durationSeconds || 8} seconds, smooth cinematic 24fps motion. Character acting & spoken delivery: Cambodian characters actively speaking on camera in Khmer with natural speech articulation, engaging facial expressions, and communicative hand gestures matching the story script. No floating text or subtitles.`
+    );
+  }
 
   return parts.join('\n');
 }
@@ -97,7 +116,11 @@ export function generateKhmerSrt(project: StoryboardProject): string {
     cursor += duration;
 
     const lines = [scene.narratorScriptKh.trim()];
-    if (scene.characterDialogue?.trim()) {
+    if (
+      scene.characterDialogue?.trim() &&
+      scene.characterDialogue.trim() !== scene.narratorScriptKh.trim() &&
+      !scene.narratorScriptKh.includes(scene.characterDialogue.trim())
+    ) {
       lines.push(scene.characterDialogue.trim());
     }
 
@@ -217,6 +240,22 @@ export function generatePromptsBatch(project: StoryboardProject): string {
   lines.push(`AI Prompt (English):`);
   lines.push(project.thumbnail.aiThumbnailPromptEn);
   lines.push('');
+
+  if (project.musicSuggestions && project.musicSuggestions.length > 0) {
+    lines.push(`====================================================================`);
+    lines.push(`PART 5: BACKGROUND MUSIC AI PROMPTS (SUNO / UDIO / STABLE AUDIO)`);
+    lines.push(`====================================================================`);
+    for (const m of project.musicSuggestions) {
+      lines.push(`[${m.section}] — ${m.mood} (${m.tempo})`);
+      lines.push(`Instruments: ${m.instruments}`);
+      lines.push(`Usage Tip: ${m.usageTip}`);
+      if (m.aiMusicPromptEn) {
+        lines.push(`AI Music Prompt:`);
+        lines.push(m.aiMusicPromptEn);
+      }
+      lines.push('');
+    }
+  }
 
   return lines.join('\n');
 }
@@ -367,9 +406,17 @@ export function generateFullMarkdownPackage(project: StoryboardProject): string 
     ]),
     `## 6. ភ្លេងផ្ទៃខាងក្រោយ (Background Music Suggestions)`,
     ``,
-    ...project.musicSuggestions.map(
-      (m) => `- **${m.section}:** ${m.mood} (${m.tempo}) — ${m.instruments}. *${m.usageTip}*`
-    ),
+    ...project.musicSuggestions.flatMap((m) => [
+      `- **${m.section}:** ${m.mood} (${m.tempo}) — ${m.instruments}. *${m.usageTip}*`,
+      ...(m.aiMusicPromptEn
+        ? [
+            `  - **AI Music Prompt (Suno/Udio):**`,
+            `    \`\`\`text`,
+            `    ${m.aiMusicPromptEn}`,
+            `    \`\`\``,
+          ]
+        : []),
+    ]),
     ``,
     `## 7. YouTube Thumbnail Prompt`,
     ``,

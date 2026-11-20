@@ -5,8 +5,8 @@
   "type": "module",
   "description": "Khmer Educational Storytelling Animation Script & Storyboard Studio",
   "scripts": {
-    "dev": "concurrently -k -n API,WEB -c cyan,green \"node server/index.mjs\" \"vite\"",
-    "dev:web": "vite",
+    "dev": "concurrently -k -n API,WEB -c cyan,green \"node server/index.mjs\" \"vite --host 0.0.0.0\"",
+    "dev:web": "vite --host 0.0.0.0",
     "dev:api": "node server/index.mjs",
     "build": "tsc -b && vite build",
     "start": "node server/index.mjs",

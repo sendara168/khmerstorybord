@@ -123,9 +123,20 @@ function formatKhmerVideoPrompt(scene, project) {
     parts.push(`Ambient SFX / Atmosphere: ${scene.bgmAndSfx}.`);
   }
 
-  parts.push(
-    `Direction & Specs: ${project.animationStyleLabel || '2D Cartoon Cambodian Educational Animation'}, authentic Cambodian (Khmer) characters and scenery, ${project.videoFormat || '16:9'}, ${scene.durationSeconds || 8} seconds, smooth cinematic 24fps animation. NOTE: Silent cinematic action, characters DO NOT speak, no dialogue or lip-sync (designed for external voiceover overlay in video editor), no floating text or subtitles.`
-  );
+  const isNoChar =
+    project?.presenterSetup === 'no-characters' ||
+    scene.character?.includes('គ្មានតួអង្គ') ||
+    scene.character?.toLowerCase().includes('no characters');
+
+  if (isNoChar) {
+    parts.push(
+      `Direction & Specs: ${project.animationStyleLabel || '2D Cartoon Cambodian Educational Animation'}, authentic Cambodian scenery and topic B-roll visuals, ${project.videoFormat || '16:9'}, ${scene.durationSeconds || 8} seconds, smooth cinematic 24fps motion, no human characters, no floating text.`
+    );
+  } else {
+    parts.push(
+      `Direction & Specs: ${project.animationStyleLabel || '2D Cartoon Cambodian Educational Animation'}, authentic Cambodian (Khmer) characters and scenery, ${project.videoFormat || '16:9'}, ${scene.durationSeconds || 8} seconds, smooth cinematic 24fps motion. Character acting & spoken delivery: Cambodian characters actively speaking on camera in Khmer with natural speech articulation, engaging facial expressions, and communicative hand gestures matching the story script. No floating text or subtitles.`
+    );
+  }
   return parts.join('\n');
 }
 
@@ -197,9 +208,17 @@ function generateMarkdownText(project) {
     ]),
     '## 6. ភ្លេងផ្ទៃខាងក្រោយ (Background Music Suggestions)',
     '',
-    ...(project.musicSuggestions || []).map(
-      (m) => `- **${m.section}:** ${m.mood} (${m.tempo}) — ${m.instruments}. *${m.usageTip}*`
-    ),
+    ...(project.musicSuggestions || []).flatMap((m) => [
+      `- **${m.section}:** ${m.mood} (${m.tempo}) — ${m.instruments}. *${m.usageTip}*`,
+      ...(m.aiMusicPromptEn
+        ? [
+            '  - **AI Music Prompt (Suno/Udio):**',
+            '    ```text',
+            `    ${m.aiMusicPromptEn}`,
+            '    ```',
+          ]
+        : []),
+    ]),
     '',
     '## 7. YouTube Thumbnail Prompt',
     '',
@@ -435,7 +454,24 @@ function normalizeProjectPayload(parsed, meta = {}) {
 
   const topicText = String(meta.topic || parsed.topic || parsed.videoTitle || 'ប្រធានបទថ្មី').trim();
   const targetScenes = Number(meta.targetScenes) || Number(parsed.targetScenes) || normalizedScenes.length;
-  const characters = Array.isArray(parsed.characters) ? parsed.characters : [];
+  const presenterSetupId = meta.presenterSetup || parsed.presenterSetup || 'group';
+  let characters = Array.isArray(parsed.characters) ? parsed.characters : [];
+  if (presenterSetupId === 'solo' && characters.length > 0) {
+    const first = characters[0];
+    const rawName = String(first?.name || 'សុខា').split('(')[0].trim();
+    characters = [
+      {
+        name: `${rawName} (អ្នកធ្វើបទបង្ហាញទោល / Solo Presenter)`,
+        role: first?.role || 'អ្នកធ្វើបទបង្ហាញទោល ដឹកនាំសាច់រឿង និងពន្យល់ពីដើមដល់ចប់',
+        appearance: first?.appearance || 'យុវជនខ្មែរអាយុ ២៦ ឆ្នាំ ទឹកមុខរួសរាយ រស់រវើក សម្បុរស្រអែមធម្មជាតិ',
+        outfit: first?.outfit || 'អាវប៉ូឡូពណ៌ផ្ទៃមេឃស្រាល ខោខូវប៊យពណ៌ទឹកប៊ិចក្រមៅ',
+        personality: first?.personality || 'ស្វាហាប់ ពូកែពន្យល់ មានទំនុកចិត្ត និងរួសរាយរាក់ទាក់',
+        aiCharacterImagePromptEn:
+          first?.aiCharacterImagePromptEn ||
+          `Authentic Cambodian (Khmer) 2D cartoon character design turnaround reference sheet of ${rawName}, a friendly 26-year-old Cambodian solo presenter, natural Southeast Asian facial features, neat short black hair, warm light-tan skin tone. Full-body front view, 3/4 view, and 3 facial expressions.`,
+      },
+    ];
+  }
   const styleAnchor =
     STYLE_ANCHORS[meta.animationStyle || parsed.animationStyle || '2d-cartoon'] ||
     STYLE_ANCHORS['2d-cartoon'];
@@ -445,6 +481,7 @@ function normalizeProjectPayload(parsed, meta = {}) {
     categoryLabelKh: meta.categoryLabelKh || parsed.categoryLabelKh || '',
     targetScenes,
     characters,
+    presenterSetup: presenterSetupId,
     animationStyleLabel:
       meta.animationStyleLabel || parsed.animationStyleLabel || '2D Cartoon Educational Animation',
     styleAnchor,
@@ -480,8 +517,8 @@ function normalizeProjectPayload(parsed, meta = {}) {
     isFictionalNote:
       parsed.isFictionalNote ||
       'តួអង្គ និងស្ថានភាពក្នុងរឿងនេះ ត្រូវបានប្រឌិតឡើងក្នុងគោលបំណងអប់រំ ដើម្បីងាយយល់។',
-    characters: Array.isArray(parsed.characters)
-      ? parsed.characters.map((c) => {
+    characters: Array.isArray(characters)
+      ? characters.map((c) => {
           const styleLabel =
             meta.animationStyleLabel ||
             parsed.animationStyleLabel ||

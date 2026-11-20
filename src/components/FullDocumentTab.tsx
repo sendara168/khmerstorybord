@@ -41,9 +41,9 @@ export const FullDocumentTab: React.FC<FullDocumentTabProps> = ({ project }) => 
 
   const allKhmerVideoPrompts = useMemo(() => {
     const lines = [
-      `=== AI VIDEO ACTION PROMPTS (សកម្មភាពទាក់ទង TOPIC • តួអង្គមិននិយាយ) ===`,
+      `=== AI VIDEO PROMPTS (តួអង្គសម្ដែង & និយាយតាមសាច់រឿង) ===`,
       `ចំណងជើង៖ ${project.videoTitle}`,
-      `កំណត់សម្គាល់៖ វីដេអូផ្តោតលើសកម្មភាពរស់រវើកទាក់ទងនឹង Topic តួអង្គមិននិយាយទេ ដើម្បីងាយស្រួលយក Script ទៅដាក់ Voice Over ខាងក្រៅ។`,
+      `កំណត់សម្គាល់៖ ស្គ្រីបត្រូវបាននិពន្ធជាសម្ដីតួអង្គនិយាយផ្ទាល់ជាភាសាខ្មែរ (Character Spoken Script) ស្របតាមសកម្មភាពក្នុងឈុតនីមួយៗ ដោយតួអង្គនិយាយ និងសម្ដែងកាយវិការផ្ទាល់ក្នុងវីដេអូ។`,
       ``,
     ];
     project.scenes.forEach((s) => {

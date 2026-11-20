@@ -32,6 +32,16 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
   const [editingCharIdx, setEditingCharIdx] = useState<number | null>(null);
 
+  const isNoCharacters =
+    project.presenterSetup === 'no-characters' ||
+    (project.characters.length > 0 &&
+      project.characters.some(
+        (c) =>
+          c.name.includes('គ្មានតួអង្គ') ||
+          c.name.includes('Topic Visual') ||
+          c.role?.includes('Topic Visual')
+      ));
+
   const totalSeconds = project.scenes.reduce((sum, s) => sum + (s.durationSeconds || 8), 0);
 
   const copyText = async (key: string, text: string) => {
@@ -85,9 +95,13 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
         </div>
         {project.presenterSetupLabel && (
           <div className="spec-item">
-            <Users size={16} />
+            {isNoCharacters ? (
+              <ImageIcon size={16} className="text-amber" />
+            ) : (
+              <Users size={16} />
+            )}
             <div>
-              <span>ទម្រង់តួអង្គ</span>
+              <span>{isNoCharacters ? 'ទម្រង់រូបភាព' : 'ទម្រង់តួអង្គ'}</span>
               <strong>{project.presenterSetupLabel.split('(')[0]}</strong>
             </div>
           </div>
@@ -150,15 +164,25 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
         )}
       </section>
 
-      {/* Character Consistency Bible + AI Character Image Prompts */}
+      {/* Character Consistency Bible OR Topic Visuals Moodboard Sheet */}
       <section className="studio-card">
         <div className="card-header-row">
           <div className="title-with-icon">
-            <Users size={18} className="text-amber" />
+            {isNoCharacters ? (
+              <ImageIcon size={18} className="text-amber" />
+            ) : (
+              <Users size={18} className="text-amber" />
+            )}
             <div>
-              <h3>តួអង្គសំខាន់ & Prompt បង្កើតរូបភាពតួអង្គ (Character Consistency Sheet)</h3>
+              <h3>
+                {isNoCharacters
+                  ? 'រូបភាពគំរូតាមប្រធានបទ & Visual Concepts (Topic Visuals Sheet)'
+                  : 'តួអង្គសំខាន់ & Prompt បង្កើតរូបភាពតួអង្គ (Character Consistency Sheet)'}
+              </h3>
               <p className="muted-text">
-                ចម្លង AI Character Image Prompt ខាងក្រោមដើម្បីបង្កើតរូបភាពគំរូតួអង្គទុកប្រើជា Reference ឱ្យមុខមាត់ដូចគ្នាគ្រប់ឈុត។
+                {isNoCharacters
+                  ? 'វីដេអូនេះបង្ហាញតែរូបភាពតាម Topic (គ្មានតួអង្គមនុស្ស) — ចម្លង AI Visual Prompt ខាងក្រោមដើម្បីបង្កើតរូបភាពគំរូ និង Moodboard ស្របតាមប្រធានបទ។'
+                  : 'ចម្លង AI Character Image Prompt ខាងក្រោមដើម្បីបង្កើតរូបភាពគំរូតួអង្គទុកប្រើជា Reference ឱ្យមុខមាត់ដូចគ្នាគ្រប់ឈុត។'}
               </p>
             </div>
           </div>
@@ -171,7 +195,9 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
             return (
               <div key={idx} className="character-card">
                 <div className="character-head">
-                  <div className="character-avatar">{char.name.slice(0, 1)}</div>
+                  <div className="character-avatar">
+                    {isNoCharacters ? <ImageIcon size={16} /> : char.name.slice(0, 1)}
+                  </div>
                   <div>
                     <h4>{char.name}</h4>
                     <span className="character-role">{char.role}</span>
@@ -179,20 +205,22 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
                 </div>
                 <div className="character-details">
                   <div>
-                    <span className="detail-k">រូបរាង៖</span> {char.appearance}
+                    <span className="detail-k">{isNoCharacters ? 'បរិបទរូបភាព៖' : 'រូបរាង៖'}</span> {char.appearance}
                   </div>
+                  {char.outfit && char.outfit !== 'N/A' && (
+                    <div>
+                      <span className="detail-k">សម្លៀកបំពាក់៖</span> {char.outfit}
+                    </div>
+                  )}
                   <div>
-                    <span className="detail-k">សម្លៀកបំពាក់៖</span> {char.outfit}
-                  </div>
-                  <div>
-                    <span className="detail-k">បុគ្គលិកលក្ខណៈ៖</span> {char.personality}
+                    <span className="detail-k">{isNoCharacters ? 'ស្ទីលរូបភាព៖' : 'បុគ្គលិកលក្ខណៈ៖'}</span> {char.personality}
                   </div>
                 </div>
 
                 <div className="prompt-dark-box" style={{ marginTop: 12 }}>
                   <div className="prompt-dark-head">
                     <span>
-                      <ImageIcon size={12} /> AI CHARACTER IMAGE PROMPT
+                      <ImageIcon size={12} /> {isNoCharacters ? 'AI TOPIC VISUAL PROMPT' : 'AI CHARACTER IMAGE PROMPT'}
                     </span>
                     <div style={{ display: 'flex', gap: 6 }}>
                       <button

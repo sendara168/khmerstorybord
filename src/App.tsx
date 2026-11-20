@@ -140,11 +140,12 @@ export const App: React.FC = () => {
         try {
           const first = await fetchProjectById(list[0].id);
           setCurrentProject(first);
-          setActiveView('project');
         } catch {
-          setActiveView('creator');
+          // ignore
         }
       }
+      // Always show the New Video Creator interface on initial load or browser refresh
+      setActiveView('creator');
     });
   }, [refreshProjects]);
 

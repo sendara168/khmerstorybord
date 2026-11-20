@@ -235,7 +235,7 @@ export const ProjectStudio: React.FC<ProjectStudioProps> = ({
           onClick={() => setActiveTab('prompts')}
         >
           <Sparkles size={15} />
-          <span>Prompt តួអង្គ • រូបភាព • វីដេអូ</span>
+          <span>Prompt AI (រូបភាព • វីដេអូ • Thumbnail • ភ្លេង)</span>
         </button>
         <button
           className={`studio-tab ${activeTab === 'subtitles' ? 'active' : ''}`}
@@ -259,7 +259,9 @@ export const ProjectStudio: React.FC<ProjectStudioProps> = ({
         {activeTab === 'overview' && (
           <OverviewTab project={project} onUpdateProject={onUpdateProject} />
         )}
-        {activeTab === 'narrator' && <NarratorScriptTab project={project} />}
+        {activeTab === 'narrator' && (
+          <NarratorScriptTab project={project} onUpdateProject={onUpdateProject} />
+        )}
         {activeTab === 'storyboard' && (
           <StoryboardTab project={project} onUpdateProject={onUpdateProject} />
         )}

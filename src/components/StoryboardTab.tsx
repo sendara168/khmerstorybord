@@ -148,7 +148,7 @@ export const StoryboardTab: React.FC<StoryboardTabProps> = ({
         characterDialogue: '',
         onScreenText: `ឈុតទី ${nextNum}`,
         aiImagePromptEn: `Clean 2D cartoon educational illustration in authentic Cambodian setting, active poses, teamwork, 16:9 composition, no text.`,
-        aiVideoPromptEn: `Smooth dynamic 2D animation motion illustrating topic concepts hands-on, camera tracking. Silent cinematic action, characters do not speak, no dialogue or lip-sync, 16:9.`,
+        aiVideoPromptEn: `Expressive animated character acting and spoken delivery: Cambodian characters actively speaking on camera in Khmer with natural speech articulation, engaging facial expressions, and communicative hand gestures illustrating topic concepts hands-on, camera tracking, smooth 24fps motion, 16:9.`,
         cameraMovement: 'Medium tracking shot',
         bgmAndSfx: 'ភ្លេង Documentary ស្រទន់',
       });
@@ -571,12 +571,12 @@ export const StoryboardTab: React.FC<StoryboardTabProps> = ({
                 </div>
               ) : (
                 <div className="scene-card-body">
-                  {/* Form សម្រាប់ Copy Script សម្រាប់ Voice Over ខាងក្រៅ */}
+                  {/* Form សម្រាប់ Copy Script សម្រាប់សម្ដីតួអង្គនិយាយ */}
                   <div className="external-vo-form">
                     <div className="external-vo-header">
                       <div className="external-vo-title-group">
                         <span className="external-vo-badge-tag">
-                          <Mic size={13} /> SCRIPT សម្រាប់ VOICE OVER ខាងក្រៅ
+                          <Mic size={13} /> ស្គ្រីបសម្ដីតួអង្គនិយាយ (CHARACTER SPOKEN SCRIPT)
                         </span>
                         {scene.sceneNumber > 1 && (
                           <span className="narrator-bridge-badge" title="សាច់រឿងមានឃ្លាតភ្ជាប់ពីឈុតមុន">
@@ -635,12 +635,16 @@ export const StoryboardTab: React.FC<StoryboardTabProps> = ({
                     </div>
                     <div className="detail-item">
                       <span className="detail-label">
-                        {/&|,|និង|ក្រុម|team/i.test(scene.character) ? (
+                        {/គ្មានតួអង្គ|topic visual/i.test(scene.character) ? (
+                          <ImageIcon size={12} className="text-amber" />
+                        ) : /&|,|និង|ក្រុម|team/i.test(scene.character) ? (
                           <Users size={12} className="text-amber" />
                         ) : (
                           <User size={12} />
                         )}{' '}
-                        តួអង្គ & ប្លង់សកម្មភាព (Character & Action)
+                        {/គ្មានតួអង្គ|topic visual/i.test(scene.character)
+                          ? 'រូបភាព Topic & ប្លង់សកម្មភាព (Topic Visual & Motion)'
+                          : 'តួអង្គ & ប្លង់សកម្មភាព (Character & Action)'}
                       </span>
                       <p>
                         <strong>{scene.character}</strong> — <span>{scene.characterAction}</span>

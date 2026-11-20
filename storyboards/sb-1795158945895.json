@@ -1,0 +1,289 @@
+{
+  "id": "sb-1795158945895",
+  "createdAt": "2026-11-20T07:15:45.893Z",
+  "updatedAt": "2026-11-20T07:15:45.893Z",
+  "categoryId": "horror-ghost",
+  "categoryLabelKh": "25. Horror & Ghost Stories – សាច់រឿងខ្មោច លង ភ័យរន្ធត់ និងព្រឺព្រួច",
+  "topic": "រឿងខ្មោចនាងនាថ៖ ព្រលឹងស្នេហាស្មោះ និងវិញ្ញាណវិលវល់កណ្តាលវាល",
+  "videoTitle": "អាថ៌កំបាំងព្រលឹងនាងនាថ៖ វិញ្ញាណស្នេហាស្មោះ និងមេរៀនជីវិតកណ្តាលវាលស្រែ",
+  "videoDescription": "ស្វែងយល់ពីប្រវត្តិរឿងព្រេងខ្មោចនាងនាថ តាមរយៈការរៀបរាប់បែបរន្ធត់ និងការវិភាគបែបអប់រំអំពីជំនឿ ទំនៀមទម្លាប់ និងមនោសញ្ចេតនាស្នេហាស្មោះស្ម័គ្រក្នុងសង្គមខ្មែរបុរាណ។ សូមចុច Like, Share និង Subscribe ដើម្បីទទួលបានវីដេអូនិទានរឿង និងមេរៀនជីវិតថ្មីៗជារៀងរាល់សប្តាហ៍!",
+  "language": "Khmer",
+  "durationPreset": "5-10",
+  "durationLabel": "៥–១០ នាទី (ណែនាំទូទៅ)",
+  "videoFormat": "16:9",
+  "resolution": "1920 × 1080",
+  "animationStyle": "photorealistic-real",
+  "animationStyleLabel": "Photorealistic Live-Action Style (Real Cambodian Humans • 8K Photography)",
+  "narratorVoice": "Khmer Male Voice",
+  "voiceTone": "Natural, Clear, Professional, Engaging",
+  "presenterSetup": "group",
+  "presenterSetupLabel": "ក្រុមតួអង្គច្រើននាក់ / ក្រុមការងារ (Team & Group Presentation)",
+  "actionDynamic": "cinematic-action",
+  "actionDynamicLabel": "ប្លង់សកម្មភាពជាក់ស្តែង & ចលនារស់រវើក (Cinematic Action & Movement)",
+  "subtitleLanguage": "Khmer",
+  "audience": "General Audience",
+  "isFictionalNote": "សាច់រឿងនេះជាការសម្រិតសម្រាំងចេញពីរឿងព្រេងបុរាណ និងរឿងនិទានប្រជាប្រិយខ្មែរ ដោយរួមបញ្ចូលការសម្តែងតួអង្គបែបគំរូអប់រំ និងការវិភាគទំនៀមទម្លាប់សង្គម មិនមែនជាព្រឹត្តិការណ៍វិទ្យាសាស្ត្រជាក់ស្តែងឡើយ។",
+  "characters": [
+    {
+      "name": "រតនា (Rathana)",
+      "role": "ប្រធានក្រុមស្រាវជ្រាវប្រវត្តិសាស្ត្រ និងវប្បធម៌ (Team Lead & Researcher)",
+      "appearance": "បុរសខ្មែរអាយុប្រហែល ២៨ ឆ្នាំ សម្បុរស្រអែម ទឹកមុខម៉ឺងម៉ាត់ មានកែវភ្នែកមុតស្រួច និងសក់ខ្លីស្អាតបាត",
+      "outfit": "អាវសឺមីដៃវែងពណ៌ផ្ទៃមេឃស្រាល ស្លៀកខោខូវប៊យពណ៌ទឹកប៊ិចចាស់ និងពាក់នាឡិកាដៃបែបស្ព័រ",
+      "personality": "មានហេតុផល ចូលចិត្តស្រាវជ្រាវស៊ីជម្រៅ ចេះសង្កេត និងជាអ្នកដឹកនាំក្រុមប្រកបដោយទំនួលខុសត្រូវ",
+      "aiCharacterImagePromptEn": "Photorealistic character turnaround sheet of a 28-year-old Cambodian man named Rathana, light tan skin, short neat black hair, sharp intelligent eyes, wearing a light blue casual button-down shirt and dark navy jeans, front view and three-quarter view, neutral clean studio background, shot on 85mm portrait lens, 8k resolution, authentic Southeast Asian features, no text."
+    },
+    {
+      "name": "សុភាព (Sopheap)",
+      "role": "អ្នកឯកទេសចងក្រងរឿងនិទានប្រជាប្រិយ (Folklore Specialist)",
+      "appearance": "នារីខ្មែរអាយុប្រហែល ២៥ ឆ្នាំ សម្បុរស្រទន់ មុខមូលពងក្រពើ សក់ខ្មៅវែងចងជាកន្ទុយសេះរៀបរយ",
+      "outfit": "អាវយឺតដៃខ្លីពណ៌សសមរម្យ ក្រវាត់ក្រមាខ្មែរក្រឡាខៀវសលើកញ្ចឹងក និងខោខាគីជើងវែង",
+      "personality": "មានចិត្តទន់ភ្លន់ ចេះរំលែកអារម្មណ៍ យល់ច្បាស់ពីមនោសញ្ចេតនាមនុស្ស និងវប្បធម៌ប្រពៃណី",
+      "aiCharacterImagePromptEn": "Photorealistic character turnaround sheet of a 25-year-old Cambodian woman named Sopheap, warm tan complexion, oval face, long black hair tied in a tidy ponytail, wearing a modest white t-shirt with a blue-and-white Cambodian krama scarf around her neck and khaki trousers, front view and 3/4 view, studio lighting, 8k resolution, no text."
+    },
+    {
+      "name": "វិបុល (Vibol)",
+      "role": "អ្នកបច្ចេកទេស និងកត់ត្រាទិន្នន័យវាល (Field Technician & Archivist)",
+      "appearance": "បុរសខ្មែរអាយុប្រហែល ២៤ ឆ្នាំ រូបរាងស្គមខ្ពស់ ពាក់វ៉ែនតាគែមខ្មៅ សក់ខ្លីរួញតិចៗ",
+      "outfit": "អាវកាក់ហោប៉ៅច្រើនពណ៌បៃតងចាស់ពីលើអាវយឺតពណ៌ប្រផេះ ស្លៀកខោជើងវែងបែបស្ទាយដើរព្រៃ",
+      "personality": "រហ័សរហួន ពូកែបច្ចេកវិទ្យា ឆាប់ភ្ញាក់ផ្អើលតែមានការប្រុងប្រយ័ត្នខ្ពស់",
+      "aiCharacterImagePromptEn": "Photorealistic character turnaround sheet of a 24-year-old Cambodian young man named Vibol, slim build, black-rimmed glasses, slightly wavy short black hair, wearing an olive-green multi-pocket field vest over a grey t-shirt and outdoor cargo pants, front view and 3/4 view, neutral background, 85mm lens, 8k resolution, no text."
+    }
+  ],
+  "outline": [
+    {
+      "section": "INTRODUCTION",
+      "titleKh": "អាថ៌កំបាំងរាត្រី និងប្រភពនៃរឿងព្រេង",
+      "summary": "ក្រុមការងារស្រាវជ្រាវចាប់ផ្តើមដំណើរស្វែងយល់ពីរឿងខ្មោចនាងនាថ នៅតំបន់ជនបទក្បែរដើមជ្រៃធំ និងវាលស្រែស្ងាត់ជ្រងំ។",
+      "keyPoints": [
+        "ការចោទសួរអំពីឫសគល់នៃជំនឿខ្មោចនាងនាថ",
+        "ទិដ្ឋភាពភូមិបុរាណពេលរាត្រី និងបរិយាកាសព្រឺព្រួច",
+        "ការកំណត់ទិសដៅសិក្សាពីមនោសញ្ចេតនានិងទំនៀមទម្លាប់"
+      ]
+    },
+    {
+      "section": "MAIN_STORY",
+      "titleKh": "ដំណើររឿងស្នេហា ការព្រាត់ប្រាស និងវិញ្ញាណវិលវល់",
+      "summary": "ការលាតត្រដាងលម្អិតពីជីវិតស្នេហានាងនាថ និងស្វាមី ការស្លាប់ទាំងទារកក្នុងផ្ទៃ និងការវិលត្រឡប់នៃព្រលឹងដោយសារចិត្តអាល័យ។",
+      "keyPoints": [
+        "ចំណងស្នេហាប្តីប្រពន្ធនៅផ្ទះឈើបុរាណខ្មែរ",
+        "ការចាកចេញទៅសមរភូមិ ឬការងារឆ្ងាយ និងការស្លាប់កាលឆ្លងទន្លេ",
+        "ការយល់ច្រឡំ និងការលងបន្លាចដោយក្តីស្រឡាញ់",
+        "ការភ្ញាក់រលឹករបស់ស្វាមីពេលដឹងការណ៍ពិត",
+        "ពិធីសូត្រមន្តរំដោះគ្រោះ និងស្វែងរកសេចក្តីស្ងប់",
+        "ការវិភាគចិត្តសាស្ត្រនៃការជាប់ជំពាក់នៃចិត្តមនុស្ស"
+      ]
+    },
+    {
+      "section": "IMPORTANT_LESSONS",
+      "titleKh": "មេរៀនជីវិត ការលះបង់ និងការរំដោះចិត្ត",
+      "summary": "ក្រុមការងារពិភាក្សាលើក្តារខៀន និងឯកសារអំពីតម្លៃនៃការលះបង់ ការយល់ដឹងពីសេចក្តីស្លាប់ និងការរំលត់ទុក្ខ។",
+      "keyPoints": [
+        "សេចក្តីស្រឡាញ់ពិតទាមទារការចេះលះបង់ និងការដោះលែង",
+        "ជំនឿបុរាណឆ្លុះបញ្ចាំងពីការការពារស្ត្រីមានផ្ទៃពោះក្នុងសហគមន៍"
+      ]
+    },
+    {
+      "section": "CONCLUSION",
+      "titleKh": "ពន្លឺនៃសច្ចធម៌ និងការដាស់តឿនស្មារតី",
+      "summary": "ការសរុបអត្ថន័យនៃរឿងព្រេងនាងនាថ និងការចែករំលែកសារអប់រំដាស់តឿនចិត្តសម្រាប់ជីវិតរស់នៅជាក់ស្តែង។",
+      "keyPoints": [
+        "ការរំលឹកគុណូបការៈ និងការរស់នៅក្នុងបច្ចុប្បន្នភាព",
+        "ពាក្យជូនពរ និងការអំពាវនាវ Like, Share, Subscribe"
+      ]
+    }
+  ],
+  "scenes": [
+    {
+      "sceneNumber": 1,
+      "section": "INTRODUCTION",
+      "sceneTitle": "អាថ៌កំបាំងកណ្តាលវាលស្រែពេលរាត្រី",
+      "durationSeconds": 8,
+      "visualDescription": "រតនា សុភាព និងវិបុល កំពុងកាន់ពិលបំភ្លឺផ្លូវដីក្រហមតាមវាលស្រែដែលមានដើមត្នោត និងដើមជ្រៃធំៗក្រោមពន្លឺព្រះច័ន្ទអ័ព្ទអួរ ខ្យល់បក់រំភើយៗ។",
+      "character": "រតនា (Rathana)",
+      "characterAction": "រតនាកំពុងលើកពិលបំភ្លឺទៅកាន់ផ្លូវខាងមុខ ដោយទឹកមុខស្វែងរកការពិត ខណៈសុភាពនិងវិបុលពិនិត្យផែនទីភូមិបុរាណ។",
+      "narratorScriptKh": "តើហេតុអ្វីបានជារឿងខ្មោចនាងនាថ៖ ព្រលឹងស្នេហាស្មោះ និងវិញ្ញាណវិលវល់កណ្តាលវាល នៅតែដក់ជាប់ក្នុងបេះដូងពលរដ្ឋខ្មែរគ្រប់ជំនាន់? នៅរាត្រីដ៏ស្ងប់ស្ងាត់នេះ ក្រុមការងារយើងកំពុងចុះស្វែងយល់ពីអាថ៌កំបាំងនៃរឿងព្រេង ដែលឆ្លុះបញ្ចាំងពីមនោសញ្ចេតនា និងជំនឿវិញ្ញាណវិលវល់ដ៏កម្សត់។",
+      "characterDialogue": "រតនា៖ «យើងជិតដល់ទីតាំងដើមជ្រៃបុរាណហើយ ត្រូវប្រយ័ត្នគ្រប់ជំហានទាំងអស់គ្នា។»",
+      "onScreenText": "រឿងព្រេងខ្មោចនាងនាថ • អាថ៌កំបាំងនៃវិញ្ញាណស្នេហ៍",
+      "aiImagePromptEn": "Ultra-photorealistic cinematic live-action photography of authentic real Cambodian people, Rathana holding a flashlight walking along a rural red dirt trail beside a rice paddy at twilight, sugar palm trees silhouetted, soft mist, authentic atmosphere, 35mm lens, f/1.8, 8k resolution, no cartoon.",
+      "aiVideoPromptEn": "Three Cambodian researchers walking quietly along a rural dirt road at dusk with flashlights, cinematic steadycam track forward, gentle wind rustling palm leaves, silent cinematic action, characters do not speak, no dialogue or lip-sync, smooth 24fps motion for external voiceover overlay, 16:9, no floating text.",
+      "cameraMovement": "Slow tracking shot pushing forward following the team along the path.",
+      "bgmAndSfx": "SFX: សំឡេងកណ្តូបយំរងំ ខ្យល់បក់ស្លឹកឈើ និងសំឡេងជើងដើរលើដីក្រហម។ BGM: ភ្លេងអភព្វអាថ៌កំបាំងបែបបទភ្លេងខ្មែរស្រាលៗ។"
+    },
+    {
+      "sceneNumber": 2,
+      "section": "MAIN_STORY",
+      "sceneTitle": "អនុស្សាវរីយ៍ស្នេហានៅផ្ទះឈើបុរាណ",
+      "durationSeconds": 8,
+      "visualDescription": "ផ្ទះឈើបុរាណខ្មែរលើកផុតពីដី ហ៊ុមព័ទ្ធដោយដើមចេក និងសួនបន្លែ ដោយមានតួអង្គនាងនាថ និងស្វាមីកំពុងជួយរៀបចំកញ្ជើស្រូវដោយស្នាមញញឹម។",
+      "character": "សុភាព (Sopheap)",
+      "characterAction": "សុភាពកំពុងចង្អុលបង្ហាញគំនូរព្រាងស្ថាបត្យកម្មផ្ទះបុរាណទៅកាន់រតនា និងវិបុល ដើម្បីពន្យល់ពីជីវភាពគូស្វាមីភរិយាកាលពីអតីតកាល។",
+      "narratorScriptKh": "ដើម្បីឆ្លើយតបនឹងសំណួរនេះ ដំណើររឿងបានចាប់ផ្តើមចេញពីសេចក្តីស្រឡាញ់ដ៏បរិសុទ្ធ របស់ប្តីប្រពន្ធមួយគូដែលរស់នៅយ៉ាងសុខសាន្តក្រោមដំបូលផ្ទះឈើតូចមួយ។ ពួកគេបានកសាងសុភមង្គលជាមួយគ្នា ដោយការនឿយហត់និងការយល់ចិត្ត មុនពេលព្យុះជីវិតបានមកដល់។",
+      "characterDialogue": "សុភាព៖ «នេះជាទម្រង់ផ្ទះបុរាណដែលកក់ក្តៅ និងជាកន្លែងកកើតក្តីស្រឡាញ់ដំបូងរបស់ពួកគេ។»",
+      "onScreenText": "ដើមកំណើតនៃក្តីស្រឡាញ់ • ភូមិឋានដ៏សុខសាន្ត",
+      "aiImagePromptEn": "Ultra-photorealistic cinematic live-action photography of authentic Cambodian traditional wooden stilt house surrounded by banana trees and vegetable plots, warm afternoon golden hour sunlight, natural skin textures, authentic historical rural setting, 35mm lens, f/1.8, 8k resolution, no cartoon.",
+      "aiVideoPromptEn": "Cinematic pan across a traditional wooden Khmer stilt house bathed in golden afternoon light, showing serene rural daily atmosphere, silent cinematic action, characters do not speak, no dialogue or lip-sync, smooth 24fps motion for external voiceover overlay, 16:9, no floating text.",
+      "cameraMovement": "Slow panoramic pan from the lush green garden up to the wooden house porch.",
+      "bgmAndSfx": "SFX: សំឡេងបក្សីយំពេលរសៀល សំឡេងស្លឹកចេកបោកត្រូវខ្យល់ស្រាលៗ។ BGM: ភ្លេងខ្លុយខ្មែររំដួលផ្អែមល្ហឹមបែបក្តីសង្ឃឹម។"
+    },
+    {
+      "sceneNumber": 3,
+      "section": "MAIN_STORY",
+      "sceneTitle": "ការបែកព្រាត់ និងសោកនាដកម្មឆ្លងទន្លេ",
+      "durationSeconds": 8,
+      "visualDescription": "ទិដ្ឋភាពភ្លៀងផ្គររលឹមស្រក់ស្រិចៗនៅក្បែរផ្ទះឈើចាស់ នាងនាថមានផ្ទៃពោះអង្គុយមើលផ្លូវប្តីដែលត្រូវចេញទៅបម្រើការងារឆ្ងាយ។",
+      "character": "វិបុល (Vibol)",
+      "characterAction": "វិបុលកំពុងបើកកំណត់ត្រាក្នុងថេប្លេតបង្ហាញស្ថិតិគ្រោះថ្នាក់នៃការសម្រាលកូនសម័យបុរាណជូនក្រុមការងារ។",
+      "narratorScriptKh": "ប៉ុន្តែជាអកុសល ពេលដែលស្វាមីត្រូវបង្ខំចិត្តឃ្លាតឆ្ងាយដើម្បីបំពេញកាតព្វកិច្ច សោកនាដកម្មក៏បានធ្លាក់មកលើគ្រួសារនេះយ៉ាងទារុណ។ នាងនាថត្រូវឆ្លងទន្លេតែម្នាក់ឯងដោយគ្មានស្វាមីនៅក្បែរ រហូតដល់បាត់បង់ជីវិតទាំងម្តាយនិងទារកក្នុងផ្ទៃ ដោយក្តីរង់ចាំមិនទាន់បានជួបមុខ។",
+      "characterDialogue": "វិបុល៖ «សម័យមុន ការឆ្លងទន្លេគ្មានគ្រូពេទ្យជំនាញ គឺជាឧបសគ្គដ៏ធំបំផុតសម្រាប់ស្ត្រីខ្មែរ។»",
+      "onScreenText": "សោកនាដកម្មនៃការព្រាត់ប្រាស • ការបាត់បង់ជីវិត",
+      "aiImagePromptEn": "Ultra-photorealistic cinematic live-action shot of an authentic Cambodian woman resting near a wooden window during rain, melancholy emotional expression, soft rainy atmospheric lighting, visible rain drops, realistic texture, 35mm lens, f/1.8, 8k resolution, no cartoon.",
+      "aiVideoPromptEn": "Slow dolly-in towards an antique wooden window with heavy rain falling outside, capturing a moody and sorrowful rural ambiance, silent cinematic action, characters do not speak, no dialogue or lip-sync, smooth 24fps motion for external voiceover overlay, 16:9, no floating text.",
+      "cameraMovement": "Dolly in slowly towards the rain-splattered wooden window sill.",
+      "bgmAndSfx": "SFX: សំឡេងទឹកភ្លៀងធ្លាក់លើដំបូលស្លឹក និងផ្គរលាន់រងំឆ្ងាយៗ។ BGM: ភ្លេងទ្រអ៊ូរួមជាមួយព្យាណូដ៏សែនស្រពាប់ស្រពោន។"
+    },
+    {
+      "sceneNumber": 4,
+      "section": "MAIN_STORY",
+      "sceneTitle": "វិញ្ញាណមិនព្រមចាកចោលផ្ទះ",
+      "durationSeconds": 9,
+      "visualDescription": "ពេលព្រលប់ស្រអាប់ ស្រមោលស្ត្រីពរទារកឈរនៅមាត់បង្អួចផ្ទះឈើ ខណៈស្វាមីដើរត្រឡប់មកវិញដោយស្ពាយបង្វិចស្បៀងមកដល់កាំជណ្តើរ។",
+      "character": "រតនា (Rathana)",
+      "characterAction": "រតនាកំពុងពិនិត្យស្លាកស្នាមចាស់ៗនៅលើកាំជណ្តើរផ្ទះបុរាណដោយយកចិត្តទុកដាក់ និងពន្យល់ក្រុមការងារ។",
+      "narratorScriptKh": "បន្ទាប់ពីការស្លាប់ដ៏សោកសៅ ព្រលឹងរបស់នាងមិនបានទៅកាន់ទីស្ងប់ឡើយ ដោយសារតែខ្សែចំណងស្នេហានិងការបារម្ភចំពោះស្វាមីនៅតែរឹងមាំខ្លាំងពេក។ វិញ្ញាណរបស់នាងនៅតែបង្កើតរូបរាងដូចមនុស្សរស់នៅបន្តចាំបម្រើប្តី ដោយមិនដឹងថាខ្លួនឯងបានក្លាយជាវិញ្ញាណទៅហើយនោះទេ។",
+      "characterDialogue": "រតនា៖ «ការជាប់ជំពាក់ផ្លូវចិត្តយ៉ាងជ្រៅ ធ្វើឱ្យវិញ្ញាណបង្កើតការបំភាន់ឡើងដើម្បីបន្តក្តីស្រឡាញ់។»",
+      "onScreenText": "ចំណងអាល័យ • វិញ្ញាណវិលវល់មិនដាច់អាល័យ",
+      "aiImagePromptEn": "Ultra-photorealistic cinematic live-action scene of an eerie twilight exterior of a Cambodian stilt house, misty atmosphere, subtle ghostly translucent silhouette near the window, warm lantern glow on the stairs, 35mm lens, f/1.8, 8k resolution, no cartoon.",
+      "aiVideoPromptEn": "Camera tilts slowly down from the shadowy roof of a traditional Khmer house towards the wooden steps where an old lantern flickers, silent cinematic action, characters do not speak, no dialogue or lip-sync, smooth 24fps motion for external voiceover overlay, 16:9, no floating text.",
+      "cameraMovement": "Slow tilt-down from the veranda roof to the lantern-lit wooden staircase.",
+      "bgmAndSfx": "SFX: សំឡេងឆ្កែព្រុសវែងៗពីចម្ងាយ សំឡេងខ្យល់បោកទ្វារក្រាកៗ។ BGM: ភ្លេងរន្ធត់អមដោយសំឡេងខ្សែរំពងបែបភ័យរន្ធត់។"
+    },
+    {
+      "sceneNumber": 5,
+      "section": "MAIN_STORY",
+      "sceneTitle": "ហេតុការណ៍ធ្លាក់ផ្លែក្រូចឆ្មារ និងការបែកធ្លាយអាថ៌កំបាំង",
+      "durationSeconds": 8,
+      "visualDescription": "ទិដ្ឋភាពចង្ក្រានបាយបុរាណ ដៃវែងខុសធម្មតាលូកចុះតាមប្រហោងរនាបក្តារដើម្បីរើសផ្លែក្រូចឆ្មារដែលជ្រុះទៅក្រោមផ្ទះ ធ្វើឱ្យស្វាមីដែលលួចមើលពីក្រោយស្លុតចិត្តយ៉ាងខ្លាំង។",
+      "character": "សុភាព (Sopheap)",
+      "characterAction": "សុភាពកំពុងចង្អុលបង្ហាញគំនូរតំណាងឱ្យព្រឹត្តិការណ៍លាតត្រដាងការពិតដល់វិបុល ដែលកំពុងកត់ត្រាដោយភ្នែកបើកធំៗ។",
+      "narratorScriptKh": "តភ្ជាប់ពីចំណុចនេះ អាថ៌កំបាំងដ៏រន្ធត់ត្រូវបានលាតត្រដាង នៅពេលដែលផ្លែក្រូចឆ្មារមួយបានជ្រុះធ្លាក់តាមចន្លោះរនាបផ្ទះទៅដី។ ការលូកដៃវែងខុសពីមនុស្សលោកដើម្បីរើសយកផ្លែក្រូចនោះ បានធ្វើឱ្យស្វាមីភ្ញាក់ដឹងខ្លួនយ៉ាងរន្ធត់ថា ភរិយាជាទីស្រឡាញ់របស់ខ្លួន មិនមែនជាមនុស្សរស់ទៀតឡើយ។",
+      "characterDialogue": "សុភាព៖ «ឈុតឆាកនេះហើយដែលបង្ហាញពីការដាច់ស្រឡះរវាងពិភពមនុស្សរស់ និងពិភពវិញ្ញាណ។»",
+      "onScreenText": "ការពិតដ៏រន្ធត់ • ការភ្ញាក់រលឹករបស់ស្វាមី",
+      "aiImagePromptEn": "Ultra-photorealistic cinematic live-action shot of an antique Cambodian kitchen interior, shadows cast by oil lamp, wooden floor with gaps, dramatic suspenseful lighting, emotional shock on human faces, authentic props, 35mm lens, f/1.8, 8k resolution, no cartoon.",
+      "aiVideoPromptEn": "Dramatic slow push-in shot across the floorboards of an authentic rustic wooden kitchen, flickering amber candlelight casting long ominous shadows, silent cinematic action, characters do not speak, no dialogue or lip-sync, smooth 24fps motion for external voiceover overlay, 16:9, no floating text.",
+      "cameraMovement": "Low-angle smooth push-in shot highlighting the rustic floor and dramatic shadows.",
+      "bgmAndSfx": "SFX: សំឡេងវត្ថុធ្លាក់បុកដី ក្តាររនាបគោះលាន់ក្រឺតក្រាត សំឡេងដង្ហើមភ័យញ័រ។ BGM: ភ្លេងស្រែករំពងស្ងាត់ៗបង្កើនភាពតានតឹងខ្លាំង។"
+    },
+    {
+      "sceneNumber": 6,
+      "section": "MAIN_STORY",
+      "sceneTitle": "ការរត់ភៀសខ្លួន និងការជ្រកកោនក្នុងវត្តអារាម",
+      "durationSeconds": 8,
+      "visualDescription": "ស្វាមីកំពុងរត់កាត់វាលស្រែភក់ទាំងភ័យតក់ស្លុត សំដៅទៅកាន់ខ្លោងទ្វារវត្តអារាមខ្មែរដែលមានពន្លឺភ្លើងគោមបំភ្លឺ និងមានព្រះសង្ឃគង់ចាំ។",
+      "character": "វិបុល (Vibol)",
+      "characterAction": "វិបុលដើរបង្ហាញផ្លូវរត់កាត់វាលស្រែទៅកាន់ទីតាំងវត្តបុរាណ ដោយពិនិត្យមើលត្រីវិស័យ និងឧបករណ៍វាស់កម្ពស់ដី។",
+      "narratorScriptKh": "ក្រោយពីបានឃើញការពិតដ៏ព្រឺព្រួចនោះមក ស្វាមីបានរត់ភៀសខ្លួនកាត់វាលស្រែទាំងកណ្តាលអធ្រាត្រ ដើម្បីស្វែងរកទីជម្រកសុវត្ថិភាពនៅឯវត្តអារាម។ វត្តអារាមក្នុងសង្គមខ្មែរ តែងតែជាទីពឹងផ្លូវចិត្តដ៏រឹងមាំបំផុត នៅពេលដែលមនុស្សជួបប្រទះវិបត្តិ ឬភាពភ័យខ្លាចដែលមិនអាចបកស្រាយបាន។",
+      "characterDialogue": "វិបុល៖ «វត្តអារាមមិនត្រឹមតែជាកន្លែងសាសនាទេ តែជាទីពឹងការពារសុវត្ថិភាពផ្លូវចិត្តរបស់អ្នកភូមិជានិច្ច។»",
+      "onScreenText": "ការស្វែងរកទីជម្រក • វត្តអារាមជាទីពឹង",
+      "aiImagePromptEn": "Ultra-photorealistic cinematic shot of an authentic Cambodian Buddhist pagoda gate illuminated by soft lanterns at night, traditional Khmer architecture, ancient trees, atmospheric mist, 35mm lens, f/1.8, 8k resolution, no cartoon.",
+      "aiVideoPromptEn": "Tracking shot moving towards the ornate entrance gate of a Cambodian pagoda at night with glowing lanterns guiding the way through mist, silent cinematic action, characters do not speak, no dialogue or lip-sync, smooth 24fps motion for external voiceover overlay, 16:9, no floating text.",
+      "cameraMovement": "Tracking forward shot moving smoothly towards the temple archway.",
+      "bgmAndSfx": "SFX: សំឡេងជើងរត់បោកភក់ក្បាក់ៗ សំឡេងកណ្តឹងវត្តបន្លឺឆ្ងាយៗ។ BGM: ភ្លេងរំជួលចិត្តលាយឡំភាពភ័យខ្លាច និងភាពស្ងប់ស្ងាត់នៃសាសនា។"
+    },
+    {
+      "sceneNumber": 7,
+      "section": "MAIN_STORY",
+      "sceneTitle": "ពិធីសូត្រមន្ត និងការរំដោះវិញ្ញាណ",
+      "durationSeconds": 9,
+      "visualDescription": "ព្រះសង្ឃចំណាស់កំពុងសូត្រធម៌លើសាលាវត្ត ដោយមានពន្លឺទៀន ធូប និងខ្សែសីមាព័ទ្ធជុំវិញ ខណៈវិញ្ញាណនាងនាថឈរយំដោយក្តីអាឡោះអាល័យក្រៅរង្វង់សីមា។",
+      "character": "រតនា (Rathana)",
+      "characterAction": "រតនាលើកដៃសំពះគោរពទីសក្ការៈក្នុងវត្តបុរាណ ព្រមទាំងពន្យល់ពីអត្ថន័យនៃពិធីកម្មសាសនាដើម្បីរំដោះព្រលឹង។",
+      "narratorScriptKh": "ក្រៅពីការភ័យខ្លាច ដំណោះស្រាយដ៏ពិតប្រាកដគឺការប្រើប្រាស់ព្រះធម៌ និងការឧទ្ទិសកុសល ដើម្បីជួយឱ្យវិញ្ញាណបានស្គាល់នូវការលះបង់។ ព្រះសង្ឃបានសម្តែងធម៌ទេសនាពន្យល់អំពីភាពមិនទៀងនៃជីវិត ជួយរំលត់ភ្លើងកំហឹង និងក្តីអាល័យ ឱ្យព្រលឹងនាងនាថបានទៅកាន់សុគតិភពដោយសន្តិភាព។",
+      "characterDialogue": "រតនា៖ «ធម៌ព្រះមិនមែនសម្រាប់កម្ចាត់វិញ្ញាណដោយកំហឹងទេ តែជាការបំភ្លឺផ្លូវឱ្យព្រលឹងបានរួចផុតពីទុក្ខ។»",
+      "onScreenText": "ពន្លឺព្រះធម៌ • ការរំដោះទុក្ខ និងសេចក្តីស្ងប់",
+      "aiImagePromptEn": "Ultra-photorealistic cinematic live-action shot inside a historic Khmer pagoda hall, elderly monk in saffron robe chanting peacefully, golden candlelight reflections, sacred thread, spiritual tranquility, 35mm lens, f/1.8, 8k resolution, no cartoon.",
+      "aiVideoPromptEn": "Gentle slow dolly shot showing rows of glowing wax candles inside a traditional Cambodian temple sanctuary, incense smoke rising gracefully, silent cinematic action, characters do not speak, no dialogue or lip-sync, smooth 24fps motion for external voiceover overlay, 16:9, no floating text.",
+      "cameraMovement": "Slow lateral dolly shot across glowing candles and sacred objects.",
+      "bgmAndSfx": "SFX: សំឡេងសូត្រធម៌បាលីរងំស្រាលៗ សំឡេងគោះត្រដោកវត្ត។ BGM: ភ្លេងគងនិងពិណពាទ្យខ្មែរបែបសមាធិដ៏ស្ងប់ជ្រាលជ្រៅ។"
+    },
+    {
+      "sceneNumber": 8,
+      "section": "IMPORTANT_LESSONS",
+      "sceneTitle": "ការវិភាគមេរៀននៅលើក្តារខៀនស្រាវជ្រាវ",
+      "durationSeconds": 9,
+      "visualDescription": "រតនា សុភាព និងវិបុល ប្រជុំគ្នានៅបន្ទប់ស្រាវជ្រាវ ដោយរតនាកំពុងសរសេរពាក្យគន្លឹះ «សេចក្តីស្រឡាញ់ vs ការជាប់ជំពាក់» លើក្តារខៀនពណ៌ស។",
+      "character": "រតនា (Rathana)",
+      "characterAction": "រតនាកំពុងកាន់ប៊ិចសរសេរចំណុចសំខាន់លើក្តារខៀន ខណៈសុភាពនិងវិបុលអង្គុយពិភាក្សា និងចង្អុលបង្ហាញគំនូសតាងផ្លូវចិត្ត។",
+      "narratorScriptKh": "នៅពេលដែលយើងពិចារណារឿងនេះឱ្យបានស៊ីជម្រៅ យើងឃើញថាមេរៀនស្នូលមិនមែនត្រឹមតែជារឿងខ្មោចលងគួរឱ្យភ័យខ្លាចនោះឡើយ។ សេចក្តីស្រឡាញ់ពិតប្រាកដទាមទារឱ្យយើងចេះទទួលស្គាល់ការពិត និងចេះលែងលះការជាប់ជំពាក់ ព្រោះថាការតោងទាមហួសហេតុនឹងបង្កើតបានជាភ្លើងទុក្ខសម្រាប់ទាំងសងខាង។",
+      "characterDialogue": "រតនា៖ «ការស្រឡាញ់ដ៏ត្រឹមត្រូវ គឺការជូនពរឱ្យមនុស្សដែលយើងស្រឡាញ់មានសេចក្តីសុខ ទោះបីជាយើងមិនបាននៅក្បែរគ្នាក៏ដោយ។»",
+      "onScreenText": "មេរៀនសំខាន់ទី ១ • សេចក្តីស្រឡាញ់ទាមទារការយល់ដឹង និងការដោះលែង",
+      "aiImagePromptEn": "Ultra-photorealistic cinematic shot of Rathana writing key concepts on a modern whiteboard, Sopheap and Vibol discussing around a wooden table with laptops and books, natural soft office lighting, authentic Cambodian researchers, 35mm lens, f/1.8, 8k resolution, no cartoon.",
+      "aiVideoPromptEn": "Smooth arc shot around three Cambodian colleagues actively collaborating around a whiteboard with research notes, silent cinematic action, characters do not speak, no dialogue or lip-sync, smooth 24fps motion for external voiceover overlay, 16:9, no floating text.",
+      "cameraMovement": "Smooth semi-circular arc shot around the research discussion table.",
+      "bgmAndSfx": "SFX: សំឡេងសរសេរប៊ិចលើក្តារខៀន និងសំឡេងត្រឡប់ទំព័រសៀវភៅ។ BGM: ភ្លេងបែបស្រាវជ្រាវ និងការគិតពិចារណាដ៏រស់រវើក។"
+    },
+    {
+      "sceneNumber": 9,
+      "section": "IMPORTANT_LESSONS",
+      "sceneTitle": "តម្លៃនៃសុខភាពមាតានិងសាមគ្គីភាពក្នុងសហគមន៍",
+      "durationSeconds": 8,
+      "visualDescription": "សុភាព និងវិបុល កំពុងបង្ហាញផ្ទាំងគំនូរប្រជាប្រិយអំពីការថែទាំស្ត្រីមានផ្ទៃពោះក្នុងភូមិខ្មែរ ដោយមានអ្នកភូមិជួយយកអាហារនិងឱសថបុរាណមកជូន។",
+      "character": "សុភាព (Sopheap)",
+      "characterAction": "សុភាពលើកសៀវភៅប្រវត្តិសាស្ត្រទំនៀមទម្លាប់ខ្មែរមកបង្ហាញ ដោយទឹកមុខពោរពេញដោយការដឹងគុណចំពោះបុព្វបុរស។",
+      "narratorScriptKh": "បន្ថែមពីលើនេះ រឿងព្រេងបុរាណមួយនេះក៏ជាសារដាស់តឿនសង្គម ឱ្យយកចិត្តទុកដាក់ខ្ពស់បំផុតចំពោះសុខភាពរបស់ស្ត្រីពេលឆ្លងទន្លេ។ ភាពសាមគ្គីគ្នាក្នុងភូមិ និងការជួយយកអាសារគ្នាទៅវិញទៅមក គឺជាខែលការពារដ៏រឹងមាំ ដើម្បីកុំឱ្យសោកនាដកម្មបែបនេះកើតឡើងជាថ្មីម្តងទៀត។",
+      "characterDialogue": "សុភាព៖ «ការយកចិត្តទុកដាក់ចំពោះស្ត្រីមានផ្ទៃពោះ គឺជាទំនួលខុសត្រូវរួមរបស់សហគមន៍ទាំងមូល។»",
+      "onScreenText": "មេរៀនសំខាន់ទី ២ • ការយកចិត្តទុកដាក់លើសុខភាពមាតា និងកុមារ",
+      "aiImagePromptEn": "Ultra-photorealistic cinematic live-action shot of Sopheap holding a classic Cambodian cultural research book, Vibol taking digital notes, warm natural indoor lighting, detailed textures of fabric and paper, 35mm lens, f/1.8, 8k resolution, no cartoon.",
+      "aiVideoPromptEn": "Slow tracking shot from the historic book pages towards the thoughtful faces of the Cambodian researchers, silent cinematic action, characters do not speak, no dialogue or lip-sync, smooth 24fps motion for external voiceover overlay, 16:9, no floating text.",
+      "cameraMovement": "Slow zoom in focusing on the educational material and characters' expressive faces.",
+      "bgmAndSfx": "SFX: សំឡេងចុចក្តារចុចកុំព្យូទ័រស្រាលៗ និងសំឡេងកត់ត្រា។ BGM: ភ្លេងព្យាណូកក់ក្តៅ និងផ្តល់ក្តីសង្ឃឹម។"
+    },
+    {
+      "sceneNumber": 10,
+      "section": "CONCLUSION",
+      "sceneTitle": "សេចក្តីសន្និដ្ឋាន និងសារលើកទឹកចិត្តចុងក្រោយ",
+      "durationSeconds": 8,
+      "visualDescription": "ក្រុមការងារទាំងបីនាក់ឈរក្បែរវាលស្រែពណ៌បៃតងខ្ចី ក្រោមពន្លឺព្រះអាទិត្យរះពេលព្រឹកព្រលឹមដ៏ស្រស់បំព្រង ញញឹមពោរពេញដោយក្តីសង្ឃឹម។",
+      "character": "រតនា (Rathana)",
+      "characterAction": "រតនា សុភាព និងវិបុល លើកដៃសំពះជំរាបលាទស្សនិកជនដោយស្នាមញញឹមរាក់ទាក់ និងកាយវិការថ្លៃថ្នូរ។",
+      "narratorScriptKh": "សរុបជារួម មកដល់ចំណុចនេះ យើងឃើញថា រឿងព្រេងខ្មោចនាងនាថ មិនត្រឹមតែជាតំណាលភ័យរន្ធត់ប៉ុណ្ណោះទេ ប៉ុន្តែជាកញ្ចក់ឆ្លុះបញ្ចាំងពីតម្លៃនៃសេចក្តីស្រឡាញ់ ការលះបង់ និងការរស់នៅដោយសតិសម្បជញ្ញៈ។ សូមចុច Like, Share និង Subscribe ដើម្បីគាំទ្រការផលិតវីដេអូល្អៗបន្តទៀត! សូមអរគុណ។",
+      "characterDialogue": "ក្រុមការងារទាំងមូល៖ «សូមអរគុណសម្រាប់ការទស្សនា និងសូមជួបគ្នានៅវីដេអូក្រោយៗទៀត!»",
+      "onScreenText": "សូមចុច Like • Share • Subscribe • អរគុណសម្រាប់ការទស្សនា",
+      "aiImagePromptEn": "Ultra-photorealistic cinematic live-action photography of Rathana, Sopheap, and Vibol standing beside a lush Cambodian green rice field at golden sunrise, performing traditional polite Sampeah greeting, authentic Cambodian smiles, 35mm lens, f/1.8, warm sunlight, 8k resolution, no cartoon.",
+      "aiVideoPromptEn": "Three Cambodian presenters standing proudly by a sunrise-lit rice field performing a respectful Cambodian Sampeah bow, slow cinematic crane-up to reveal the golden landscape, silent cinematic action, characters do not speak, no dialogue or lip-sync, smooth 24fps motion for external voiceover overlay, 16:9, no floating text.",
+      "cameraMovement": "Gentle crane up and pull back revealing the vast green countryside at sunrise.",
+      "bgmAndSfx": "SFX: សំឡេងបក្សីច្រៀងពេលព្រឹកព្រលឹម ខ្យល់បក់រំភើយៗលើវាលស្រែ។ BGM: ភ្លេងតន្ត្រីបំផុសទឹកចិត្ត អមដោយឧបករណ៍ភ្លេងបុរាណខ្មែរយ៉ាងរំភើបរីករាយ។"
+    }
+  ],
+  "musicSuggestions": [
+    {
+      "section": "INTRODUCTION",
+      "mood": "Mysterious, eerie, curiosity-inducing, atmospheric suspense",
+      "tempo": "65 BPM",
+      "instruments": "Subtle low bamboo flute (Khmer Khloy), atmospheric dark ambient synth pads, gentle distant percussion",
+      "usageTip": "ប្រើប្រាស់កម្រិតសំឡេងប្រមាណ -18dB ដើម្បីកុំឱ្យលុបលើសំឡេងអ្នកអាន និងបង្កើតបរិយាកាសព្រឺព្រួច",
+      "aiMusicPromptEn": "[Instrumental Dark Ambient Folklore] [Tempo: 65 BPM] [Mood: Mysterious, eerie, suspenseful, traditional Southeast Asian atmospheric tones] [Instruments: Traditional Khmer bamboo flute, deep cello drone, soft ambient wind pads] [Style: Clean educational documentary background music, balanced frequency range for voiceover, no vocals]"
+    },
+    {
+      "section": "MAIN_STORY",
+      "mood": "Melancholic, dramatic, emotional tension, storytelling groove",
+      "tempo": "75 BPM",
+      "instruments": "Acoustic piano, traditional Tro Ou (Khmer bowed string), soft orchestral strings, subtle cinematic sub-bass",
+      "usageTip": "បង្កើនកម្រិតសំឡេងឡើងបន្តិចពេលឈុតធ្លាក់ក្រូចឆ្មារ និងបន្ថយមកវិញពេលអ្នកអានពន្យល់",
+      "aiMusicPromptEn": "[Instrumental Cinematic Drama] [Tempo: 75 BPM] [Mood: Sorrowful, haunting romance, deep emotional folklore tension] [Instruments: Acoustic piano, traditional Khmer Tro string instrument, gentle strings, subtle heartbeat percussion] [Style: Clean educational documentary background music, balanced frequency range for voiceover, no vocals]"
+    },
+    {
+      "section": "CONCLUSION",
+      "mood": "Uplifting, reflective, warm, inspiring closure",
+      "tempo": "88 BPM",
+      "instruments": "Acoustic nylon guitar, soft Khmer Roneat Ek accents, warm piano chords, airy pads",
+      "usageTip": "ដំឡើងកម្រិតសំឡេងឱ្យឮច្បាស់នៅ ២ វិនាទីចុងក្រោយបន្ទាប់ពីការអំពាវនាវ Subscribe ចប់",
+      "aiMusicPromptEn": "[Instrumental Uplifting Acoustic] [Tempo: 88 BPM] [Mood: Warm, inspirational, reflective, hopeful Cambodian countryside morning] [Instruments: Warm acoustic guitar, delicate Khmer xylophone accents, soft piano, light ambient strings] [Style: Clean educational documentary background music, balanced frequency range for voiceover, no vocals]"
+    }
+  ],
+  "thumbnail": {
+    "headlineKh": "អាថ៌កំបាំងនាងនាថ!",
+    "subTextKh": "ការពិតរន្ធត់ និងមេរៀនស្នេហ៍",
+    "visualConcept": "រូបភាពបង្ហាញពីតួអង្គប្រធានក្រុមរតនា បើកភ្នែកធំៗចង្អុលទៅកាន់ស្រមោលព្រលឹងនាងនាថពរទារកកណ្តាលវាលស្រែពេលរាត្រីព្រះច័ន្ទពេញបូណ៌មី ដោយមានពន្លឺអ័ព្ទពណ៌ខៀវនិងលឿងទុំចាំងផ្លាតយ៉ាងទាក់ទាញ។",
+    "aiThumbnailPromptEn": "Ultra high-CTR professional YouTube thumbnail, dramatic photorealistic portrait of an expressive young Cambodian male researcher looking shocked and curious, pointing toward a haunting glowing silhouette of Neang Neath holding a baby in a misty rural rice field under a giant full moon, sugar palm tree silhouettes in the background, vibrant complementary lighting with deep teal shadows and warm golden lantern rim light, rule of thirds, clean uncluttered focal point, 16:9 aspect ratio, 8k render, no blurry artifacts, no text watermarks."
+  }
+}

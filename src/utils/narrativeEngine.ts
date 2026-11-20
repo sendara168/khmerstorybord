@@ -1,5 +1,7 @@
 import type {
   CharacterProfile,
+  PresenterSetupId,
+  SceneActionDynamicId,
   StoryboardScene,
   StorySection,
 } from '../types/storyboard';
@@ -11,6 +13,8 @@ export interface NarrativeContext {
   characters?: CharacterProfile[];
   animationStyleLabel?: string;
   styleAnchor?: string;
+  presenterSetup?: PresenterSetupId;
+  actionDynamic?: SceneActionDynamicId;
 }
 
 export interface StoryMilestonePlan {
@@ -21,6 +25,64 @@ export interface StoryMilestonePlan {
   conclusionCount: number;
   mainEnd: number;
   lessonsEnd: number;
+}
+
+export function sanitizeScriptRepetitions(
+  scenes: StoryboardScene[],
+  topic: string,
+  videoTitle?: string
+): StoryboardScene[] {
+  const cleanTopic = (topic || '').trim();
+  const cleanTitle = (videoTitle || '').trim();
+  const escapeRegExp = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+  return scenes.map((scene, idx) => {
+    let script = String(scene.narratorScriptKh || '').trim();
+
+    // Scene 1 can mention the topic to introduce it; Scene 2+ must NOT recite the topic or title repeatedly
+    if (idx > 0) {
+      const targets = [cleanTitle, cleanTopic].filter(Boolean);
+
+      for (const t of targets) {
+        if (!t || t.length < 3) continue;
+
+        const escaped = escapeRegExp(t);
+
+        // Replace repetitive title citations with natural contextual Khmer phrasing
+        script = script.replace(
+          new RegExp(`(?:នៃ|អំពី|ជាមួយ|ចំពោះ)\\s*«${escaped}»`, 'gi'),
+          'នៃបញ្ហានេះ'
+        );
+        script = script.replace(
+          new RegExp(`(?:ក្នុង|សម្រាប់)\\s*«${escaped}»`, 'gi'),
+          'ក្នុងចំណុចនេះ'
+        );
+        script = script.replace(new RegExp(`«${escaped}»`, 'gi'), 'ចំណុចនេះ');
+
+        // Without Khmer quotes
+        script = script.replace(
+          new RegExp(`(?:នៃ|អំពី|ជាមួយ|ចំពោះ)\\s+${escaped}`, 'gi'),
+          'នៃបញ្ហានេះ'
+        );
+        script = script.replace(
+          new RegExp(`(?:ក្នុង|សម្រាប់)\\s+${escaped}`, 'gi'),
+          'ក្នុងកិច្ចការនេះ'
+        );
+        script = script.replace(new RegExp(`\\b${escaped}\\b`, 'gi'), 'បញ្ហានេះ');
+      }
+
+      // Clean redundant spaces and punctuation artifacts
+      script = script
+        .replace(/\s{2,}/g, ' ')
+        .replace(/ចំណុចនេះ\s+ចំណុចនេះ/g, 'ចំណុចនេះ')
+        .replace(/បញ្ហានេះ\s+បញ្ហានេះ/g, 'បញ្ហានេះ');
+    }
+
+    return {
+      ...scene,
+      narratorScriptKh: script.trim(),
+    };
+  });
 }
 
 export function computeStoryMilestones(targetCount: number): StoryMilestonePlan {
@@ -213,6 +275,162 @@ const CONCLUSION_TEMPLATES: NarrativeStepTemplate[] = [
   },
 ];
 
+function isPhotorealisticStyle(styleAnchor?: string): boolean {
+  const sa = String(styleAnchor || '').toLowerCase();
+  return sa.includes('photorealistic') || sa.includes('real human') || sa.includes('live-action');
+}
+
+function buildSoloPresenterImagePrompt(
+  leadChar: string,
+  characterAction: string,
+  styleAnchor?: string,
+  _isDialogueSpeech?: boolean
+): string {
+  if (isPhotorealisticStyle(styleAnchor)) {
+    return `Ultra-photorealistic cinematic 35mm photography featuring authentic real Cambodian solo presenter ${leadChar}, natural human skin texture and pores, authentic everyday Cambodian outfit, single person in frame, in an active expressive speaking pose with engaging facial expression, delivering story presentation and gesturing: ${characterAction}, authentic Cambodian setting, natural cinematic lighting, shot on 35mm lens, f/1.8 aperture, 8k resolution, photorealistic masterpiece, strictly real human, no cartoon, strictly no other characters in frame. ${styleAnchor || ''}`;
+  }
+  const sa = String(styleAnchor || '').toLowerCase();
+  const prefix = sa.includes('3d')
+    ? 'Stylized 3D Pixar-inspired educational cartoon animation'
+    : sa.includes('documentary')
+    ? 'Modern 2D editorial documentary illustration'
+    : 'Authentic Cambodian 2D illustration';
+  return `${prefix} featuring solo presenter ${leadChar}, single person in frame, in an active expressive speaking pose delivering presentation with engaging facial expression and communicative hand gestures: ${characterAction}, authentic Cambodian background, solo presenter shot, strictly no other characters in frame. ${styleAnchor || ''}`;
+}
+
+function buildSoloPresenterVideoPrompt(
+  leadChar: string,
+  characterAction: string,
+  topicText: string,
+  styleAnchor?: string,
+  _isDialogueSpeech?: boolean,
+  dialogueText?: string
+): string {
+  const speechLine = dialogueText ? ` while speaking line: "${dialogueText}"` : '';
+  if (isPhotorealisticStyle(styleAnchor)) {
+    return `Visual Action: Cinematic 4K live-action character acting and spoken delivery: authentic real Cambodian solo presenter ${leadChar}, actively speaking directly on camera in Khmer with natural mouth movements, genuine conversational expressions, and communicative hand gestures while presenting: ${characterAction}${speechLine}, illustrating "${topicText}". Single real person in frame, natural cinematic lighting, smooth 24fps motion, 16:9, no floating text.`;
+  }
+  return `Visual Action: Expressive animated character acting and spoken delivery: Cambodian solo presenter ${leadChar}, single person in frame, actively speaking on camera in Khmer with natural speech articulation, engaging facial expressions, and communicative gestures while presenting: ${characterAction}${speechLine}, illustrating "${topicText}". Single character in frame, smooth 24fps animation, authentic Cambodian setting, 16:9, no floating text.`;
+}
+
+function buildGroupPresenterImagePrompt(
+  charNames: string,
+  actionDesc: string,
+  styleAnchor?: string,
+  _isDialogueSpeech?: boolean
+): string {
+  if (isPhotorealisticStyle(styleAnchor)) {
+    return `Ultra-photorealistic cinematic 35mm photography of authentic real Cambodian people (${charNames}), natural human skin texture and pores, authentic everyday Cambodian outfits, in a lively conversational scene with characters speaking, engaging facial expressions, and communicative gestures while interacting: ${actionDesc}, authentic Cambodian urban or rural setting, shot on 35mm lens, f/2.0 aperture, natural sunlight, 8k resolution, photorealistic masterpiece, strictly real humans, no cartoon, no 3D render. ${styleAnchor || ''}`;
+  }
+  const sa = String(styleAnchor || '').toLowerCase();
+  const prefix = sa.includes('3d')
+    ? 'Stylized 3D Pixar-inspired educational cartoon animation'
+    : sa.includes('documentary')
+    ? 'Modern 2D editorial documentary illustration'
+    : 'Authentic Cambodian 2D illustration';
+  return `${prefix} showing lively conversational scene with Cambodian characters (${charNames}) speaking and delivering dialogue with engaging facial expressions and communicative gestures: ${actionDesc}, authentic Cambodian urban or rural background, active collaborative poses. ${styleAnchor || ''}`;
+}
+
+function buildGroupPresenterVideoPrompt(
+  charNames: string,
+  actionDesc: string,
+  topicText: string,
+  styleAnchor?: string,
+  _isDialogueSpeech?: boolean,
+  dialogueText?: string
+): string {
+  const speechLine = dialogueText ? ` while delivering dialogue: "${dialogueText}"` : '';
+  if (isPhotorealisticStyle(styleAnchor)) {
+    return `Visual Action: Cinematic 4K live-action character acting and dialogue delivery: authentic real Cambodian characters (${charNames}), actively speaking and conversing on camera in Khmer with natural mouth movements, genuine conversational expressions, and communicative hand gestures while interacting: ${actionDesc}${speechLine}, illustrating "${topicText}". Smooth cinematic 24fps footage, natural lighting, 16:9, no floating text.`;
+  }
+  return `Visual Action: Expressive animated character acting and dialogue delivery: Cambodian characters (${charNames}), actively speaking and conversing on camera in Khmer with natural speech articulation, lively conversational expressions, and expressive gestures while interacting: ${actionDesc}${speechLine}, illustrating "${topicText}". Smooth 24fps animation, authentic Cambodian setting, 16:9, no floating text.`;
+}
+
+function sanitizeSceneForCast(
+  s: any,
+  idx: number,
+  isSolo: boolean,
+  isNoCharacters: boolean,
+  leadChar: string,
+  charNames: string,
+  topicText: string,
+  styleAnchor?: string,
+  isDialogueSpeech?: boolean
+): StoryboardScene {
+  let character = isNoCharacters
+    ? 'គ្មានតួអង្គ (Topic Visuals Only)'
+    : isSolo
+    ? leadChar
+    : s.character || charNames;
+
+  let characterAction = s.characterAction || '';
+  let characterDialogue = isNoCharacters ? '' : s.characterDialogue || '';
+  let visualDesc = s.visualDescription || '';
+  let imgPrompt = s.aiImagePromptEn || '';
+  let videoPrompt = s.aiVideoPromptEn || '';
+
+  if (isSolo) {
+    character = leadChar;
+    characterAction = characterAction
+      .replace(/សុខា\s*និង\s*តារា/g, `${leadChar}តែម្នាក់ឯង`)
+      .replace(/កញ្ញា\s*និង\s*សុខា/g, `${leadChar}តែម្នាក់ឯង`)
+      .replace(/វិចិត្រ\s*និង\s*បុប្ផា/g, `${leadChar}តែម្នាក់ឯង`)
+      .replace(/ក្រុមការងារទាំងមូល\s*\(.*?\)/g, leadChar)
+      .replace(/ក្រុមការងារ/g, `អ្នកធ្វើបទបង្ហាញទោល (${leadChar})`)
+      .replace(/សមាជិកទាំងអស់/g, leadChar)
+      .replace(/តួអង្គទាំងអស់/g, leadChar)
+      .replace(/តួអង្គទាំង\s*[០-៩0-9]+\s*នាក់/g, leadChar);
+
+    if (characterDialogue && !characterDialogue.startsWith(`${leadChar}៖`)) {
+      const colonIdx = characterDialogue.indexOf('៖');
+      if (colonIdx > 0 && colonIdx < 15) {
+        characterDialogue = `${leadChar}៖` + characterDialogue.slice(colonIdx + 1);
+      }
+    }
+
+    if (!imgPrompt.toLowerCase().includes('solo presenter') && !imgPrompt.toLowerCase().includes('single person')) {
+      imgPrompt = buildSoloPresenterImagePrompt(leadChar, characterAction, styleAnchor, isDialogueSpeech);
+    }
+
+    if (!videoPrompt.toLowerCase().includes('solo presenter') && !videoPrompt.toLowerCase().includes('single person')) {
+      videoPrompt = buildSoloPresenterVideoPrompt(leadChar, characterAction, topicText, styleAnchor, isDialogueSpeech, characterDialogue);
+    }
+  } else if (isNoCharacters) {
+    character = 'គ្មានតួអង្គ (Topic Visuals Only)';
+    characterDialogue = '';
+    if (!imgPrompt.toLowerCase().includes('no human characters')) {
+      imgPrompt = `${imgPrompt}, no human characters`;
+    }
+    if (!videoPrompt.toLowerCase().includes('no human characters')) {
+      videoPrompt = `${videoPrompt}, no human characters`;
+    }
+  }
+
+  let narratorScriptKh = (s.narratorScriptKh || '').trim();
+  if (!isNoCharacters) {
+    const speakerName = (character.split('(')[0] || leadChar).trim();
+    const hasSpeakerPrefix = /^[\u1780-\u17FF\w\s]+[៖:]/.test(narratorScriptKh);
+    if (!hasSpeakerPrefix && speakerName) {
+      narratorScriptKh = `${speakerName}៖ «${narratorScriptKh.replace(/^«|»$/g, '').trim()}»`;
+    }
+    if (!characterDialogue) {
+      characterDialogue = narratorScriptKh;
+    }
+  }
+
+  return {
+    ...s,
+    sceneNumber: idx + 1,
+    character,
+    characterAction,
+    narratorScriptKh,
+    characterDialogue,
+    visualDescription: visualDesc,
+    aiImagePromptEn: imgPrompt,
+    aiVideoPromptEn: videoPrompt,
+  };
+}
+
 export function ensureCompleteNarrativeScenes(
   rawScenes: StoryboardScene[],
   ctx: NarrativeContext
@@ -224,22 +442,94 @@ export function ensureCompleteNarrativeScenes(
     ctx.animationStyleLabel ||
     '2D Cartoon Cambodian Educational Animation, authentic Cambodian setting, clean warm lighting, 16:9';
 
-  // Get primary character names for natural Cambodian action
+  // Get primary character names for natural Cambodian action or Topic Visuals
   const chars = ctx.characters && ctx.characters.length > 0 ? ctx.characters : [];
-  const charNames =
-    chars.length > 0
-      ? chars.map((c) => c.name.split('(')[0].trim()).join(', ')
-      : 'សុខា, តារា & កញ្ញា';
+  const isNoCharacters =
+    ctx.presenterSetup === 'no-characters' ||
+    (chars.length > 0 &&
+      chars.some(
+        (c) =>
+          c.name.includes('គ្មានតួអង្គ') ||
+          c.name.includes('Topic Visual') ||
+          c.role?.includes('Topic Visual')
+      ));
+  const isSolo = ctx.presenterSetup === 'solo' || (!isNoCharacters && chars.length === 1);
+  const isDialogueSpeech = ctx.actionDynamic === 'character-dialogue-speech';
+
   const leadChar = chars[0]?.name ? chars[0].name.split('(')[0].trim() : 'សុខា';
+  const charNames = isNoCharacters
+    ? 'គ្មានតួអង្គ (Topic Visuals Only)'
+    : isSolo
+    ? leadChar
+    : chars.length > 0
+    ? chars.map((c) => c.name.split('(')[0].trim()).join(', ')
+    : 'សុខា, តារា & កញ្ញា';
 
   // If already at or above target, ensure sequential numbering and proper narrative ending
   if (rawScenes.length >= targetCount) {
-    const adjusted = rawScenes.map((s, idx) => ({
-      ...s,
-      sceneNumber: idx + 1,
-      section: s.section || (idx === 0 ? 'INTRODUCTION' : idx >= rawScenes.length - 2 ? 'CONCLUSION' : 'MAIN_STORY'),
-      durationSeconds: Math.max(4, Math.min(20, Number(s.durationSeconds) || 8)),
-    }));
+    const adjusted = rawScenes.map((s, idx) => {
+      let character = isNoCharacters
+        ? 'គ្មានតួអង្គ (Topic Visuals Only)'
+        : isSolo
+        ? leadChar
+        : s.character || charNames;
+
+      let characterAction = s.characterAction || '';
+      let characterDialogue = isNoCharacters ? '' : s.characterDialogue || '';
+      let visualDesc = s.visualDescription || '';
+      let imgPrompt = s.aiImagePromptEn || '';
+      let videoPrompt = s.aiVideoPromptEn || '';
+
+      if (isSolo) {
+        character = leadChar;
+        characterAction = characterAction
+          .replace(/សុខា\s*និង\s*តារា/g, `${leadChar}តែម្នាក់ឯង`)
+          .replace(/កញ្ញា\s*និង\s*សុខា/g, `${leadChar}តែម្នាក់ឯង`)
+          .replace(/វិចិត្រ\s*និង\s*បុប្ផា/g, `${leadChar}តែម្នាក់ឯង`)
+          .replace(/ក្រុមការងារទាំងមូល\s*\(.*?\)/g, leadChar)
+          .replace(/ក្រុមការងារ/g, `អ្នកធ្វើបទបង្ហាញទោល (${leadChar})`)
+          .replace(/សមាជិកទាំងអស់/g, leadChar)
+          .replace(/តួអង្គទាំងអស់/g, leadChar)
+          .replace(/តួអង្គទាំង\s*[០-៩0-9]+\s*នាក់/g, leadChar);
+
+        if (characterDialogue && !characterDialogue.startsWith(`${leadChar}៖`)) {
+          const colonIdx = characterDialogue.indexOf('៖');
+          if (colonIdx > 0 && colonIdx < 15) {
+            characterDialogue = `${leadChar}៖` + characterDialogue.slice(colonIdx + 1);
+          }
+        }
+
+        if (!imgPrompt.toLowerCase().includes('solo presenter') && !imgPrompt.toLowerCase().includes('single person')) {
+          imgPrompt = buildSoloPresenterImagePrompt(leadChar, characterAction, styleAnchor, isDialogueSpeech);
+        }
+
+        if (!videoPrompt.toLowerCase().includes('solo presenter') && !videoPrompt.toLowerCase().includes('single person')) {
+          videoPrompt = buildSoloPresenterVideoPrompt(leadChar, characterAction, topicText, styleAnchor, isDialogueSpeech, characterDialogue);
+        }
+      } else if (isNoCharacters) {
+        character = 'គ្មានតួអង្គ (Topic Visuals Only)';
+        characterDialogue = '';
+        if (!imgPrompt.toLowerCase().includes('no human characters')) {
+          imgPrompt = `${imgPrompt}, no human characters`;
+        }
+        if (!videoPrompt.toLowerCase().includes('no human characters')) {
+          videoPrompt = `${videoPrompt}, no human characters`;
+        }
+      }
+
+      return {
+        ...s,
+        sceneNumber: idx + 1,
+        section: s.section || (idx === 0 ? 'INTRODUCTION' : idx >= rawScenes.length - 2 ? 'CONCLUSION' : 'MAIN_STORY'),
+        durationSeconds: Math.max(4, Math.min(20, Number(s.durationSeconds) || 8)),
+        character,
+        characterAction,
+        characterDialogue,
+        visualDescription: visualDesc,
+        aiImagePromptEn: imgPrompt,
+        aiVideoPromptEn: videoPrompt,
+      };
+    });
 
     // Guarantee that the last scene is a CONCLUSION with closure
     const lastIdx = adjusted.length - 1;
@@ -249,7 +539,7 @@ export function ensureCompleteNarrativeScenes(
         adjusted[lastIdx].narratorScriptKh += ' សរុបជារួម មកដល់ចំណុចបញ្ចប់នេះ សូមអរគុណសម្រាប់ការទស្សនា និងសូមចុច Like, Share និង Subscribe ដើម្បីទទួលបានចំណេះដឹងថ្មីៗ!';
       }
     }
-    return adjusted;
+    return sanitizeScriptRepetitions(adjusted, topicText, ctx.topic);
   }
 
   // If rawScenes is fewer than targetCount, we must seamlessly bridge & expand to targetCount!
@@ -278,23 +568,48 @@ export function ensureCompleteNarrativeScenes(
     customTitle?: string
   ): StoryboardScene => {
     const title = customTitle || `${template.titleKh} (${num})`;
-    const narrator = `${template.bridgeStarter} «${topicText}» ${template.narratorBody}`;
-    const action = `${charNames} ${template.actionDesc}`;
-    const dialogue = `${leadChar}៖ ${template.dialogueKh}`;
+    const speaker = isNoCharacters ? '' : isSolo ? leadChar : (num % 2 === 1 ? leadChar : 'កញ្ញា');
+    const narrator = isNoCharacters
+      ? `${template.bridgeStarter} ${template.narratorBody}`
+      : `${speaker}៖ «${template.bridgeStarter} ${template.narratorBody}»`;
+    const action = isNoCharacters
+      ? `ប្លង់រូបភាព B-roll និងទេសភាពទាក់ទងនឹង ${template.titleKh}`
+      : isSolo
+      ? `${leadChar} ${template.actionDesc}`
+      : `${charNames} ${template.actionDesc}`;
+    const dialogue = isNoCharacters ? '' : `${speaker}៖ «${template.dialogueKh || template.narratorBody}»`;
+
+    const visualDesc = isNoCharacters
+      ? `ប្លង់រូបភាពឯកសារ B-roll គ្មានតួអង្គមនុស្ស៖ ${template.actionDesc} សម្រាប់ប្រធានបទ «${topicText}» ក្នុងបរិបទកម្ពុជាពិតប្រាកដ។ រូបភាពផ្ដោតលើព័ត៌មានលម្អិតនៃ ${template.titleKh}។`
+      : isSolo
+      ? `ប្លង់សកម្មភាពអ្នកធ្វើបទបង្ហាញទោល (Solo Host)៖ ${leadChar} ${template.actionDesc} ក្នុងបរិយាកាសកម្ពុជាពិតប្រាកដ ដោយគ្មានតួអង្គដទៃឡើយ។`
+      : `ប្លង់សកម្មភាពរស់រវើកក្នុងបរិយាកាសកម្ពុជា៖ ${action}។ បរិយាកាសពោរពេញដោយថាមពលវិជ្ជមាន និងការសហការរវាងតួអង្គខ្មែរ ស្របតាមខ្លឹមសារ ${template.titleKh}។`;
+
+    const imgPrompt = isNoCharacters
+      ? `Cinematic documentary B-roll shot illustrating ${topicText} — ${template.titleKh}, authentic Cambodian setting, detailed environmental and conceptual storytelling, clean composition, no human characters. ${styleAnchor}.`
+      : isSolo
+      ? buildSoloPresenterImagePrompt(leadChar, template.actionDesc, styleAnchor, isDialogueSpeech)
+      : buildGroupPresenterImagePrompt(charNames, template.actionDesc, styleAnchor, isDialogueSpeech);
+
+    const videoPrompt = isNoCharacters
+      ? `Visual Action: Cinematic camera motion (smooth pan and push-in) capturing visual details, objects, and authentic Cambodian environment for "${topicText} - ${template.titleKh}". Clean documentary B-roll footage, authentic Cambodian setting, smooth 24fps motion, 16:9, no floating text.`
+      : isSolo
+      ? buildSoloPresenterVideoPrompt(leadChar, template.actionDesc, topicText, styleAnchor, isDialogueSpeech, dialogue)
+      : buildGroupPresenterVideoPrompt(charNames, template.actionDesc, topicText, styleAnchor, isDialogueSpeech, dialogue);
 
     return {
       sceneNumber: num,
       section: template.section,
       sceneTitle: title,
       durationSeconds: 8,
-      visualDescription: `ប្លង់សកម្មភាពរស់រវើកក្នុងបរិយាកាសកម្ពុជា៖ ${action}។ បរិយាកាសពោរពេញដោយថាមពលវិជ្ជមាន និងការសហការរវាងតួអង្គខ្មែរ។`,
+      visualDescription: visualDesc,
       character: charNames,
       characterAction: action,
       narratorScriptKh: narrator,
       characterDialogue: dialogue,
       onScreenText: title,
-      aiImagePromptEn: `Authentic Cambodian 2D illustration showing ${template.actionDesc}, featuring Cambodian characters (${charNames}), authentic Cambodian urban or rural background, active collaborative poses. ${styleAnchor}.`,
-      aiVideoPromptEn: `Visual Action: ${charNames} actively engaged in ${template.actionDesc}, smooth natural body language and gestures illustrating "${topicText}". Silent cinematic action, characters do not speak, no dialogue or lip-sync, smooth 24fps motion for external voiceover overlay, 16:9, no floating text.`,
+      aiImagePromptEn: imgPrompt,
+      aiVideoPromptEn: videoPrompt,
       cameraMovement: template.cameraMovement,
       bgmAndSfx: template.bgm,
     };
@@ -383,9 +698,9 @@ export function ensureCompleteNarrativeScenes(
     }
   }
 
-  // Guarantee sequential scene numbers 1 to targetCount
-  return resultScenes.map((s, idx) => ({
-    ...s,
-    sceneNumber: idx + 1,
-  }));
+  // Clean repetitive topic/title citations in scenes 2+ and guarantee sequential scene numbers
+  const cleanedScenes = sanitizeScriptRepetitions(resultScenes, topicText, ctx.topic);
+  return cleanedScenes.map((s, idx) =>
+    sanitizeSceneForCast(s, idx, isSolo, isNoCharacters, leadChar, charNames, topicText, styleAnchor, isDialogueSpeech)
+  );
 }

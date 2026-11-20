@@ -1,15 +1,22 @@
 import type {
   AiProviderId,
   AnimationStyleId,
+  CharacterProfile,
   DurationPresetId,
   GenerationRequest,
+  MusicSuggestion,
   PresenterSetupOption,
   SceneActionDynamicOption,
   StoryboardProject,
   StoryboardScene,
+  ThumbnailPlan,
   TopicCategory,
 } from '../types/storyboard';
-import { computeStoryMilestones, ensureCompleteNarrativeScenes } from '../utils/narrativeEngine';
+import {
+  computeStoryMilestones,
+  ensureCompleteNarrativeScenes,
+  sanitizeScriptRepetitions,
+} from '../utils/narrativeEngine';
 
 export interface ProviderPreset {
   id: AiProviderId;
@@ -485,34 +492,45 @@ export const TOPIC_CATEGORIES: TopicCategory[] = [
       "ប្រវត្តិប្រាសាទកោះកេរ៖ ពីរ៉ាមីត ៧ ជាន់អច្ឆរិយៈនៃទឹកដីខ្មែរ"
     ]
   },
-  {
+    {
     "id": "folktales",
     "code": "14",
-    "nameEn": "Folktales & Fables",
-    "nameKh": "រឿងព្រេង និងនិទានអប់រំ",
-    "descriptionKh": "រឿងព្រេងខ្មែរ រឿងនិទានសត្វ គតិបណ្ឌិត និងសុភាសិតខ្មែរ",
+    "nameEn": "Khmer Folktales & Legends (Ancient & Modern)",
+    "nameKh": "រឿងព្រេងនិទានខ្មែរ បែបបុរាណ & បែបសម័យ",
+    "descriptionKh": "រឿងព្រេងខ្មែរបុរាណល្បីៗ រឿងនិទានប្រវត្តិទីកន្លែង រឿងតំណាលបុរាណ និងរឿងនិទានបែបសម័យបង្កប់ការអប់រំ និងគតិបណ្ឌិត",
     "accent": "#b91c1c",
     "sampleTopics": [
+      "រឿងពស់កេងកង៖ ស្នេហាអភ័ព្វ និងបណ្តាសាព្រេងបុរាណខ្មែរ",
+      "រឿងទុំទាវ៖ ស្នេហាបរិសុទ្ធ ការប្រឆាំងវណ្ណៈ និងមេរៀនសោកនាដកម្ម",
+      "រឿងធនញ្ជ័យ៖ ភាពឆ្លាតវៃនៃការដោះស្រាយប្រស្នាស្ដេច និងមេរៀនប្រាជ្ញា",
+      "រឿងភ្នំនាងកង្រី៖ សេចក្តីស្នេហាស្មោះស្ម័គ្រ និងដើមកំណើតជួរភ្នំក្រវាញ",
+      "រឿងចៅចាក់ស្មុគ៖ ការតស៊ូ ភក្តីភាព និងប្រាជ្ញាដោះស្រាយវិបត្តិ",
+      "រឿងក្អែកមួយជាក្អែកដប់៖ មេរៀនកុំឆាប់ជឿពាក្យចចាមអារ៉ាមតៗគ្នា",
+      "រឿងក្រពើអាធន និងលោកក្រឡាហោមគង់៖ ការប្រយុទ្ធការពារអ្នកស្រុក",
+      "រឿងព្រះថោងនាងនាគ៖ ដើមកំណើតជាតិខ្មែរ និងប្រពៃណីរៀបអាពាហ៍ពិពាហ៍",
+      "រឿងភ្នំសំពៅ ភ្នំក្រពើ និងភ្នំក្តោង៖ ដើមកំណើតភ្នំប្រវត្តិសាស្ត្រខេត្តបាត់ដំបង",
+      "រឿងដើមកំណើតស្រះស្រង់ និងប្រាសាទអង្គរវត្ត៖ ទេវកថា និងប្រាជ្ញាបុព្វបុរសខ្មែរ",
+      "រឿងចៅកម្ជិល និងគ្រាប់ឪឡឹកមាស៖ សេចក្តីព្យាយាមកែប្រែវាសនា",
       "រឿងសុភាទន្សាយ និងសត្វខ្លា៖ ប្រើបញ្ញាឈ្នះកម្លាំងបាយ",
+      "រឿងដើមកំណើតសត្វតុកកែ និងពស់ថ្លាន់៖ ទំនាក់ទំនងចម្លែកក្នុងធម្មជាតិ",
+      "រឿងដើមកំណើតភ្នំប្រុស ភ្នំស្រី៖ ការប្រកួតប្រជែង និងប្រាជ្ញាស្មារតី",
+      "រឿងចៅផ្កាប់ត្រឡោក៖ ការតស៊ូ និងការរកឃើញឱកាសក្នុងភាពក្រីក្រ",
+      "រឿងកសិករ និងកូនប្រុសទាំងបី៖ ទ្រព្យសម្បត្តិពិតប្រាកដនៅក្នុងដីស្រែ",
+      "រឿងសេដ្ឋី និងកូនប្រសាទាំង ៤៖ ប្រាជ្ញាជ្រើសរើសអ្នកបន្តវេន",
       "រឿងអណ្ដើក និងទន្សាយ៖ មេរៀនកុំមើលងាយគូប្រជែង និងការតស៊ូជាប់លាប់",
       "រឿងក្អែកឆ្លាត និងក្អមទឹក៖ បញ្ញាដោះស្រាយបញ្ហាពេលជួបភាពទាល់ច្រក",
-      "រឿងកសិករ និងកូនប្រុសទាំងបី៖ ទ្រព្យសម្បត្តិពិតប្រាកដនៅក្នុងដីស្រែ",
       "រឿងស្រមោច និងកណ្ដូប៖ មេរៀននៃការត្រៀមខ្លួនទុកមុនសម្រាប់អនាគត",
-      "អត្ថន័យសុភាសិតខ្មែរ «តក់ៗពេញបំពង់» តាមរយៈរឿងនិទានសម័យថ្មី",
-      "រឿងសត្វចាប និងព្រៃឈើ៖ កម្លាំងនៃសាមគ្គីភាពជួយឱ្យរួចផុតពីគ្រោះថ្នាក់",
-      "អត្ថន័យសុភាសិត «ចំណេះវិជ្ជាជាទ្រព្យដែលចោរលួចមិនបាន»",
-      "រឿងធនញ្ជ័យ៖ ភាពឆ្លាតវៃនៃការដោះស្រាយប្រស្នាស្ដេច",
-      "រឿងចៅផ្កាប់ត្រឡោក៖ ការតស៊ូ និងការរកឃើញឱកាសក្នុងភាពក្រីក្រ",
-      "រឿងមាន់គក និងកញ្ជ្រោង៖ កុំចាញ់បោកការបញ្ចើចបញ្ចើ",
-      "រឿងសត្វសឹង្ហ និងកណ្ដុរតូច៖ កុំមើលងាយអ្នកទន់ខ្សោយ",
-      "រឿងបុរសកម្ជិល និងកូនត្រីមាស៖ សេចក្តីលោភលន់នាំមកនូវវិនាស",
-      "រឿងដើមកំណើតភ្នំប្រុស ភ្នំស្រី៖ ការប្រកួតប្រជែង និងប្រាជ្ញាស្មារតី",
-      "រឿងដើមកំណើតសត្វតុកកែ និងពស់ថ្លាន់",
-      "រឿងពូកែតែឯងមិនឈ្នះកម្លាំងរួម៖ មេរៀនពីចង្កោមព្រួញ",
-      "រឿងកូនក្ងោក និងក្អែក៖ ភាពស្រស់ស្អាតពិតប្រាកដចេញពីចរិយាសម្បត្តិ",
-      "រឿងអ្នកនេសាទ និងដបវិញ្ញាណ៖ បញ្ញាឈ្នះការគំរាមកំហែង",
-      "រឿងចចកស្លៀកស្បែកចៀម៖ ការប្រុងប្រយ័ត្នចំពោះមនុស្សពុតត្បុត",
-      "អត្ថន័យសុភាសិត «ធ្វើស្រែទាន់ក្ដៅដី ចង់ស្រីទាន់ក្ដៅចិត្ត» តាមទស្សនៈសម័យថ្មី"
+      "រឿងនិទានសម័យថ្មី៖ យុវជនស្រុកស្រែ និងទូរស័ព្ទដៃវេទមន្ត",
+      "រឿងអ្នកលក់កាហ្វេរទេះ និងមេរៀនសច្ចធម៌៖ ភាពស្មោះត្រង់បង្កើតទ្រព្យរាប់លាន",
+      "រឿងនិទានសម័យ AI៖ វិស្វករកុំព្យូទ័រ និងអ្នកប្រាជ្ញដើមជ្រៃ",
+      "រឿងនិទានកូនអ្នកមាន និងកូនអ្នកក្រ៖ មេរៀនតម្លៃពិតប្រាកដនៃសុភមង្គល",
+      "រឿងនិទានអ្នកបើក Tuk Tuk ចិត្តធម៌៖ អំពើល្អតូចមួយដែលផ្លាស់ប្តូរជីវិតមនុស្សម្នាក់",
+      "រឿងនិទានសម័យឌីជីថល៖ អន្ទាក់នៃភាពល្បីល្បាញលើបណ្តាញសង្គម",
+      "រឿងនិទានសហគ្រិនវ័យក្មេង និងដើមត្នោត៖ ពីដើមទុន ៥ ដុល្លារដល់ម៉ាកយីហោជាតិ",
+      "រឿងនិទានមិត្តភក្តិ ៣ នាក់ និងកិច្ចសន្យាអនាគត៖ ២០ ឆ្នាំក្រោយការបែកបាក់",
+      "រឿងនិទានកូនក្របីឆ្លាត និងកុំព្យូទ័រយួរដៃ៖ ចំណេះដឹងផ្លាស់ប្តូរវាសនាភូមិ",
+      "រឿងនិទានជាងគំនូរផ្សារចាស់ និងផ្ទាំងគំនូរចុងក្រោយ៖ តម្លៃនៃបេះដូងសិល្បៈ",
+      "រឿងនិទានយាយ និងចៅក្នុងយុគសម័យស្មាតហ្វូន៖ ភាពកក់ក្តៅដែលបាត់បង់"
     ]
   },
   {
@@ -815,9 +833,120 @@ export const TOPIC_CATEGORIES: TopicCategory[] = [
       "មេរៀនល្អសម្រាប់កុមារ៖ ការស្ដាប់ដំបូន្មានឪពុកម្ដាយ និងលោកគ្រូអ្នកគ្រូ"
     ]
   },
+    {
+    "id": "horror-ghost",
+    "code": "25",
+    "nameEn": "Horror & Ghost Stories",
+    "nameKh": "សាច់រឿងខ្មោច លង ភ័យរន្ធត់ និងព្រឺព្រួច",
+    "descriptionKh": "រឿងខ្មោចព្រាយបិសាចខ្មែរ ផ្ទះបោះបង់ចោល អាគមធ្មប់ វិញ្ញាណវិលវល់ ភូមិស្ងាត់ជ្រងំកណ្តាលយប់ និងរឿងព្រឺព្រួចពិតៗ",
+    "accent": "#831843",
+    "sampleTopics": [
+      "រឿងខ្មោចនាងនាថ៖ ព្រលឹងស្នេហាស្មោះ និងវិញ្ញាណវិលវល់កណ្តាលវាល",
+      "អាថ៌កំបាំងផ្ទះបោះបង់ចោលកណ្តាលព្រៃជ្រៅ៖ ហេតុអ្វីគ្មានអ្នកណាហ៊ានស្នាក់នៅ?",
+      "រឿងខ្មោចជើងកប៖ ជំនឿបុរាណខ្មែរអំពីព្រលឹងអ្នកស្លាប់តៃហោងតាមដងផ្លូវ",
+      "អាគមស្នេហ៍ និងអំពើធ្មប់ខ្មែរពីបុរាណ៖ មេរៀនព្រមានកុំឱ្យលេងផ្លូវងងឹត",
+      "ភូមិស្ងាត់ជ្រងំកណ្តាលអធ្រាត្រ៖ វត្តមានស្រមោលសក្បុសនៅក្រោមដើមជ្រៃធំ",
+      "រឿងខ្មោចព្រាយក្រឡាភ្លើង៖ ជំនឿតំណាលអំពីស្ត្រីឆ្លងទន្លេស្លាប់ទាំងម្ដាយទាំងកូន",
+      "រថយន្តឈ្នួលពេលកណ្តាលយប់ និងអ្នករួមដំណើរគ្មានស្រមោល",
+      "វិញ្ញាណវិលវល់នៅបន្ទប់ជួលចាស់៖ ហេតុការណ៍ចម្លែករាល់ម៉ោង ៣ ភ្លឺ",
+      "សំឡេងយំខ្សឹកខ្សួលពីអណ្តូងទឹកបុរាណ៖ រឿងពិតព្រឺក្បាលក្នុងភូមិដាច់ស្រយាល",
+      "រឿងខ្មោចក្បាលខ្មោចសើចចំអក៖ ការសាកល្បងភាពក្លាហានរបស់យុវជន ៤ នាក់",
+      "អាថ៌កំបាំងដើមពោធិ៍ធំមាត់ស្ទឹង៖ ហេតុអ្វីចាស់ៗហាមក្មេងៗកុំដើរកាត់ពេលយប់?",
+      "រឿងខ្មោចព្រាយកន្ទោងខៀវ៖ ជំនឿបុរាណខ្មែរអំពីសត្វស្លាបនាំប្រផ្នូលអាក្រក់",
+      "ព្រលឹងអ្នកចាំការពារប្រាសាទបុរាណកណ្តាលព្រៃ៖ គ្រោះថ្នាក់របស់អ្នកលួចជីកកកាយ",
+      "រឿងពិតព្រឺព្រួច៖ ការបោះតង់ក្នុងព្រៃភ្នំ និងភ្ញៀវមិនបានអញ្ជើញពេលយប់ជ្រៅ",
+      "ផ្ទះឈើបុរាណបន្សល់ពីសម័យបារាំង និងសំឡេងជើងដើរលើកម្រាលក្តារ",
+      "អាថ៌កំបាំងកញ្ចក់បុរាណ៖ រូបភាពឆ្លុះដែលមិនមែនជារូបយើង",
+      "រឿងខ្មោចទារកយំរកម្តាយ៖ វិញ្ញាណកូនង៉ែតដែលត្រូវគេបោះបង់",
+      "រាត្រីរន្ធត់នៅស្ពានដាច់ស្រយាល៖ រូបភាពស្រមោលឈរចាំទទូចសុំជិះទៅជាមួយ",
+      "រឿងចម្លែកក្នុងវត្តអារាមចំណាស់៖ សំឡេងស្គរធំទូងដោយគ្មានមនុស្សវាយ",
+      "រឿងខ្មោចព្រាយពង្រត់កូនក្មេង៖ ការប្រុងប្រយ័ត្នតាមជំនឿចាស់ៗពីបុរាណ",
+      "អាថ៌កំបាំងតុក្កតាឈើបុរាណ៖ ភ្នែកដែលសម្លឹងតាមអ្នកគ្រប់ជំហាន",
+      "វិញ្ញាណអ្នកបើកបរឡានដឹកទំនិញពេលយប់ និងផ្លូវកោងគ្រោះថ្នាក់លើខ្នងភ្នំ",
+      "រឿងព្រឺព្រួចនៅមន្ទីរពេទ្យចាស់៖ សំឡេងរុញគ្រែអ្នកជំងឺពេលពាក់កណ្តាលអធ្រាត្រ",
+      "ការសន្យានឹងព្រលឹងខ្មោច៖ មេរៀនកុំឱ្យបួងសួងប៉ាតណាប៉ាតណី",
+      "រឿងខ្មោចសសរស្ដម្ភផ្ទះ៖ វិញ្ញាណការពារដីធ្លី និងច្បាប់កុំប្រមាថម្ចាស់ទឹកម្ចាស់ដី",
+      "សំឡេងច្រវាក់អូសកណ្តាលអធ្រាត្រ៖ អាថ៌កំបាំងគុកបុរាណ",
+      "រឿងចម្លែកនៅមាត់បឹងកណ្តាលរាត្រី៖ ភ្លើងគប់អណ្តែតលើផ្ទៃទឹកដែលគ្មានទូក",
+      "វិញ្ញាណដើមចេកជ្វា៖ ជំនឿតំណាលខ្មែរបុរាណដែលចាស់ៗតែងដំណាលប្រាប់"
+    ]
+  },
+  {
+    "id": "comedy-humor",
+    "code": "26",
+    "nameEn": "Comedy & Humor Stories",
+    "nameKh": "រឿងកំប្លែង សើចសប្បាយ និងជីវិតកំប្លុកកំប្លែង",
+    "descriptionKh": "រឿងកំប្លែងសើចចុកពោះ ការយល់ច្រឡំ ជីវិតកំប្លែងក្នុងភូមិ រកស៊ីប្លែកៗ កំប្លែងស្នេហា និងរឿងអប់រំបែបកំប្លុកកំប្លែង",
+    "accent": "#059669",
+    "sampleTopics": [
+      "រឿងកំប្លែងសើចចុកពោះ៖ មេភូមិរៀនប្រើស្មាតហ្វូនដំបូង បង្កើតរឿងរញ៉េរញ៉ៃពេញភូមិ",
+      "ការយល់ច្រឡំសើចចុកពោះ៖ ទៅដណ្តឹងកូនស្រីគេ ច្រឡំស្តាប់តម្លៃគោជាថ្លៃថ្លៃបណ្ណាការ",
+      "រឿងកំប្លែងក្នុងពិធីការកាត់សក់បង្កក់សិរី៖ មេបាភ្លេចពាក្យជូនពរ និយាយច្រឡំជាពិធីបុណ្យ",
+      "រឿងកំប្លែងតាក់ស៊ីឈ្នួល៖ ជិះឡានច្រឡំខេត្ត ព្រោះស្តាប់ឈ្មោះភូមិដូចគ្នា",
+      "រឿងកំប្លែងរកស៊ីប្លែកៗ៖ ចង់លក់មាន់អាំងតាមហ្វេសប៊ុក ឡាយវីដេអូមាន់រត់បាត់",
+      "រឿងកំប្លែងគូស្នេហ៍ថ្មីថ្មោង៖ ធ្វើម្ហូបលើកដំបូងដាក់ស្ករច្រឡំអំបិល ផ្អើលដល់អ្នកជិតខាង",
+      "រឿងកំប្លែងក្នុងថ្នាក់រៀន៖ គ្រូសួរសំណួរប្រវត្តិសាស្ត្រ សិស្សឆ្លើយចេញរឿងបាល់ទាត់",
+      "រឿងកំប្លែងពេទ្យធ្មេញ៖ អ្នកជំងឺខ្លាចម្ជុល រត់ជុំវិញគ្លីនិកពេទ្យដេញចាប់",
+      "រឿងកំប្លែងទិញឥវ៉ាន់អនឡាញ៖ រូបភាពក្នុងវេបសាយធំស្អាត ដល់ពេលផ្ញើមកទំហំតូចប៉ុនម្រាមដៃ",
+      "រឿងកំប្លែងក្នុងភូមិ៖ យាយម៉ៅ និងតាព្រហ្ម ប្រកែកគ្នាពីដើមត្នោតកាត់ព្រំដី",
+      "រឿងកំប្លែងតួឯកស្ទាវក្នុងភូមិ៖ ចង់សម្ញែងម៉ូតូឌុបស្រីស្អាត ជ្រុលចង្កូតចុះវាលស្រែ",
+      "រឿងកំប្លែងរៀនភាសាបរទេស៖ បកប្រែភាសាអង់គ្លេសពាក្យមួយៗ ចេញន័យសើចផ្អើលហាងកាហ្វេ",
+      "រឿងកំប្លែងទៅសម្ភាសន៍ការងារ៖ ភ័យពេកឆ្លើយថាជំនាញពិសេសគឺ «ញ៉ាំបាយលឿន»",
+      "រឿងកំប្លែងប្រពន្ធតាមទាន់៖ ប្តីលួចលាក់លុយក្រោមពូក ប្រពន្ធបោកពូកលុយហោះពេញផ្ទះ",
+      "រឿងកំប្លែងបុណ្យភូមិ៖ ប្រកួតទាញព្រ័ត្រ មិនទាន់ចាប់ផ្តើមផងដួលអស់មួយក្រុម",
+      "រឿងកំប្លែងអ្នកចង់ស្គម៖ តមបាយថ្ងៃត្រង់ តែយប់ឡើងញ៉ាំមីកំប៉ុង ៣ កញ្ចប់",
+      "រឿងកំប្លែងជាងជួសជុលម៉ូតូ៖ រុះរើគ្រឿងម៉ូតូចេញអស់ ដល់ផ្គុំវិញសល់ខ្ចៅមួយកំប៉ុង",
+      "រឿងកំប្លែងរៀនបើកឡានលើកដំបូង៖ ជាន់ហ្វ្រាំងច្រឡំជាន់ហ្គែរ ស្ទុះចូលរោងគោ",
+      "រឿងកំប្លែងទូរស័ព្ទខលច្រឡំលេខ៖ ជជែកគ្នាកន្លះម៉ោងទើបដឹងថាមិនស្គាល់គ្នា",
+      "រឿងកំប្លែងការងារការិយាល័យ៖ ផ្ញើសាររអ៊ូរទាំពីមេ ច្រឡំផ្ញើចូលគ្រុបដែលមានមេនៅជាមួយ",
+      "រឿងកំប្លែងមិត្តភក្តិខ្ចីលុយ៖ ពេលខ្ចីយំសំពះ ពេលសងវិញដើរគេចមុខដូចចារកម្ម",
+      "រឿងកំប្លែងទៅលេងផ្សារទំនើប៖ ជិះជណ្តើរយន្តលើកដំបូង មិនហ៊ានបោះជើងជាន់",
+      "រឿងកំប្លែងលេងលាក់ពួន៖ ពួនជិតផុតថ្ងៃ គ្មានអ្នកណាដើររក ព្រោះគេភ្លេចទៅផ្ទះបាត់",
+      "រឿងកំប្លែងហាត់ប្រាណថ្ងៃដំបូង៖ ឈឺសាច់ដុំ ៣ ថ្ងៃដើរដូចមនុស្សយន្ត",
+      "រឿងកំប្លែងពិធីជួបជុំមិត្តចាស់៖ ម្នាក់ៗសម្ញែងឡាន តែពេលគិតលុយចូលបន្ទប់ទឹកព្រមគ្នា",
+      "រឿងកំប្លែងកាត់សក់តាមម៉ូដកូរ៉េ៖ ជាងកាត់រួចចេញម៉ូដត្រងោលត្រចៀកកណ្តុរ",
+      "រឿងកំប្លែងដើរផ្សាររាត្រី៖ ដើរកាន់ដៃគ្នាផ្អែមល្ហែម ងាកក្រោយទើបដឹងថាកាន់ដៃច្រឡំមនុស្ស",
+      "រឿងកំប្លែងចូលរួមពិធីមង្គលការ៖ ស្រេកឃ្លានពេក ចូលច្រឡំរោងការអ្នកដទៃញ៉ាំអស់មួយតុ"
+    ]
+  },
+  {
+    "id": "khmer-magic-sorcery-action",
+    "code": "27",
+    "nameEn": "Khmer Magic, Sorcery & Mythic Battles",
+    "nameKh": "រឿងមន្តអាគមន៍ យុទ្ធសិល្ប៍វិជ្ជា & ចម្បាំងខ្មោចព្រាយបីសាច",
+    "descriptionKh": "សាច់រឿងបែបអភូតហេតុ មន្តអាគមន៍ខ្មែរ យុទ្ធសិល្ប៍បុរាណ សាក់យ័ន្ត ដាវសីល ក្បាច់គុនល្បុក្កតោសីល្ប៍ តតាំងជាមួយខ្មោច ព្រាយ អាប ក្រហាញ ប្រេត និងបីសាចអាក្រក់",
+    "accent": "#7c3aed",
+    "sampleTopics": [
+      "ចម្បាំងគ្រូអាគមន៍ស និងស្ដេចបីសាចព្រៃភ្នំក្រវាញ",
+      "អាថ៌កំបាំងដាវសីលកាត់ពពក និងការបង្ក្រាបព្រាយទឹកកោះកេរ",
+      "យុទ្ធសិល្ប៍ល្បុក្កតោបុរាណ បំបែកវិជ្ជាខ្មោចក្រហាញក្បាលភ្លើង",
+      "ក្បួនសាក់យ័ន្តមហាសីល និងការការពារភូមិពីហ្វូងប្រេតស្រេកឃ្លាន",
+      "ការតស៊ូរបស់កំលោះសិស្សគុន និងអាថ៌កំបាំងព្រាយកន្ទោងខៀវ",
+      "វិជ្ជាមន្តគាថាធាតុទាំង ៤ បង្ក្រាបមេធ្មប់អាគមន៍ខ្មៅ",
+      "ចម្បាំងលើភ្នំគូលែន៖ គ្រូសីល និងកងទ័ពបីសាចស្រមោលអន្ធការ",
+      "ដាវបន្ទោរទេព និងការរំដោះវិញ្ញាណខ្មោចដើមជ្រៃរាប់រយឆ្នាំ",
+      "យុទ្ធសិល្ប៍ក្បាច់គុនខ្មែរបុរាណ ប្រយុទ្ធជាមួយយក្ស និងបីសាចតេជោ",
+      "អាថ៌កំបាំងកូនក្រក និងការកម្ចាត់វិញ្ញាណអាក្រក់ក្នុងប្រាសាទបុរាណ",
+      "ដំណើរស្វែងរកគម្ពីរសីលវេទបុរាណ និងចម្បាំងជាមួយស្ដេចអាបព្រៃជ្រៅ",
+      "ក្បាច់គុនដៃដែក និងមន្តគាថាសូត្រការពារភូមិឋានពីខ្មោចឆៅ",
+      "ការប្រកួតរវាងគ្រូអាគមន៍ស និងគ្រូអាគមន៍ខ្មៅដណ្ដើមត្បូងសីល",
+      "ចម្បាំងរាត្រីព្រះច័ន្ទពេញបូណ៌មី៖ ការទប់ទល់នឹងហ្វូងព្រាយបិសាចស្រេកឈាម",
+      "យុទ្ធជនអ្នកក្លាហាន និងអាថ៌កំបាំងកាំបិតបន្ទោរបង្ក្រាបខ្មោចតៃហោង",
+      "មន្តអាគមន៍កែវភ្នែកទេព មើលធ្លុះខ្មោចព្រាយដែលក្លែងខ្លួនជាមនុស្ស",
+      "ចម្បាំងការពារព្រំដែនភូមិពីការឈ្លានពានរបស់កងទ័ពបីសាចគ្រោងឆ្អឹង",
+      "អាថ៌កំបាំងខ្សែចង្កេះគាថា និងការផ្ដួលស្ដេចបីសាចក្រោមបាតបឹងទន្លេសាប",
+      "ការរំដោះភូមិឋានពីអំណាចអាគមន៍ខ្មៅរបស់មេធ្មប់ព្រៃភ្នំដងរែក",
+      "យុទ្ធសិល្ប៍ព្រួញភ្លើងទេព បាញ់កម្ទេចមេព្រាយក្បាលហោះ",
+      "គ្រូសីលវ័យក្មេង និងការប្រយុទ្ធសង្គ្រោះអ្នកភូមិពីបណ្តាសាបីសាច",
+      "អាថ៌កំបាំងយ័ន្តការពារទាំង ៨ ទិស និងការប្រយុទ្ធលើកំពូលភ្នំសីល",
+      "វិជ្ជាស្រូបខ្យល់គុន និងការកម្ចាត់បិសាចក្រហមភ្នំត្បែង",
+      "ការតស៊ូដើម្បីយុត្តិធម៌របស់យុទ្ធជនគុនខ្មែរ ប្រឆាំងនឹងមេអាគមន៍ទុច្ចរិត",
+      "ចម្បាំងមហាសីលរវាងទេព និងបីសាច ដើម្បីការពារសន្តិភាពដែនដីសុវណ្ណភូមិ"
+    ]
+  },
   {
     "id": "custom",
-    "code": "25",
+    "code": "28",
     "nameEn": "Custom Topic",
     "nameKh": "ប្រធានបទផ្ទាល់ខ្លួន",
     "descriptionKh": "បញ្ចូលប្រធានបទណាមួយតាមតម្រូវការពិសេសរបស់អ្នក ឬជ្រើសរើសទម្រង់គំរូខាងក្រោម",
@@ -927,6 +1056,13 @@ export const ANIMATION_STYLES: Array<{
     promptAnchor:
       'Modern 2D editorial documentary illustration, authentic Cambodian (Khmer) people and real Cambodian countryside/urban architecture (Phnom Penh riverside, Khmer shophouses, sugar palm rice fields), clean Khmer script on natural street/shop signs where relevant, textured gouache and clean ink outlines, warm atmospheric cinematic lighting, consistent character design, 16:9 aspect ratio, no watermarks',
   },
+  {
+    id: 'photorealistic-real',
+    labelKh: 'រូបភាពមនុស្សពិតបែបភាពយន្ត (Photorealistic • Real Human)',
+    labelEn: 'Photorealistic Live-Action Style (Real Cambodian Humans • 8K Photography)',
+    promptAnchor:
+      'Ultra-photorealistic cinematic live-action photography of authentic real Cambodian (Khmer) people, highly detailed natural skin texture, realistic human facial features and pores, authentic everyday Cambodian outfits and real Southeast Asian hairstyles, genuine authentic Cambodian settings (Phnom Penh urban streets, modern cafés, bustling markets, or rural Cambodian landscape with sugar palm trees and stilt houses), authentic Khmer signage on shops, shot on 35mm lens, f/1.8 aperture, soft cinematic background bokeh, natural warm golden hour sunlight, 8k resolution, photorealistic masterpiece, strictly no cartoon, no 3D render, no CGI, no floating watermarks or text',
+  },
 ];
 
 export const PRESENTER_SETUP_OPTIONS: PresenterSetupOption[] = [
@@ -962,25 +1098,44 @@ export const PRESENTER_SETUP_OPTIONS: PresenterSetupOption[] = [
   },
   {
     id: 'solo',
-    labelKh: 'អ្នកធ្វើបទបង្ហាញទោល + តួអង្គក្នុងឧទាហរណ៍ (Solo Host + Scenario Examples)',
-    labelEn: 'Solo Host + Scenario Cast (1–2 Characters)',
-    badgeKh: 'បទបង្ហាញទោល • ១–២ នាក់',
+    labelKh: 'អ្នកធ្វើបទបង្ហាញទោល / តួអង្គតែម្នាក់គត់ (Solo Presenter • 1 Character Only)',
+    labelEn: 'Solo Host / Single Presenter (Strictly 1 Single Character • No Other People)',
+    badgeKh: 'តួអង្គតែ ១ នាក់គត់ • Solo Host',
     descriptionKh:
-      'មានអ្នកធ្វើបទបង្ហាញម្នាក់ជាគោល ប៉ុន្តែចុះទៅបង្ហាញសកម្មភាពផ្ទាល់ និងជួបតួអង្គផ្សេងៗក្នុងសាច់រឿង',
-    castCount: '1–2 Characters',
-    castHintKh: 'អ្នកធ្វើបទបង្ហាញ ១ នាក់ និងតួអង្គឧទាហរណ៍ក្នុងសាច់រឿង',
+      'មានអ្នកធ្វើបទបង្ហាញតែម្នាក់គត់ (Solo Host) ដើរតួពន្យល់ ចង្អុលបង្ហាញ ធ្វើសកម្មភាព និងដឹកនាំសាច់រឿងពីដើមដល់ចប់ ដោយគ្មានតួអង្គដទៃទៀតឡើយ',
+    castCount: '1 Character Only',
+    castHintKh: 'បង្កើតតួអង្គតែ ១ នាក់គត់ (Solo Host) ដើរតួធ្វើសកម្មភាព និងពន្យល់រឿងពេញមួយវីដេអូ ហាមមានតួអង្គផ្សេង',
+  },
+  {
+    id: 'no-characters',
+    labelKh: 'បង្ហាញតែរូបភាពតាម Topic / គ្មានតួអង្គ (Topic Visuals Only • No Characters)',
+    labelEn: 'Topic Visuals Only / Concept Imagery & B-Roll (No Characters)',
+    badgeKh: 'គ្មានតួអង្គ • រូបភាព Topic ១០០%',
+    descriptionKh:
+      'ផ្តោតលើរូបភាព visual B-roll វត្ថុ ឧបករណ៍ ឯកសារ ទេសភាព ក្រាហ្វិក និងចលនារូបភាពដែលទាក់ទងនឹង Topic ផ្ទាល់ ដោយមិនចាំបាច់ប្រើតួអង្គមនុស្ស ឬអ្នកធ្វើបទបង្ហាញឡើយ',
+    castCount: '0 Characters (Topic Visuals Only)',
+    castHintKh: 'គ្មានតួអង្គមនុស្ស — បង្ហាញតែរូបភាព ឧបករណ៍ ទេសភាព និងចលនា B-roll ស្របតាម Topic សុទ្ធសាធ',
   },
 ];
 
 export const SCENE_ACTION_DYNAMICS: SceneActionDynamicOption[] = [
   {
-    id: 'cinematic-action',
-    labelKh: 'ប្លង់សកម្មភាពជាក់ស្តែង & ចលនារស់រវើក (Cinematic Action & Movement)',
-    labelEn: 'Cinematic Action & Movement (NO Boring Talking Heads)',
-    badgeKh: 'ណែនាំ • ហាមឈរនិយាយទទេ',
+    id: 'character-dialogue-speech',
+    labelKh: 'តួអង្គនិយាយផ្ទាល់ & សម្ដែងតាម Script សាច់រឿង (Character Speaking & Story Acting)',
+    labelEn: 'Character Speaking & Story Acting (Expressive Speaking & Acting in Khmer)',
+    badgeKh: 'ណែនាំ • តួអង្គនិយាយផ្ទាល់ជាភាសាខ្មែរ',
     descriptionKh:
-      'ហាមដាច់ខាតឈរនិយាយទទេ! តួអង្គត្រូវមានចលនា ដើរ រត់ ធ្វើការងារ បើកបរ ចង្អុលបង្ហាញ ជួបមនុស្ស និងដោះស្រាយបញ្ហាផ្ទាល់',
-    actionHintKh: 'គ្រប់ឈុតត្រូវមានសកម្មភាពរស់រវើក មិនឈរនិយាយស្ងៀមៗមុខកាមេរ៉ាឡើយ',
+      'តួអង្គជាអ្នកនិយាយផ្ទាល់មាត់តាម Script សាច់រឿងជាភាសាខ្មែរ (មានឈ្មោះតួអង្គ [ឈ្មោះ]៖ «...» ច្បាស់លាស់ និយាយពន្យល់ និងសន្ទនាគ្នាដោយផ្ទាល់ក្នុងឈុត អមដោយកាយវិការសម្ដែង និងអារម្មណ៍រស់រវើក មិនមែនជាសំឡេង Voice Over ពីក្រៅឡើយ)',
+    actionHintKh: 'តួអង្គបញ្ចេញសំឡេងនិយាយតាម Script ជាភាសាខ្មែរ និងសម្ដែងកាយវិការរស់រវើកក្នុងឈុត',
+  },
+  {
+    id: 'cinematic-action',
+    labelKh: 'ប្លង់ចលនាសកម្មភាព & កាយវិការរស់រវើក (Cinematic Action & Movement)',
+    labelEn: 'Cinematic Action & Movement (Dynamic Physical Staging)',
+    badgeKh: 'សកម្មភាពរស់រវើក',
+    descriptionKh:
+      'តួអង្គមានចលនាសកម្ម ដើរ ធ្វើការងារ បើកបរ ចង្អុលបង្ហាញ ជួបមនុស្ស និងដោះស្រាយបញ្ហាផ្ទាល់ ព្រមទាំងនិយាយតាម Script',
+    actionHintKh: 'គ្រប់ឈុតត្រូវមានសកម្មភាពរស់រវើក និងកាយវិការសម្ដែងទាក់ទាញ',
   },
   {
     id: 'hands-on-demo',
@@ -997,7 +1152,7 @@ export const SCENE_ACTION_DYNAMICS: SceneActionDynamicOption[] = [
     labelEn: 'Interactive Group Dialogue & Multi-Angle Shots',
     badgeKh: 'សន្ទនាឆ្លើយឆ្លង',
     descriptionKh:
-      'ប្លង់សន្ទនាជាក្រុម ចាប់មុំពីចំហៀង មុំពីក្រោយស្មា (Over-The-Shoulder) និងប្លង់ទូលាយ មិនមែនសំឡឹងចំកាមេរ៉ាស្ងៀមៗឡើយ',
+      'ប្លង់សន្ទនាជាក្រុម ចាប់មុំពីចំហៀង មុំពីក្រោយស្មា (Over-The-Shoulder) និងប្លង់ទូលាយ រវាងតួអង្គ',
     actionHintKh: 'ផ្តោតលើការសន្ទនាឆ្លើយឆ្លងគ្នា និងមុំកាមេរ៉ាកាត់ចុះឡើងរវាងតួអង្គ',
   },
   {
@@ -1008,6 +1163,15 @@ export const SCENE_ACTION_DYNAMICS: SceneActionDynamicOption[] = [
     descriptionKh:
       'តួអង្គធ្វើដំណើរចុះទីតាំងផ្ទាល់ ផ្សារ វាលស្រែ រោងចក្រ ការិយាល័យ ផ្ទះ និងកន្លែងសាធារណៈ រួមជាមួយមនុស្សជុំវិញ',
     actionHintKh: 'ផ្តោតលើការចុះទីតាំងជាក់ស្តែង និងទំនាក់ទំនងជាមួយបរិស្ថានជុំវិញ',
+  },
+  {
+    id: 'topic-broll',
+    labelKh: 'រូបភាពឯកសារ B-Roll & ក្រាហ្វិកតាមប្រធានបទ (Topic Visuals, B-Roll & Infographics)',
+    labelEn: 'Topic B-Roll, Conceptual Visuals & Infographic Imagery',
+    badgeKh: 'រូបភាព B-Roll',
+    descriptionKh:
+      'ផ្តោតលើប្លង់កាមេរ៉ា Cinematic B-roll វត្ថុ ឧបករណ៍ ឯកសារ ទេសភាព និងចលនារូបភាពដែលឆ្លុះបញ្ចាំងពីខ្លឹមសារ Topic ផ្ទាល់',
+    actionHintKh: 'ផ្តោតលើចលនាកាមេរ៉ា Cinematic Pan/Zoom, ឧបករណ៍, ឯកសារ និងទេសភាពជាក់ស្តែងតាម Topic',
   },
 ];
 
@@ -1091,12 +1255,31 @@ D. CONCLUSION (~10% នៃឈុត)
     - «នៅពេលដែលយើងអនុវត្តចំណុចនេះបានជោគជ័យ... សំណួរគឺថាតើ...»
     - «តភ្ជាប់ពីចំណុចនេះ...»
   * Conclusion: ប្រមូលផ្តុំដំណោះស្រាយទាំងអស់ជាធ្លុងមួយ៖ «សរុបជារួម មកដល់ចំណុចនេះ យើងឃើញថា...»
-- Visual & Character Action Journey: រូបភាព និងសកម្មភាពតួអង្គត្រូវបន្តដំណើរជាសាច់រឿងតែមួយ (Story Arc)៖ ជួបបញ្ហា ➔ ប្រជុំពិភាក្សា ➔ ចុះសាកល្បងអនុវត្តផ្ទាល់ ➔ ជួបឧបសគ្គតូចមួយ ➔ សហការដោះស្រាយ ➔ ទទួលបានលទ្ធផលជាផ្លែផ្កា ➔ សង្ខេបមេរៀនរួមគ្នា។
+- Visual & Action Journey: ${
+    presenterObj.id === 'no-characters'
+      ? `រូបភាព និងបរិយាកាសត្រូវបន្តដំណើរជាសាច់រឿងតែមួយ (Story Arc)៖ ណែនាំទិដ្ឋភាពបញ្ហា ➔ បង្ហាញឯកសារ/ឧបករណ៍/ស្ថិតិ ➔ បង្ហាញដំណាក់កាលអនុវត្តជាក់ស្តែង ➔ បង្ហាញទេសភាព និងបរិស្ថានកម្ពុជាដែលទទួលបានផ្លែផ្កា ➔ សង្ខេបជាក្រាហ្វិកមេរៀនរួម។`
+      : `រូបភាព និងសកម្មភាពតួអង្គត្រូវបន្តដំណើរជាសាច់រឿងតែមួយ (Story Arc)៖ ជួបបញ្ហា ➔ ប្រជុំពិភាក្សា ➔ ចុះសាកល្បងអនុវត្តផ្ទាល់ ➔ ជួបឧបសគ្គតូចមួយ ➔ សហការដោះស្រាយ ➔ ទទួលបានលទ្ធផលជាផ្លែផ្កា ➔ សង្ខេបមេរៀនរួមគ្នា។`
+  }
 
 4. ច្បាប់សំខាន់សម្រាប់តួអង្គ និងប្លង់សកម្មភាព (STRICT ACTION & CAST DYNAMICS)
 - ជម្រើសទម្រង់តួអង្គ៖ ${presenterObj.labelKh} (${presenterObj.castHintKh})
 - ជម្រើសប្លង់សកម្មភាព៖ ${actionObj.labelKh} (${actionObj.actionHintKh})
-- ហាមដាច់ខាតឈរនិយាយទទេ (ANTI-TALKING-HEAD MANDATE)៖ កុំឱ្យតួអង្គគ្រាន់តែឈរស្ងៀមៗមុខកាមេរ៉ាអាន Script Voiceover ឱ្យសោះ! នេះជាគំនូរជីវចលអប់រំបែប Storytelling រស់រវើក។
+${
+  presenterObj.id === 'no-characters'
+    ? `* ច្បាប់កំហិតសម្រាប់ «គ្មានតួអង្គ / បង្ហាញតែរូបភាពតាម Topic (TOPIC VISUALS ONLY • NO CHARACTERS)»៖
+  - វីដេអូនេះមិនប្រើតួអង្គមនុស្ស ឬអ្នកនិយាយឡើយ (NO human characters, NO character heads)។
+  - គ្រប់ឈុតទាំងអស់ ត្រូវផ្តោត ១០០% លើរូបភាព visual B-roll, ឧបករណ៍ជាក់ស្តែង, ឯកសារ, ក្រាហ្វិកពន្យល់, ទេសភាព និងបរិយាកាសកម្ពុជាដែលទាក់ទងនឹងប្រធានបទ «${topicText}» ផ្ទាល់។
+  - ក្នុងតារាងឈុត៖ «character» ត្រូវកំណត់ជា «គ្មានតួអង្គ (Topic Visuals Only)», «characterAction» ត្រូវកំណត់ជាការពិពណ៌នាពីចលនារូបភាព/វត្ថុ/ឧបករណ៍/ទេសភាព (Topic Visual Motion), និង «characterDialogue» ត្រូវទុកទទេ។
+  - «aiImagePromptEn» ត្រូវតែពិពណ៌នារូបភាព cinematic visual B-roll / infographic / object / landscape ដោយគ្មានតួអង្គមនុស្ស (no human characters)។
+  - «aiVideoPromptEn» ផ្តោតលើ cinematic camera movement, smooth pan/zoom, object motion, lighting atmosphere ready for voiceover.`
+    : presenterObj.id === 'solo'
+    ? `* ច្បាប់កំហិតដាច់ខាតសម្រាប់ «អ្នកធ្វើបទបង្ហាញទោល / តួអង្គតែ ១ នាក់គត់ (SOLO PRESENTER • 1 SINGLE CHARACTER ONLY)»៖
+  - កំណត់តួអង្គតែ ១ នាក់គត់ (Solo Host, ឧ. សុខា) ក្នុងបញ្ជីតួអង្គ (ហាមដាច់ខាតបង្កើតតួអង្គទី ២ ឬទី ៣)!
+  - គ្រប់ឈុតទាំងអស់ (Scene 1 ដល់ Scene ចុងក្រោយ)៖ «character» ត្រូវតែកំណត់ជាតួអង្គទោលតែ ១ នាក់គត់នេះ!
+  - «characterAction» និង «visualDescription» ត្រូវតែពិពណ៌នាសកម្មភាពរបស់តួអង្គទោលនេះធ្វើសកម្មភាពតែម្នាក់ឯង (Solo physical action): ដើរតែម្នាក់ឯង ចង្អុលបង្ហាញ ពិនិត្យឯកសារ បង្ហាញឧបករណ៍ កាន់ថេប្លេត សរសេរលើក្តារខៀន ជិះ PassApp ឬពន្យល់ផ្ទាល់ទៅកាន់អ្នកទស្សនា (ហាមប្រជុំជាក្រុម ហាមមានតួអង្គផ្សេងក្នុងប្លង់)!
+  - «characterDialogue» គឺសម្រាប់តែពាក្យសម្ដីរបស់តួអង្គទោលនេះនិយាយផ្ទាល់ទៅកាន់អ្នកទស្សនា (Solo monologue addressing viewers) ឬទុកទទេ (ហាមមានការឆ្លើយឆ្លងរវាងតួអង្គពីរនាក់)!
+  - «aiImagePromptEn» និង «aiVideoPromptEn» ត្រូវតែបញ្ជាក់យ៉ាងច្បាស់ថា៖ "featuring solo Cambodian presenter (<name>), single person in frame, strictly no other characters in frame".`
+    : `- ហាមដាច់ខាតឈរនិយាយទទេ (ANTI-TALKING-HEAD MANDATE)៖ កុំឱ្យតួអង្គគ្រាន់តែឈរស្ងៀមៗមុខកាមេរ៉ាអាន Script Voiceover ឱ្យសោះ! នេះជាគំនូរជីវចលអប់រំបែប Storytelling រស់រវើក។
 - គ្រប់ឈុតទាំងអស់៖ «visualDescription» និង «characterAction» ត្រូវតែរៀបរាប់សកម្មភាពរូបវន្តរស់រវើក (Physical actions) ដូចជា៖
   * តួអង្គដើរយ៉ាងស្វាហាប់តាមដងផ្លូវ ទីប្រជុំជន ឬវាលស្រែ
   * ក្រុមការងារប្រជុំ លើកដៃស្នើគំនិត ចង្អុលបង្ហាញក្រាហ្វិកលើក្តារខៀន ឬអេក្រង់កុំព្យូទ័រ
@@ -1105,7 +1288,8 @@ D. CONCLUSION (~10% នៃឈុត)
   * កំពុងចុះពិនិត្យកសិដ្ឋាន ហាង ផ្សារ ឬរោងចក្រជាមួយប្រជាជនក្នុងតំបន់
   * មានកាយវិការឆ្លើយឆ្លង សើច ឆ្ងល់ ពិភាក្សា និងសហការគ្នា
 - សំឡេងអ្នកនិទាន (Khmer Narrator Script) គឺជាអ្នករៀបរាប់សាច់រឿងអប់រំពីលើ (Voiceover Narration) ខណៈពេលដែលតួអង្គកំពុងធ្វើសកម្មភាពជាក់ស្តែងក្នុងរូបភាព។
-- ឈុតដែលមានការសន្ទនា សូមបញ្ចូលឃ្លាសន្ទនាខ្លីៗរវាងតួអង្គក្នុង «characterDialogue» ឱ្យបានច្រើន ដើម្បីឱ្យសាច់រឿងមានភាពរស់រវើកបែបមនុស្សពិត!
+- ឈុតដែលមានការសន្ទនា សូមបញ្ចូលឃ្លាសន្ទនាខ្លីៗរវាងតួអង្គក្នុង «characterDialogue» ឱ្យបានច្រើន ដើម្បីឱ្យសាច់រឿងមានភាពរស់រវើកបែបមនុស្សពិត!`
+}
 
 4. FORMAT សម្រាប់រៀបចំឈុតវីដេអូ
 បែងចែកវីដេអូជា ${targetScenes} ឈុត (5–10 វិនាទី/ឈុត)។ ឈុតនីមួយៗត្រូវមាន៖
@@ -1115,20 +1299,25 @@ D. CONCLUSION (~10% នៃឈុត)
 - Visual Description
 - Character (ឈ្មោះតួអង្គ ឬក្រុមតួអង្គដែលកំពុងធ្វើសកម្មភាព)
 - Character Action (សកម្មភាពជាក់ស្តែងរស់រវើក មិនឈរនិយាយទទេ)
-- Narrator Script (Khmer Voiceover ពេញលេញ)
+- Narrator Script (Khmer Character Spoken Lines — សម្ដីតួអង្គនិយាយផ្ទាល់ជាភាសាខ្មែរ: [ឈ្មោះតួអង្គ]៖ «...»)
 - Character Dialogue (សន្ទនាខ្លីៗរវាងតួអង្គ)
 - On-screen Text
 - AI Image Prompt (English — active poses, multi-character composition, Cambodian setting)
-- AI Video Animation Prompt (English — Topic Visual Action ONLY: Smooth visual motion, dynamic physical gestures illustrating the topic hands-on, camera movement, Cambodian setting. CHARACTERS DO NOT SPEAK, no dialogue or lip-sync, silent cinematic action ready for external voiceover overlay in CapCut/Premiere)
+- AI Video Animation Prompt (English — Expressive character acting and spoken delivery: Cambodian characters actively speaking on camera in Khmer with natural speech articulation, engaging facial expressions, and communicative hand gestures matching the story script. Smooth 24fps motion, 16:9, no floating text)
 - Camera Movement (Track shot, dynamic panning, over-the-shoulder, etc.)
 - Background Music / Sound Effects
 
 5. ច្បាប់សំខាន់សម្រាប់អ្នកនិទាន (NARRATOR SCRIPT)
 - សរសេរជាភាសាខ្មែរឱ្យត្រឹមត្រូវតាមវេយ្យាករណ៍ ប្រើពាក្យសាមញ្ញ ងាយស្ដាប់ និងងាយយល់។
 - Script ត្រូវមានអត្ថន័យពេញលេញ មិនមែនសរសេរត្រឹមតែចំណងជើងទេ ហើយត្រូវមានការតភ្ជាប់ពីប្រយោគមួយទៅប្រយោគមួយ។
+- ហាមដាច់ខាតយកចំណងជើង ឬឈ្មោះ Topic មកនិយាយឡើងវិញដដែលៗគ្រប់ឈុត (CRITICAL ANTI-TITLE-REPETITION MANDATE)៖
+  * ឈ្មោះ Topic ឬចំណងជើង អាចនិយាយបានត្រឹមតែ ១ ដងគត់នៅ Scene 1 ដើម្បីណែនាំប្រធានបទ។
+  * ចាប់ពី Scene 2 ដល់ Scene ចុងក្រោយ ហាមដាច់ខាតនិយាយឃ្លាចំណងជើង ឬឈ្មោះ Topic ពេញឡើងវិញ! ត្រូវប្រើពាក្យជំនួសបែបធម្មជាតិដូចជា «បញ្ហានេះ», «វិធីសាស្ត្រនេះ», «ដំណោះស្រាយនេះ», «ជំហានបន្ទាប់», ឬនិយាយចូលខ្លឹមសារជាក់ស្ដែងភ្លាមៗ។
+- ពាក្យដែលនិយាយ ត្រូវតែស៊ីសង្វាក់ ១០០% ជាមួយរូបភាព និងប្រធានបទ (STRICT SCRIPT-TO-VISUAL SYNCHRONIZATION)៖
+  * អត្ថបទអ្នកនិទាន (narratorScriptKh) ត្រូវតែត្រូវគ្នាឥតខ្ចោះជាមួយរូបភាព (visualDescription) និងសកម្មភាព (characterAction / topic visual) នៃឈុតនោះ។
+  * អ្វីដែលភ្នែកកំពុងមើលឃើញក្នុងរូបភាព គឺជាអ្វីដែលត្រចៀកកំពុងស្ដាប់ឮពីអ្នកនិទាន! កុំឱ្យរូបភាពបង្ហាញរឿងមួយ តែអ្នកនិទាននិយាយរឿងមួយផ្សេងទៀតឱ្យសោះ (ឧ. បើរូបភាពបង្ហាញពីការកត់ត្រាលើសៀវភៅ ឬអេក្រង់ ត្រូវនិយាយពីការកត់ត្រា; បើរូបភាពបង្ហាញពីការប្រជុំ ឬទីផ្សារ ត្រូវនិយាយពីការពិភាក្សាជាក់ស្តែង)។
 - កុំប្រើពាក្យដដែលៗច្រើនពេក និងកុំសង្ខេបខ្លឹមសារខ្លីពេក។
 - ត្រូវសរសេរអត្ថបទដែលអ្នកនិទានអាចអានថតសំឡេងបានភ្លាមៗ និងត្រូវដាក់ដាច់ដោយឡែកពី AI Image Prompt និង AI Video Prompt។
-- កុំឱ្យ Narrator និយាយខុសពីសកម្មភាពដែលកំពុងបង្ហាញក្នុងរូបភាព។
 
 6. ANIMATION STYLE, KHMER CULTURAL SETTING & VISUAL CONSISTENCY
 ${styleObj.promptAnchor}.
@@ -1201,10 +1390,30 @@ STRICT PRODUCTION RULES:
      * Keep "aiImagePromptEn" and "aiVideoPromptEn" dense, sharp, and concise (1–2 sentences).
      * Keep "visualDescription" and "characterAction" direct and active (no fluff).
      * Focus maximum richness on "narratorScriptKh" (2–3 substantive spoken Khmer sentences with smooth narrative bridges).
-1. MULTI-CHARACTER CAST SETUP (${presenterObj.labelEn}):
-   - In "characters", define multiple distinct Cambodian (Khmer) characters (${presenterObj.castHintKh}).
+1. CAST & VISUAL PRESENTATION DYNAMICS (${presenterObj.labelEn}):
+${
+  presenterObj.id === 'no-characters'
+    ? `   - CRITICAL REQUIREMENT (TOPIC VISUALS ONLY • NO HUMAN CHARACTERS):
+     * This video uses NO human presenters or character talking heads! DO NOT create characters that speak to camera.
+     * In "characters", generate 2–3 conceptual visual asset moodboard items representing the topic (e.g. Topic Visual Identity, Core Tools & Artifacts, Real Cambodian Setting & Environment), with role as "Topic Visual Element" and personality as "Cinematic Visual Asset".
+     * In every scene:
+       - Set "character" to "គ្មានតួអង្គ (Topic Visuals Only)".
+       - Set "characterAction" to describe the dynamic visual B-roll movement, physical objects, equipment, charts, documents, or scenery motion illustrating the topic.
+       - Set "characterDialogue" to "".
+       - "visualDescription", "aiImagePromptEn", and "aiVideoPromptEn" MUST depict dynamic documentary B-roll, physical items, close-ups of equipment/tools/documents, Cambodian environments, and clean infographics illustrating "${topicText}" with NO human characters.`
+    : presenterObj.id === 'solo'
+    ? `   - STRICT CRITICAL MANDATE (SOLO PRESENTER • EXACTLY 1 SINGLE CHARACTER ONLY):
+      * Define EXACTLY ONE character in "characters" array (1 single Cambodian solo host/presenter, e.g. "សុខា (អ្នកធ្វើបទបង្ហាញទោល / Solo Presenter)").
+      * STRICTLY FORBIDDEN: DO NOT define a second or third character! Length of "characters" array MUST BE EXACTLY 1!
+      * In EVERY single scene:
+        - "character" MUST be this single presenter only!
+        - "characterAction" and "visualDescription" MUST portray this solo presenter acting alone (walking alone, examining data alone, testing practical tools hands-on alone, sketching on a whiteboard alone, presenting to audience). Strictly NO team meetings and NO other characters in frame!
+        - "characterDialogue" is strictly monologue of the solo presenter addressing the audience, or empty string. NEVER conversation between multiple people!
+        - "aiImagePromptEn" and "aiVideoPromptEn" MUST explicitly state: "featuring solo Cambodian presenter (<name>), single person in frame, strictly no other characters in frame".`
+    : `   - In "characters", define multiple distinct Cambodian (Khmer) characters (${presenterObj.castHintKh}).
    - Give each character a distinct role (e.g. Team Leader, Technical Specialist, Practitioner, Curious Learner), distinct natural Cambodian appearance, consistent everyday outfits, and distinct personalities.
-   - Throughout the story, actively showcase these characters collaborating, discussing, problem-solving, and interacting together!
+   - Throughout the story, actively showcase these characters collaborating, discussing, problem-solving, and interacting together!`
+}
 
 2. ANTI-TALKING-HEAD MANDATE & DYNAMIC SCENE ACTION (${actionObj.labelEn}):
    - CRITICAL RULE: NEVER create scenes where characters merely stand still facing the camera reading the voiceover script!
@@ -1215,11 +1424,23 @@ STRICT PRODUCTION RULES:
      * Riding PassApp / bicycles / motorbikes while pointing out real-world landmarks
      * Gathering around a desk with laptops, sticky notes, or tea/coffee cups in lively discussion
      * Shaking hands, handing over items, smiling, gesturing expressively, cheering, solving problems
-   - The Khmer Narrator Script is voiceover storytelling that accompanies the visual actions, while characters actively live, work, and collaborate in the world.
-   - Include natural Khmer conversational dialogue between characters in "characterDialogue" whenever characters talk to each other!
+   - CRITICAL SPOKEN DIALOGUE FORMAT: The character(s) themselves deliver the story script directly in natural spoken Khmer! In EVERY SCENE, format "narratorScriptKh" as direct character speech: "[ឈ្មោះតួអង្គ]៖ «<ពាក្យសម្ដីតួអង្គនិយាយជាភាសាខ្មែរ>»".
+   - In "characterDialogue", provide this exact same spoken dialogue line: "[ឈ្មោះតួអង្គ]៖ «...»".
 
-3. COMPREHENSIVE EDUCATIONAL DEPTH & IN-DEPTH EXPLANATION (អត្ថន័យក្បោះក្បាយពេញលេញ & ស៊ីជម្រៅ):
+3. COMPREHENSIVE EDUCATIONAL DEPTH, VISUAL SYNCHRONIZATION & NO-TITLE-REPETITION:
    - CRITICAL PEDAGOGICAL RULE: Every single scene must provide substantial, deep educational value, NOT shallow bullet slogans or rushed summaries!
+   - STRICT SCRIPT & VISUAL SYNCHRONIZATION (ពាក្យដែលនិយាយ ត្រូវតែស៊ីសង្វាក់ ១០០% ជាមួយរូបភាព និងប្រធានបទ):
+     * In EVERY SINGLE SCENE, "narratorScriptKh" MUST DIRECTLY match, explain, and illuminate what is visibly happening in "visualDescription" and "characterAction" (or topic visual)!
+     * What the audience sees with their eyes MUST match what they hear with their ears:
+       - If the visual shows examining a financial spreadsheet or scanning a KHQR code on a smartphone, the script MUST explain budget tracking, digital recording, and calculations.
+       - If the visual shows testing a farming tool or inspecting crops in a field, the script MUST explain the agricultural technique and tangible results.
+       - If the visual shows writing workflows on a whiteboard with team members, the script MUST explain the exact step-by-step methodology and planning.
+     * FORBIDDEN: NEVER write generic, abstract text in "narratorScriptKh" that disconnects from the physical scene, objects, and actions shown!
+   - STRICT ANTI-TITLE-REPETITION MANDATE (ហាមដាច់ខាតយកចំណងជើង ឬឈ្មោះ TOPIC មកនិយាយឡើងវិញដដែលៗគ្រប់ឈុត):
+     * The video title or full topic phrase may ONLY be spoken ONCE in Scene 1 (The Hook & Introduction) to introduce the subject.
+     * From Scene 2 to Scene ${milestones.targetScenes}: ABSOLUTELY DO NOT repeat the full video title or topic phrase!
+     * DO NOT start or fill sentences with repetitive robotic phrases like "ចំពោះ «${topicText}»", "ក្នុង «${topicText}»", or "នៃ «${topicText}»".
+     * Instead, speak naturally using contextual Khmer reference terms like «បញ្ហានេះ», «វិធីសាស្ត្រនេះ», «ដំណោះស្រាយនេះ», «ជំហានបន្ទាប់», «ការអនុវត្តនេះ» or dive straight into the practical explanation.
    - Explain the "WHY" (Root causes, underlying psychological triggers, scientific or financial mechanics, e.g. why habits fail, biological functions, compound math, market dynamics).
    - Explain the "HOW" (Actionable, step-by-step practical methods, clear rules of thumb, formulas, and exact guidance that viewers can implement immediately).
    - Relatable Cambodian Examples & Analogies: Ground every point in relatable Cambodian daily life (e.g. coffee purchases, small vendor stall bookkeeping, KHQR digital bank savings, farming techniques, student exam methods). Compare abstract ideas to familiar items (water streams, young tree saplings, clay piggy banks).
@@ -1288,34 +1509,484 @@ STRICT PRODUCTION RULES:
       "visualDescription": "ការពិពណ៌នារូបភាពជាភាសាខ្មែរ (សកម្មភាពជាក់ស្តែង មិនឈរនិយាយទទេ)",
       "character": "ឈ្មោះតួអង្គ ឬក្រុមតួអង្គ",
       "characterAction": "សកម្មភាពតួអង្គជាក់ស្តែង (កំពុងដើរ ពិភាក្សា ចង្អុលបង្ហាញ ឬធ្វើការងារផ្ទាល់)",
-      "narratorScriptKh": "អត្ថបទអ្នកនិទានពេញលេញជាភាសាខ្មែរដែលអានថតសំឡេងបានភ្លាមៗ",
-      "characterDialogue": "ឃ្លាសន្ទនាខ្លីៗរវាងតួអង្គ (បើមាន)",
+      "narratorScriptKh": "សម្ដីតួអង្គនិយាយផ្ទាល់ជាភាសាខ្មែរ: [ឈ្មោះតួអង្គ]៖ «...»",
+      "characterDialogue": "សម្ដីតួអង្គនិយាយផ្ទាល់: [ឈ្មោះតួអង្គ]៖ «...»",
       "onScreenText": "អក្សរខ្លីលើអេក្រង់",
       "aiImagePromptEn": "Detailed English 2D illustration prompt depicting active poses, multi-character teamwork, authentic Cambodian countryside/city background + ${styleObj.promptAnchor}",
-      "aiVideoPromptEn": "Visual Action: smooth character movement and gestures demonstrating topic concepts hands-on, camera tracking. Authentic Cambodian setting, warm lighting. Silent cinematic action, characters do not speak, no dialogue or lip-sync, smooth 24fps motion for external voiceover overlay, 16:9, no floating text.",
+      "aiVideoPromptEn": "Visual Action: Expressive animated character acting and spoken delivery: Cambodian characters actively speaking on camera in Khmer with natural speech articulation, engaging facial expressions, and communicative hand gestures matching the story script. Authentic Cambodian setting, smooth 24fps motion, 16:9, no floating text.",
       "cameraMovement": "Dynamic tracking shot / over-the-shoulder angle",
       "bgmAndSfx": "ភ្លេង Documentary ស្រទន់ + SFX"
     }
   ],
   "musicSuggestions": [
     {
-      "section": "A. ផ្នែកផ្ដើម",
+      "section": "A. ផ្នែកផ្ដើម (Intro & Hook)",
       "mood": "Curiosity, Warm Documentary",
       "tempo": "80 BPM",
       "instruments": "Soft Piano, Acoustic Guitar",
-      "usageTip": "រក្សាសំឡេងនៅ -20dB ដើម្បីឱ្យសំឡេងអ្នកនិទានច្បាស់"
+      "usageTip": "រក្សាសំឡេងនៅ -20dB ដើម្បីឱ្យសំឡេងអ្នកនិទានច្បាស់",
+      "aiMusicPromptEn": "[Instrumental Acoustic Lo-fi] [Tempo: 80 BPM] [Mood: Warm curiosity, gentle mystery, reflective] [Instruments: Soft piano, acoustic guitar, warm pads] [Style: Clean educational background music, no vocals]"
     }
   ],
   "thumbnail": {
-    "headlineKh": "ចំណងជើងធំលើ Thumbnail",
-    "subTextKh": "អក្សររងខ្លី",
-    "visualConcept": "គំនិតរចនារូបភាពតួអង្គជាក្រុមធ្វើសកម្មភាព",
-    "aiThumbnailPromptEn": "Eye-catching 16:9 Cambodian 2D cartoon YouTube thumbnail prompt in English showing team collaboration & Cambodian setting, no watermarks"
+    "headlineKh": "ចំណងជើងធំលើ Thumbnail (3-6 ពាក្យ)",
+    "subTextKh": "អក្សររងខ្លីទាក់ទាញ",
+    "visualConcept": "គំនិតរចនារូបភាព High-CTR បង្ហាញនិមិត្តសញ្ញា និងពន្លឺ Cinematic",
+    "aiThumbnailPromptEn": "High-CTR YouTube thumbnail prompt in English tailored 100% to the topic with bold rule-of-thirds composition, vibrant rim lighting, 16:9, no text watermarks, 8k render"
   }
 }
 \`\`\`
 
 Generate ALL ${milestones.targetScenes} scenes completely in the "scenes" array right now (strictly numbered from scene 1 to scene ${milestones.targetScenes}), reaching a complete, satisfying ending and conclusion. Do NOT stop early.`;
+}
+
+export function generateTopicTailoredMusic(
+  topic: string,
+  categoryId?: string
+): MusicSuggestion[] {
+  const t = (topic || '').toLowerCase();
+  const cat = (categoryId || '').toLowerCase();
+
+  // 00. Khmer Magic, Sorcery, Bokator & Mythic Demon Battles
+  if (
+    cat.includes('magic') ||
+    cat.includes('sorcery') ||
+    t.includes('យុទ្ធសិល្ប៍') ||
+    t.includes('ដាវសីល') ||
+    t.includes('សាក់យ័ន្ត') ||
+    t.includes('គ្រូអាគមន៍') ||
+    t.includes('កាំបិតបន្ទោរ') ||
+    t.includes('បង្ក្រាប')
+  ) {
+    return [
+      {
+        section: 'A. ផ្នែកផ្ដើម (Intro & Mystical Omens)',
+        mood: 'Mysterious, Ominous, Ancient Pali Chanting Ambience, Sacred Power',
+        tempo: '75 BPM',
+        instruments: 'Khmer Kong Vong Temple Gongs, Deep Sub-bass Resonant Drone, Haunting Tro Ou Strings, Distant Sacred Chanting',
+        usageTip: 'បើកដោយសំឡេងគងវង់ និងសំឡេងស្មឹងស្មាធិ៍មន្តគាថានៅ -22dB បង្កើនភាពអាថ៌កំបាំង និងអនុភាពសីលវេទ។',
+        aiMusicPromptEn: `[Instrumental Epic Khmer Mythic Sorcery Intro] [Tempo: 75 BPM] [Mood: Ancient mystery, dark supernatural suspense, sacred occult atmosphere, ominous omen] [Instruments: Resonant Khmer temple gongs (Kong Vong), deep drone pads, haunting low Tro Ou fiddle, ethereal whispered chants, atmospheric low rumble] [Style: Cinematic fantasy sorcery trailer intro, hair-raising mythical suspense, balanced for spoken dialogue, no vocals]`,
+      },
+      {
+        section: 'B. សាច់រឿងកណ្ដាល & ចម្បាំងយុទ្ធសិល្ប៍ (Epic Magic & Martial Battle)',
+        mood: 'High-Octane Battle, Powerful, Epic Heroic Percussion, Spell Clash',
+        tempo: '128 BPM',
+        instruments: 'Intense Khmer Skor Thom War Drums, Heavy Taiko, Driving Cinematic Brass, Piercing Sralai Flute, Sword Clash FX',
+        usageTip: 'ចង្វាក់ស្គរធំចម្បាំងល្បុក្កតោ និងស្នូរដាវសីល បង្កើនកម្ដៅនៃការប្រយុទ្ធតតាំងជាមួយបីសាចឱ្យកាន់តែរន្ធត់ញាប់ញ័រ។',
+        aiMusicPromptEn: `[Instrumental Epic Khmer Martial Arts & Demon Battle Score] [Tempo: 128 BPM] [Mood: High adrenaline, epic heroic combat, supernatural martial fury, clash of light and darkness] [Instruments: Thundering Khmer Skor Thom war drums, driving cinematic orchestral brass, aggressive taiko percussion, piercing Khmer Sralai war flute accents, heavy cinematic risers and impacts] [Style: High-energy fantasy martial arts action battle music, breathless momentum, no vocals]`,
+      },
+      {
+        section: 'C. សង្ខេប & ជ័យជម្នះនៃធម៌សីល (Triumph of Dharma & Holy Blessing Outro)',
+        mood: 'Victorious, Sacred Relief, Divine Harmony, Inspiring Hope',
+        tempo: '82 BPM',
+        instruments: 'Shimmering Roneat Ek Xylophone, Gentle Wooden Flute (Khloy), Soaring Warm Strings, Triumphant Ambient Chimes',
+        usageTip: 'បញ្ចប់ដោយសំឡេងរនាតឯក និងខ្លុយខ្មែរស្រទន់ តំណាងឱ្យជ័យជម្នះនៃធម៌លើអធម៌ និងភាពសុខសាន្តនៃដែនដី។',
+        aiMusicPromptEn: `[Instrumental Triumphant Khmer Fantasy Outro] [Tempo: 82 BPM] [Mood: Divine victory, sacred serenity, triumph of righteousness over evil, peaceful renewal] [Instruments: Shimmering traditional Khmer Roneat Ek xylophone, melodious wooden bamboo flute (Khloy), soaring warm orchestral strings, sacred chimes, soft lingering ambient pads] [Style: Majestic Asian fantasy cinematic ending credits, uplifting and spiritual, no vocals]`,
+      },
+    ];
+  }
+
+  // 0A. Ghost, Horror, Thriller, Supernatural
+  if (
+    cat.includes('horror') ||
+    cat.includes('ghost') ||
+    t.includes('ខ្មោច') ||
+    t.includes('ព្រាយ') ||
+    t.includes('រន្ធត់') ||
+    t.includes('ព្រឺ') ||
+    t.includes('លង') ||
+    t.includes('វិញ្ញាណ') ||
+    t.includes('អាគម') ||
+    t.includes('ធ្មប់')
+  ) {
+    return [
+      {
+        section: 'A. ផ្នែកផ្ដើម (Intro & Hook)',
+        mood: 'Eerie, Creepy Suspense, Dark Ambience, Chilling Whisper',
+        tempo: '68 BPM',
+        instruments: 'Dissonant Bowed Waterphone, Deep Sub-bass Drone, Eerie Khmer Tro Sau Fiddle Screech, Cold Ambient Pads',
+        usageTip: 'បើកដោយសំឡេងល្វើយៗនៃទ្រសោ និងដង្ហើមខ្យល់ត្រជាក់នៅ -20dB បង្កើតអារម្មណ៍ព្រឺក្បាលភ្លាមៗ។',
+        aiMusicPromptEn: `[Instrumental Dark Horror Cinematic Score] [Tempo: 68 BPM] [Mood: Eerie, creepy, chilling suspense, mysterious, ominous dark atmosphere] [Instruments: Dissonant bowed waterphone, haunting deep drone, distant discordant strings, subtle eerie Khmer fiddle screech, atmospheric reverb] [Style: High-tension horror documentary soundtrack, spine-chilling slow build, clear voiceover mixing, no vocals]`,
+      },
+      {
+        section: 'B. សាច់រឿងកណ្ដាល (Main Story & Paranormal Suspense)',
+        mood: 'Terrifying Heartbeat, Creeping Dread, Dark Tension',
+        tempo: '76 BPM',
+        instruments: 'Distorted Cello, Intense Sub-bass Pulses, Scraping Metal, Sudden Dissonant Stabs',
+        usageTip: 'សំឡេងចង្វាក់បេះដូងលោតញាប់ និងសំឡេងកកិតស្ងាត់ៗ ជួយឱ្យអ្នកទស្សនាភ័យអ៊ុតមើលមិនព្រិចភ្នែក។',
+        aiMusicPromptEn: `[Instrumental Psychological Horror Thriller] [Tempo: 76 BPM] [Mood: Terrifying, intense suspense, creeping dread, dark paranormal pulse] [Instruments: Heavy muted heartbeat kick, scraping dark strings, cold metallic textures, sudden dissonant orchestral stabs, eerie low drones] [Style: Cinematic horror movie background music, hair-raising suspense, seamless loop, no vocals]`,
+      },
+      {
+        section: 'C. សង្ខេប & ការព្រមានចុងក្រោយ (Chilling Conclusion & Outro)',
+        mood: 'Lingering Dread, Cold Aftermath, Haunted Mystery',
+        tempo: '65 BPM',
+        instruments: 'Broken Music Box, Sparse Cold Piano Chords, Decaying Reverb, Faint Cold Wind',
+        usageTip: 'បញ្ចប់ដោយសំឡេងប្រអប់តន្ត្រីបុរាណល្វើយៗ និងខ្យល់ត្រជាក់បក់កាត់ ធ្វើឱ្យអារម្មណ៍ព្រឺរោមជាប់មិនបាត់។',
+        aiMusicPromptEn: `[Instrumental Dark Ambient Outro] [Tempo: 65 BPM] [Mood: Lingering dread, dark resolution, chilling conclusion, haunted mystery] [Instruments: Broken eerie music box melody, sparse cold piano chords, decaying reverb, faint spectral winds] [Style: Spooky YouTube horror story outro background score, atmospheric fade, no vocals]`,
+      },
+    ];
+  }
+
+  // 0B. Comedy, Humor, Slapstick & Funny Situations
+  if (
+    cat.includes('comedy') ||
+    cat.includes('humor') ||
+    t.includes('កំប្លែង') ||
+    t.includes('សើច') ||
+    t.includes('កំប្លុក') ||
+    t.includes('ច្រឡំ') ||
+    t.includes('លេងសើច')
+  ) {
+    return [
+      {
+        section: 'A. ផ្នែកផ្ដើម (Intro & Hook)',
+        mood: 'Playful, Quirky, Bouncy, Cheeky Mischief',
+        tempo: '118 BPM',
+        instruments: 'Pizzicato Strings, Tuba, Marimba, Funny Woodblocks',
+        usageTip: 'សំឡេងចង្វាក់ញាក់កំប្លែងបែប Pizzicato នៅ -22dB បង្កើនស្នាមញញឹមតាំងពីវិនាទីដំបូង។',
+        aiMusicPromptEn: `[Instrumental Quirky Comedy Bouncy Score] [Tempo: 118 BPM] [Mood: Playful, funny, quirky, cheerful mischief, lighthearted humor] [Instruments: Staccato pizzicato strings, bouncy tuba bassline, cheerful marimba, funny woodblocks and rim clicks] [Style: Hilarious comedy cartoon and YouTube funny storytelling background music, energetic and lighthearted, no vocals]`,
+      },
+      {
+        section: 'B. សាច់រឿងកណ្ដាល (Main Story & Comical Chaos)',
+        mood: 'Slapstick, Whimsical, Laugh-out-loud Situational Timing',
+        tempo: '124 BPM',
+        instruments: 'Muted Trumpet, Funny Clarinet, Xylophone, Jaunty Ukulele',
+        usageTip: 'ចង្វាក់រហ័សរលូនអមដោយត្រែ wa-wa កំប្លែង ជួយឱ្យឈុតយល់ច្រឡំកាន់តែសើចចុកពោះ។',
+        aiMusicPromptEn: `[Instrumental Slapstick Humor Storytelling] [Tempo: 124 BPM] [Mood: Laugh-out-loud funny, whimsical, clumsy situational comedy, hilarious comedic timing] [Instruments: Bouncy acoustic upright bass, playful muted trumpet wa-wa, bright xylophone runs, jaunty ukulele and shaker] [Style: Classic comedy caper background soundtrack, entertaining and bubbly, no vocals]`,
+      },
+      {
+        section: 'C. សង្ខេប & Call to Action (Joyful Outro)',
+        mood: 'Celebratory Laughter, Upbeat, Cheerful Wink',
+        tempo: '120 BPM',
+        instruments: 'Bright Brass Stabs, Snappy Drums, Sparkling Glockenspiel',
+        usageTip: 'បញ្ចប់ដោយភាពរីករាយ សើចសប្បាយ និងអញ្ជើញ Like, Share, Subscribe ដោយក្តីស្និទ្ធស្នាល។',
+        aiMusicPromptEn: `[Instrumental Cheerful Comedy Outro] [Tempo: 120 BPM] [Mood: Joyful, celebratory laughter, upbeat, humorous conclusion] [Instruments: Lively acoustic guitar strums, cheerful brass chords, bright glockenspiel sparkle, snappy drums] [Style: Fun viral comedy outro music, energetic and smiling finish, no vocals]`,
+      },
+    ];
+  }
+
+  // 0C. Khmer Folktales & Legends (Ancient & Modern)
+  if (
+    cat.includes('folktale') ||
+    cat.includes('fable') ||
+    t.includes('រឿងព្រេង') ||
+    t.includes('និទាន') ||
+    t.includes('ទន្សាយ') ||
+    t.includes('ធនញ្ជ័យ') ||
+    t.includes('ទុំទាវ') ||
+    t.includes('កេងកង') ||
+    t.includes('ក្អែក') ||
+    t.includes('ព្រះថោង') ||
+    t.includes('តំណាល')
+  ) {
+    return [
+      {
+        section: 'A. ផ្នែកផ្ដើម (Intro & Hook)',
+        mood: 'Mythical Storytelling, Ancient Wonder, Gentle Nostalgia',
+        tempo: '82 BPM',
+        instruments: 'Traditional Khmer Khloy (Bamboo Flute), Delicate Acoustic Harp, Ambient Cinematic Strings',
+        usageTip: 'សំឡេងខ្លុយខ្មែរស្រទន់ល្វើយៗនៅ -20dB បង្កើតបរិយាកាសទេវកថាបុរាណគួរឱ្យជក់ចិត្ត។',
+        aiMusicPromptEn: `[Instrumental Mythical Cambodian Folktale Score] [Tempo: 82 BPM] [Mood: Magical, storytelling wonder, ancient folklore curiosity, gentle nostalgia] [Instruments: Soft traditional Khmer bamboo flute (Khloy), delicate acoustic harp arpeggios, warm cinematic strings, subtle wind chimes] [Style: Epic Asian folktale and fable documentary background score, enchanting narrative flow, no vocals]`,
+      },
+      {
+        section: 'B. សាច់រឿងកណ្ដាល (Main Story & Folkloric Adventure)',
+        mood: 'Engaging, Wise, Adventurous, Traditional Warmth',
+        tempo: '88 BPM',
+        instruments: 'Acoustic Guitar Fingerpicking, Gentle Roneat Ek Resonance, Singing Cello',
+        usageTip: 'សំឡេងរនាតឯក និងហ្គីតាដេញខ្សែជួយឱ្យសាច់រឿងព្រេងដំណើរការទៅមុខយ៉ាងរស់រវើក។',
+        aiMusicPromptEn: `[Instrumental Folkloric Storytelling Acoustic] [Tempo: 88 BPM] [Mood: Engaging, wise, adventurous, moral clarity, traditional warmth] [Instruments: Resonant acoustic guitar fingerpicking, gentle traditional Khmer xylophone (Roneat) resonance, singing cello melody, warm percussion] [Style: Enchanting folktale audiobook and animation background music, smooth dynamic balance, no vocals]`,
+      },
+      {
+        section: 'C. សង្ខេប & គតិបណ្ឌិតជីវិត (Heartwarming Moral Outro)',
+        mood: 'Profound Wisdom, Heartwarming Life Lesson, Timeless Closure',
+        tempo: '85 BPM',
+        instruments: 'Majestic Warm Strings, Khmer Bamboo Flute, Uplifting Piano',
+        usageTip: 'បញ្ចប់ដោយគតិអប់រំយ៉ាងជ្រាលជ្រៅនៃរឿងព្រេង និងដាស់តឿនចិត្តអ្នកទស្សនាឱ្យចងចាំមេរៀនល្អ។',
+        aiMusicPromptEn: `[Instrumental Heartwarming Folktale Outro] [Tempo: 85 BPM] [Mood: Profound wisdom, heartwarming moral conclusion, peaceful reflection, inspiring closure] [Instruments: Majestic warm string crescendo, expressive Khmer bamboo flute, gentle piano outro chords] [Style: Celebrated folktale ending theme, timeless emotional beauty, no vocals]`,
+      },
+    ];
+  }
+
+  // 1. Business, Money, Finance, Investment
+  if (
+    cat.includes('business') ||
+    cat.includes('money') ||
+    t.includes('រកស៊ី') ||
+    t.includes('លុយ') ||
+    t.includes('សន្សំ') ||
+    t.includes('វិនិយោគ') ||
+    t.includes('ចំណូល') ||
+    t.includes('ចំណាយ') ||
+    t.includes('អាជីវកម្ម') ||
+    t.includes('ទ្រព្យ') ||
+    t.includes('បំណុល') ||
+    t.includes('ហិរញ្ញវត្ថុ')
+  ) {
+    return [
+      {
+        section: 'A. ផ្នែកផ្ដើម (Intro & Hook)',
+        mood: 'Smart, Curious, Rhythmic, Professional',
+        tempo: '94 BPM',
+        instruments: 'Acoustic Guitar, Warm Rhodes Piano, Subtle Hi-Hats',
+        usageTip: 'រក្សាកម្រិតសំឡេងនៅ -22dB ពេលមានសំឡេងអ្នកអាន ដើម្បីរក្សាភាពច្បាស់ និងទាក់ទាញអារម្មណ៍ដំបូង។',
+        aiMusicPromptEn: `[Instrumental Lo-Fi Acoustic Corporate] [Tempo: 94 BPM] [Mood: Smart, confident, curious, motivating, professional business rhythm] [Instruments: Clean warm acoustic guitar strumming, electric Rhodes piano, light vinyl texture, subtle mellow bassline, crisp hi-hats] [Style: Modern YouTube finance & business educational explainer background score, crystal clear dynamic range, no vocals]`,
+      },
+      {
+        section: 'B. សាច់រឿងកណ្ដាល & វិធីសាស្ត្រ (Main Story & Practical Steps)',
+        mood: 'Focused, Inspiring, Motivating Flow',
+        tempo: '98 BPM',
+        instruments: 'Soft Upright Piano, Mellow Synth Pad, Clean Percussion',
+        usageTip: 'សំឡេងចង្វាក់កណ្ដាលរលូន ជួយឱ្យអ្នកទស្សនាផ្ដោតលើជំហាននីមួយៗ និងមិនធុញទ្រាន់។',
+        aiMusicPromptEn: `[Instrumental Inspiring Modern Acoustic] [Tempo: 98 BPM] [Mood: Focused, uplifting, steady momentum, clarity, intelligent financial mastery] [Instruments: Dynamic acoustic guitar fingerpicking, bright soft piano chords, warm synth pads, subtle driving kick and shaker groove] [Style: High-production educational documentary background music, seamless loopable feel, no vocals]`,
+      },
+      {
+        section: 'C. សង្ខេប & Call to Action (Conclusion & Outro)',
+        mood: 'Triumphant, Warm Encouragement, Forward-looking',
+        tempo: '102 BPM',
+        instruments: 'Bright Acoustic Guitar, Uplifting Strings, Soft Shakers',
+        usageTip: 'បង្កើនកម្រិតសំឡេងឡើងបន្តិច (-16dB) នៅឈុតចុងក្រោយពេលអញ្ជើញ Like, Share, Subscribe។',
+        aiMusicPromptEn: `[Instrumental Uplifting Acoustic Folk-Pop] [Tempo: 102 BPM] [Mood: Triumphant, warm, optimistic, inspiring success, empowering motivation] [Instruments: Vibrant acoustic guitar rhythm, cinematic warm strings crescendo, bright piano melody, inspiring ambient build] [Style: Celebratory YouTube outro background music, clean inspiring finish, no vocals]`,
+      },
+    ];
+  }
+
+  // 2. Cambodian History, Heritage, Culture, Angkor
+  if (
+    cat.includes('history') ||
+    t.includes('អង្គរ') ||
+    t.includes('ប្រាសាទ') ||
+    t.includes('ប្រវត្តិ') ||
+    t.includes('បុរាណ') ||
+    t.includes('ខ្មែរ') ||
+    t.includes('ស្តេច') ||
+    t.includes('រាជ') ||
+    t.includes('អរិយធម៌')
+  ) {
+    return [
+      {
+        section: 'A. ផ្នែកផ្ដើម (Intro & Hook)',
+        mood: 'Ancient Majesty, Cinematic Mystery, Reverence',
+        tempo: '78 BPM',
+        instruments: 'Traditional Khmer Roneat Ek accents, Tro Sau Fiddle, Deep Atmospheric Pads',
+        usageTip: 'បើកដោយសំឡេងល្វើយៗនៃទ្រសោ និងរនាតឯកនៅ -20dB បង្កើតបរិយាកាសអាថ៌កំបាំងទាក់ទាញ។',
+        aiMusicPromptEn: `[Instrumental Ancient Cambodian Fusion Soundtrack] [Tempo: 78 BPM] [Mood: Majestic, ancient mystery, deep cultural resonance, cinematic awe] [Instruments: Authentic Khmer Roneat Ek wooden xylophone accents, haunting Tro Sau two-string fiddle, ethereal Khloy bamboo flute, cinematic orchestral strings, deep resonant temple drums] [Style: Epic historical documentary score, spacious ambient depth, pristine audio engineering, strictly instrumental, no vocals]`,
+      },
+      {
+        section: 'B. សាច់រឿងកណ្ដាល (Historical Narrative & Epic Chronicles)',
+        mood: 'Grand, Evocative, Steady Traditional Rhythm',
+        tempo: '82 BPM',
+        instruments: 'Khloy Bamboo Flute, Acoustic Strings, Subtle Ancient Percussion',
+        usageTip: 'រក្សាភាពទន់ភ្លន់កុំឱ្យបាំងសំឡេងរៀបរាប់ព្រឹត្តិការណ៍ប្រវត្តិសាស្ត្រ។',
+        aiMusicPromptEn: `[Instrumental Traditional Khmer World Ambient] [Tempo: 82 BPM] [Mood: Grand historical storytelling, regal, poignant, evocative heritage] [Instruments: Melodic bamboo flute Khloy, gentle acoustic guitar backing, subtle traditional Sampho percussion, lush warm strings] [Style: Atmospheric Asian documentary background music, cinematic cultural immersion, no vocals]`,
+      },
+      {
+        section: 'C. សង្ខេប & មោទនភាព (Climax & Cultural Pride Outro)',
+        mood: 'Pride, Timeless Glory, Inspiring Legacy',
+        tempo: '84 BPM',
+        instruments: 'Full Orchestral Strings, Roneat Ek Glissando, Resonant Bells',
+        usageTip: 'សំឡេងលាន់ឮរំលេចមោទនភាពជាតិ និងបន្សល់ទុកនូវអារម្មណ៍ជ្រាលជ្រៅដល់អ្នកទស្សនា។',
+        aiMusicPromptEn: `[Instrumental Inspiring Cinematic Khmer Heritage Outro] [Tempo: 84 BPM] [Mood: Majestic pride, enduring timeless glory, heartfelt cultural legacy] [Instruments: Full warm orchestral strings, shimmering Roneat Ek glockenspiel flourishes, resonant bronze temple bells, uplifting acoustic progression] [Style: High-impact documentary climax and outro music, majestic and emotional, no vocals]`,
+      },
+    ];
+  }
+
+  // 3. Tech, AI, Coding, Digital, Science
+  if (
+    cat.includes('tech') ||
+    cat.includes('ai') ||
+    t.includes('ai') ||
+    t.includes('បច្ចេកវិទ្យា') ||
+    t.includes('ឌីជីថល') ||
+    t.includes('កុំព្យូទ័រ') ||
+    t.includes('វិទ្យាសាស្ត្រ') ||
+    t.includes('អ៊ីនធឺណិត') ||
+    t.includes('ទូរស័ព្ទ')
+  ) {
+    return [
+      {
+        section: 'A. ផ្នែកផ្ដើម (Tech Hook & Curiosity)',
+        mood: 'Futuristic, Crisp, Innovative Electronic Ambient',
+        tempo: '106 BPM',
+        instruments: 'Analog Synth Pulses, Clean Rhodes, Subtle Glitch Textures',
+        usageTip: 'ចង្វាក់អេឡិចត្រូនិចស្រទន់ បង្កើតអារម្មណ៍ទាន់សម័យ និងរហ័សរហួន។',
+        aiMusicPromptEn: `[Instrumental Modern Minimal Ambient Tech] [Tempo: 106 BPM] [Mood: Futuristic, sleek, innovative, analytical curiosity, cutting-edge digital pace] [Instruments: Warm analog synthesizer pulses, clean electric piano, soft rhythmic glitch arpeggios, crisp minimal percussion, deep sub-bass] [Style: High-tech explainer & AI documentary background score, pristine frequency separation for voiceover, no vocals]`,
+      },
+      {
+        section: 'B. សាច់រឿងកណ្ដាល & ការវិភាគ (Deep Tech Breakdown)',
+        mood: 'Focused, Precise, Forward-Looking Momentum',
+        tempo: '110 BPM',
+        instruments: 'Warm Synth Pads, Rhythmic Arp, Modern Acoustic Blends',
+        usageTip: 'ជួយរក្សាល្បឿនវីដេអូបច្ចេកវិទ្យាឱ្យនៅតែរស់រវើក មិនងងុយគេង។',
+        aiMusicPromptEn: `[Instrumental Dynamic Tech House Ambient] [Tempo: 110 BPM] [Mood: Intelligent, focused momentum, progressive discovery, modern digital workflow] [Instruments: Subdued analog bassline, gentle filtered synth arpeggios, atmospheric pads, light punchy kick, clear airy hats] [Style: Silicon Valley tech documentary style background music, crystal clear production, no vocals]`,
+      },
+      {
+        section: 'C. សង្ខេប & អនាគត (Future Horizon & Outro)',
+        mood: 'Empowering, Optimistic, Visionary Inspiration',
+        tempo: '112 BPM',
+        instruments: 'Vibrant Synth Lead, Cinematic Piano, Inspiring Modern Beats',
+        usageTip: 'បញ្ចប់ដោយក្តីសង្ឃឹម និងចក្ខុវិស័យអនាគតដ៏ភ្លឺស្វាង។',
+        aiMusicPromptEn: `[Instrumental Visionary Future Tech Outro] [Tempo: 112 BPM] [Mood: Inspiring, visionary, optimistic, boundless possibilities, uplifting technological revolution] [Instruments: Bright cinematic piano chords, ascending synth sweeps, modern crisp beat, warm ambient shimmer] [Style: Inspiring tech keynote and YouTube outro music, polished production, no vocals]`,
+      },
+    ];
+  }
+
+  // 4. Life Lessons, Mindset, Self-growth, Motivation, Health
+  if (
+    cat.includes('life') ||
+    cat.includes('growth') ||
+    cat.includes('health') ||
+    t.includes('មេរៀនជីវិត') ||
+    t.includes('ផ្នត់គំនិត') ||
+    t.includes('ទម្លាប់') ||
+    t.includes('ជោគជ័យ') ||
+    t.includes('អត់ធ្មត់') ||
+    t.includes('សុភមង្គល') ||
+    t.includes('ស្ត្រេស') ||
+    t.includes('ចិត្ត') ||
+    t.includes('សុខភាព')
+  ) {
+    return [
+      {
+        section: 'A. ផ្នែកផ្ដើម (Intro & Reflective Hook)',
+        mood: 'Thoughtful, Peaceful Clarity, Emotional Resonance',
+        tempo: '80 BPM',
+        instruments: 'Solo Upright Piano, Soft Ambient Cello, Acoustic Guitar',
+        usageTip: 'ផ្ដល់អារម្មណ៍ស្ងប់ និងបើកចិត្តអ្នកទស្សនាឱ្យត្រៀមទទួលយកមេរៀនជីវិត។',
+        aiMusicPromptEn: `[Instrumental Peaceful Neoclassical Acoustic] [Tempo: 80 BPM] [Mood: Deep mindfulness, emotional warmth, peaceful clarity, heartfelt reflection] [Instruments: Gentle solo upright piano chords, expressive warm cello swells, soft fingerpicked acoustic guitar, airy ambient pads] [Style: Emotive personal growth & wisdom documentary background music, tender dynamics under spoken voiceover, no vocals]`,
+      },
+      {
+        section: 'B. សាច់រឿងកណ្ដាល & ការផ្លាស់ប្តូរ (Transformation & Resilience)',
+        mood: 'Warm Encouragement, Inner Strength, Awakening',
+        tempo: '86 BPM',
+        instruments: 'Acoustic Guitar, Warm Piano, Subtle Shimmer Pads, Light Rhythm',
+        usageTip: 'ជួយជំរុញទឹកចិត្តឱ្យងើបឡើងតស៊ូ និងផ្លាស់ប្តូរទម្លាប់ល្អ។',
+        aiMusicPromptEn: `[Instrumental Inspiring Emotional Acoustic Score] [Tempo: 86 BPM] [Mood: Inner strength, gentle resilience, awakening, heartening growth, warm sunlight through clouds] [Instruments: Rhythmic acoustic guitar, bright piano counter-melodies, warm cello, subtle shaker rhythm, ambient strings] [Style: Heartfelt self-improvement storytelling background music, beautiful organic sound, no vocals]`,
+      },
+      {
+        section: 'C. សង្ខេប & សេចក្តីសុខក្នុងចិត្ត (Peaceful Closing & Wisdom Outro)',
+        mood: 'Grateful, Serene, Deep Life Fulfillment',
+        tempo: '82 BPM',
+        instruments: 'Lyrical Piano, Soft Acoustic Guitar Strums, Gentle Ambience',
+        usageTip: 'បញ្ចប់ដោយស្នាមញញឹម និងសេចក្តីស្ងប់ក្នុងចិត្តដ៏បរិសុទ្ធ។',
+        aiMusicPromptEn: `[Instrumental Serene Grateful Piano Outro] [Tempo: 82 BPM] [Mood: Deep gratitude, serene peace, timeless life fulfillment, enduring hope] [Instruments: Lyrical soft piano, resonant acoustic guitar harmonics, gentle ambient morning soundscape] [Style: Uplifting mindful outro background score, calm fade out, strictly instrumental, no vocals]`,
+      },
+    ];
+  }
+
+  // 5. Default Educational & Documentary Track (Universal)
+  return [
+    {
+      section: 'A. ផ្នែកផ្ដើម (Intro & Hook)',
+      mood: 'Curious, Engaging, Warm Educational Tone',
+      tempo: '86 BPM',
+      instruments: 'Soft Acoustic Guitar, Gentle Piano, Subtle Synth Shimmer',
+      usageTip: 'រក្សាសំឡេងនៅ -20dB ក្រោមសំឡេងអ្នកអាន ដើម្បីឱ្យពាក្យពេចន៍ច្បាស់ត្រជាក់ភ្នែក។',
+      aiMusicPromptEn: `[Instrumental Warm Educational Documentary] [Tempo: 86 BPM] [Mood: Curious, warm, welcoming, educational intrigue, clear storytelling focus] [Instruments: Mellow acoustic guitar arpeggios, gentle upright piano, warm ambient synth pad, light subtle rhythm] [Style: Professional YouTube educational background music, perfectly balanced for clear spoken voiceover, no vocals]`,
+    },
+    {
+      section: 'B. សាច់រឿងកណ្ដាល (Main Story & Practical Insights)',
+      mood: 'Steady, Motivating, Informative Narrative Groove',
+      tempo: '90 BPM',
+      instruments: 'Acoustic Strums, Bright Piano Melodies, Light Acoustic Drums',
+      usageTip: 'ចង្វាក់រស់រវើកសមរម្យ ជួយឱ្យការស្តាប់មានភាពជក់ចិត្តរហូតដល់ចប់។',
+      aiMusicPromptEn: `[Instrumental Inspiring Documentary Score] [Tempo: 90 BPM] [Mood: Steady, motivating, clear, informative momentum, uplifting clarity] [Instruments: Dynamic acoustic guitar, bright piano accents, subtle cello, soft brushed drums and shakers] [Style: High quality storytelling explainer score, seamless dynamic flow, no vocals]`,
+    },
+    {
+      section: 'C. សង្ខេប & Call to Action (Climax & Outro)',
+      mood: 'Uplifting, Inspiring, Warm Community Gratitude',
+      tempo: '94 BPM',
+      instruments: 'Uplifting Strings, Vibrant Acoustic Guitar, Warm Piano Crescendo',
+      usageTip: 'រំលេចសំឡេងឡើងបន្តិចនៅឈុតចុងក្រោយ ដើម្បីជំរុញឱ្យចុច Like, Share និង Subscribe។',
+      aiMusicPromptEn: `[Instrumental Uplifting Documentary Climax Outro] [Tempo: 94 BPM] [Mood: Inspiring, celebratory, warm community gratitude, memorable forward journey] [Instruments: Vibrant acoustic guitar strumming, soaring warm orchestral strings, bright piano melody, inspiring ambient finish] [Style: Triumphant YouTube outro background music, clean studio mix, strictly instrumental, no vocals]`,
+    },
+  ];
+}
+
+export function generateTopicTailoredThumbnail(
+  topic: string,
+  styleAnchor: string,
+  isNoChar?: boolean,
+  characters?: Array<{ name: string; appearance?: string }>
+): ThumbnailPlan {
+  const cleanTopic = (topic || '').trim() || 'ប្រធានបទថ្មី';
+
+  if (isNoChar) {
+    return {
+      headlineKh: cleanTopic,
+      subTextKh: 'គន្លឹះសំខាន់ • មើលចប់យល់ភ្លាម!',
+      visualConcept: `រូបភាពគម្រប High-CTR បែប Visual Concept (គ្មានតួអង្គមនុស្ស)៖ បង្ហាញនិមិត្តសញ្ញា និងវត្ថុគន្លឹះកណ្ដាលនៃ «${cleanTopic}» (ឧបករណ៍ជាក់ស្តែង ក្រាហ្វិក 3D រំលេចពន្លឺពណ៌មាស ឬទេសភាពកម្ពុជា) អមដោយពន្លឺ Cinematic Rim Light ពណ៌ Amber និង Teal កម្រិតពណ៌ច្បាស់ 16:9 ទាក់ទាញភ្នែកខ្លាំង។`,
+      aiThumbnailPromptEn: `High-CTR viral YouTube thumbnail for "${cleanTopic}", breathtaking cinematic 3D visual metaphor symbolizing the core essence of the topic, surrounded by glowing educational infographics, floating light particles, and dramatic bokeh. Authentic Cambodian background setting with sugar palm tree silhouettes and Phnom Penh riverside glow at golden hour. Vibrant complementary color contrast (golden amber and deep electric teal), intense volumetric rim lighting, rule-of-thirds composition with a powerful clean focal point, hyper-detailed textures, strictly NO human characters, no ugly text watermarks, 8k render --ar 16:9 ${styleAnchor}.`,
+    };
+  }
+
+  if (
+    cleanTopic.includes('អាគម') ||
+    cleanTopic.includes('យុទ្ធសិល្ប៍') ||
+    cleanTopic.includes('ដាវសីល') ||
+    cleanTopic.includes('សាក់យ័ន្ត') ||
+    cleanTopic.includes('បីសាច') ||
+    cleanTopic.includes('កាំបិតបន្ទោរ')
+  ) {
+    return {
+      headlineKh: cleanTopic,
+      subTextKh: 'ចម្បាំងមហាសីល • ធម៌ឈ្នះអធម៌!',
+      visualConcept: `រូបភាពគម្រប High-CTR បែប Khmer Mythic Fantasy Action៖ តួអង្គគ្រូសីល/យុទ្ធជនខ្មែរអ្នកក្លាហាន សាក់យ័ន្តបុរាណបញ្ចេញរស្មីមាសភ្លឺចិញ្ចែងចាច កំពុងកាន់ដាវសីលទេពបញ្ចេញរន្ទះភ្លើង ប្រឈមមុខតតាំងជាមួយស្ដេចបីសាច/ព្រាយអាក្រក់យក្ស ក្នុងប្រាសាទបុរាណបាក់បែកក្រោមមេឃព្យុះរន្ទះ។ ពន្លឺ Rim Light ពណ៌មាស និងស្វាយអាគមន៍ (Gold & Violet Mana) កម្រិតពណ៌ដិតច្បាស់ 16:9 ទាក់ទាញភ្នែកខ្លាំង។`,
+      aiThumbnailPromptEn: `High-CTR viral YouTube thumbnail for epic Cambodian supernatural myth "${cleanTopic}", heroic Cambodian sorcerer martial warrior with glowing gold Pali yantra tattoo inscriptions on skin, wielding an enchanted blazing lightning blade, confronting a colossal shadowy demon monster with glowing crimson eyes amidst ruined ancient Angkorian temple ruins under a tempestuous thunderstorm. Dramatic neon gold and mystical violet rim lighting, high-contrast dynamic composition, volumetric dust and magical spark embers, hyper-expressive heroic confrontation, 16:9 widescreen cinematic poster, no floating text or subtitles, 8k render --ar 16:9 ${styleAnchor}.`,
+    };
+  }
+
+  if (
+    cleanTopic.includes('ខ្មោច') ||
+    cleanTopic.includes('ព្រាយ') ||
+    cleanTopic.includes('រន្ធត់') ||
+    cleanTopic.includes('ព្រឺ') ||
+    cleanTopic.includes('លង')
+  ) {
+    return {
+      headlineKh: cleanTopic,
+      subTextKh: 'រឿងពិតព្រឺក្បាល • ហាមមើលម្នាក់ឯង!',
+      visualConcept: `រូបភាពគម្រប High-CTR បែប Horror & Thriller ព្រឺព្រួច៖ ស្រមោលព្រលឹងវិញ្ញាណ និងពន្លឺព្រះច័ន្ទកណ្តាលអធ្រាត្រនៃ «${cleanTopic}» បង្ហាញភាពអាថ៌កំបាំងក្នុងបរិបទភូមិកម្ពុជាចាស់ ផ្សែងអ័ព្ទត្រជាក់ ពន្លឺចង្កៀងប្រេងកាត ឬភ្នែកភ្លឺកណ្តាលភាពងងឹត។ ពន្លឺ Rim Light ពណ៌ក្រហមឈាម និងខៀវត្រជាក់ (Blood Red & Cold Moonlit Teal) ទាក់ទាញការចុចមើលខ្លាំង។`,
+      aiThumbnailPromptEn: `High-CTR viral horror YouTube thumbnail for "${cleanTopic}", chilling cinematic suspense, eerie Cambodian rural landscape at midnight with ancient twisting banyan tree silhouettes, haunting cold blue moonlight cutting through misty fog, faint glowing spectral lantern, hair-raising supernatural presence. Dynamic extreme shadows, deep contrast, terrifying mystery, cinematic rim lighting, 8k render, no floating text watermarks --ar 16:9 ${styleAnchor}.`,
+    };
+  }
+
+  if (
+    cleanTopic.includes('កំប្លែង') ||
+    cleanTopic.includes('សើច') ||
+    cleanTopic.includes('កំប្លុក')
+  ) {
+    return {
+      headlineKh: cleanTopic,
+      subTextKh: 'សើចចុកពោះ • ធានាថាមិនសើចយកលុយវិញ!',
+      visualConcept: `រូបភាពគម្រប High-CTR បែប Comedy កំប្លុកកំប្លែងសើចចុកពោះ៖ កាយវិការ និងទឹកមុខស្លន់ស្លោ ភ័យហួសចិត្ត ឬសើចចំហមាត់នៃ «${cleanTopic}» បែបកំប្លែងខ្មែរ រំលេចពណ៌លឿងភ្លឺ និងផ្ទៃមេឃស្រឡះ ពន្លឺ Pop-Art Vibrant និងបែបផែនកំប្លុកកំប្លែងទាក់ទាញភ្នែកភ្លាមៗ។`,
+      aiThumbnailPromptEn: `High-CTR viral comedy YouTube thumbnail for "${cleanTopic}", hilarious exaggerated shocked and laughing facial expressions, funny dynamic comedic situation in colorful authentic Cambodian village setting, bright sunny lighting, punchy saturated colors (vibrant warning yellow, comic book cyan), energetic comedic action, wide-angle lens perspective, ultra-expressive character acting, 8k render, no text watermarks --ar 16:9 ${styleAnchor}.`,
+    };
+  }
+
+  if (
+    cleanTopic.includes('រឿងព្រេង') ||
+    cleanTopic.includes('និទាន') ||
+    cleanTopic.includes('ទុំទាវ') ||
+    cleanTopic.includes('កេងកង') ||
+    cleanTopic.includes('ធនញ្ជ័យ') ||
+    cleanTopic.includes('ព្រះថោង')
+  ) {
+    return {
+      headlineKh: cleanTopic,
+      subTextKh: 'រឿងព្រេងនិទានបុរាណ • មេរៀនជីវិត',
+      visualConcept: `រូបភាពគម្រប High-CTR បែប Folktale & Ancient Legend ខ្មែរបុរាណ៖ ទិដ្ឋភាពទេវកថាក្នុងប្រវត្តិរឿង «${cleanTopic}» បង្ហាញតួអង្គក្នុងសម្លៀកបំពាក់ខ្មែរបុរាណ ឬនិមិត្តសញ្ញាវេទមន្តនៃរឿងព្រេង អមដោយពន្លឺមាសអណ្តែតត្រដែត និងទេសភាពធម្មជាតិប្រាសាទបុរាណអង្គរ។`,
+      aiThumbnailPromptEn: `High-CTR mythical Cambodian folktale YouTube thumbnail for "${cleanTopic}", enchanting legendary visual storytelling, heroic and mystical characters in traditional Khmer silk attire, glowing magical golden aura, majestic ancient Angkor trees, sacred lotus waters, dramatic fantasy cinematic lighting, rich warm golden hour colors, 8k render, no text watermarks --ar 16:9 ${styleAnchor}.`,
+    };
+  }
+
+    const charName = characters && characters[0]?.name ? characters[0].name.split(' ')[0] : 'តួអង្គខ្មែរ';
+
+  return {
+    headlineKh: cleanTopic,
+    subTextKh: 'អាថ៌កំបាំងជោគជ័យ • អនុវត្តបានពិត!',
+    visualConcept: `រូបភាពគម្រប High-CTR ទាក់ទាញភ្នែក៖ បង្ហាញ ${charName} (តួអង្គគំនូរជីវចលខ្មែរ) មានទឹកមុខភ្ញាក់ផ្អើល បើកភ្នែកធំៗ និងចង្អុលដៃទៅកាន់និមិត្តសញ្ញាពន្លឺពណ៌មាសនៃ «${cleanTopic}» ដោយមានទេសភាពកម្ពុជា និងពន្លឺ Cinematic បញ្ចាំងច្បាស់ៗទាក់ទាញភ្នែក។`,
+    aiThumbnailPromptEn: `High-CTR viral YouTube thumbnail for "${cleanTopic}", featuring an expressive 2D Cambodian cartoon character with a dramatic, shocked, and enthusiastic facial expression, wide eyes and joyful excitement, pointing directly towards a luminous glowing 3D educational visual metaphor representing the topic. Dynamic diagonal composition, dramatic cinematic rim lighting, vibrant warm golden amber and rich cyan-teal color contrast, authentic Cambodian setting with sugar palm trees and Phnom Penh skyline in the background, sharp facial details, 16:9 widescreen composition, no blurry artifacts, no floating text watermarks, 8k render ${styleAnchor}.`,
+  };
 }
 
 export function buildOfflineDraftProject(req: GenerationRequest): StoryboardProject {
@@ -1331,6 +2002,10 @@ export function buildOfflineDraftProject(req: GenerationRequest): StoryboardProj
   const count = Math.max(4, Math.min(120, Number(req.targetScenes) || durationObj.defaultScenes || 24));
   const now = new Date().toISOString();
 
+  const isNoChar = presenterObj.id === 'no-characters';
+  const isRealHuman = req.animationStyle === 'photorealistic-real';
+  const isDialogueSpeech = req.actionDynamic === 'character-dialogue-speech';
+
   let characters = [
     {
       name: 'សុខា (ប្រធានក្រុម / Team Lead)',
@@ -1338,7 +2013,9 @@ export function buildOfflineDraftProject(req: GenerationRequest): StoryboardProj
       appearance: 'យុវជនខ្មែរអាយុ ២៨ ឆ្នាំ សក់ខ្លីរៀបរយ ទឹកមុខរួសរាយ សម្បុរស្រអែមធម្មជាតិ',
       outfit: 'អាវពណ៌ខៀវផ្ទៃមេឃ ខោពណ៌ទឹកប៊ិចចាស់ ស្បែកជើងស្បែក',
       personality: 'មានភាពជាអ្នកដឹកនាំ ពូកែពន្យល់ និងលើកទឹកចិត្តក្រុម',
-      aiCharacterImagePromptEn: `Authentic Cambodian (Khmer) 2D cartoon character design turnaround reference sheet of Sokha, a friendly 28-year-old Cambodian team lead with natural Southeast Asian facial features, neat short black hair, warm light-tan skin tone, wearing a sky-blue polo shirt and dark navy pants. Full-body front view, 3/4 view, and 3 facial expressions (speaking, smiling, enthusiastic). ${styleObj.promptAnchor}.`,
+      aiCharacterImagePromptEn: isRealHuman
+        ? `Authentic Cambodian (Khmer) photorealistic portrait and turnaround reference sheet of Sokha, a handsome friendly 28-year-old real Cambodian man, natural Southeast Asian facial features, authentic skin pores and realistic skin texture, neat short black hair, warm light-tan skin tone, wearing a sky-blue polo shirt and dark navy pants. Front view portrait, 3/4 view angle, and 3 natural human expressions (speaking, smiling, enthusiastic). Shot on 85mm portrait lens, f/2.0 aperture, ${styleObj.promptAnchor}.`
+        : `Authentic Cambodian (Khmer) 2D cartoon character design turnaround reference sheet of Sokha, a friendly 28-year-old Cambodian team lead with natural Southeast Asian facial features, neat short black hair, warm light-tan skin tone, wearing a sky-blue polo shirt and dark navy pants. Full-body front view, 3/4 view, and 3 facial expressions (speaking, smiling, enthusiastic). ${styleObj.promptAnchor}.`,
     },
     {
       name: 'តារា (អ្នកបច្ចេកទេស & អនុវត្ត / Specialist)',
@@ -1346,7 +2023,9 @@ export function buildOfflineDraftProject(req: GenerationRequest): StoryboardProj
       appearance: 'យុវជនខ្មែរអាយុ ២៥ ឆ្នាំ ពាក់វ៉ែនតា សក់ទាន់សម័យ សម្បុរសណ្តែកបាយ',
       outfit: 'អាវយឺតកមូលពណ៌ស អាវក្រៅពណ៌ប្រផេះស្រាល ខោខូវប៊យ',
       personality: 'រហ័សរហួន ពូកែវិភាគ និងបង្ហាញឧបករណ៍ជាក់ស្តែង',
-      aiCharacterImagePromptEn: `Authentic Cambodian (Khmer) 2D cartoon character design turnaround reference sheet of Dara, a smart 25-year-old Cambodian tech specialist with round glasses, stylish short black hair, wearing a white t-shirt under a light gray casual jacket and jeans. Full-body front view, 3/4 view, and 3 facial expressions (focused, analyzing, joyful). ${styleObj.promptAnchor}.`,
+      aiCharacterImagePromptEn: isRealHuman
+        ? `Authentic Cambodian (Khmer) photorealistic portrait and turnaround reference sheet of Dara, a smart 25-year-old real Cambodian tech specialist with round glasses, stylish short black hair, natural skin texture and pores, wearing a white t-shirt under a light gray casual jacket and jeans. Front view, 3/4 angle, and 3 natural facial expressions (focused, analyzing, smiling). Shot on 85mm portrait lens, ${styleObj.promptAnchor}.`
+        : `Authentic Cambodian (Khmer) 2D cartoon character design turnaround reference sheet of Dara, a smart 25-year-old Cambodian tech specialist with round glasses, stylish short black hair, wearing a white t-shirt under a light gray casual jacket and jeans. Full-body front view, 3/4 view, and 3 facial expressions (focused, analyzing, joyful). ${styleObj.promptAnchor}.`,
     },
     {
       name: 'កញ្ញា (អ្នកស្រាវជ្រាវ / Researcher)',
@@ -1354,52 +2033,106 @@ export function buildOfflineDraftProject(req: GenerationRequest): StoryboardProj
       appearance: 'យុវតីខ្មែរអាយុ ២៤ ឆ្នាំ ចងសក់ទៅក្រោយ ទឹកមុខឆ្លាតវៃ សម្បុរស្រស់ថ្លា',
       outfit: 'អាវសាច់ក្រណាត់ដៃវែងពណ៌លឿងខ្ចី សំពត់ពណ៌ខ្មៅរៀបរយ',
       personality: 'ឧស្សាហ៍ព្យាយាម សម្បូរគំនិតច្នៃប្រឌិត និងយកចិត្តទុកដាក់',
-      aiCharacterImagePromptEn: `Authentic Cambodian (Khmer) 2D cartoon character design turnaround reference sheet of Kanya, a bright 24-year-old Cambodian female researcher with ponytail hair, warm Southeast Asian skin tone, wearing a pastel yellow blouse and dark pleated skirt. Full-body front view, 3/4 view, and 3 facial expressions (curious, presenting, satisfied). ${styleObj.promptAnchor}.`,
+      aiCharacterImagePromptEn: isRealHuman
+        ? `Authentic Cambodian (Khmer) photorealistic portrait and turnaround reference sheet of Kanya, a bright beautiful 24-year-old real Cambodian female researcher with neat ponytail hair, warm Southeast Asian skin tone, realistic human skin texture and pores, wearing a pastel yellow blouse and dark pleated skirt. Front view portrait, 3/4 view angle, and 3 natural facial expressions (curious, presenting, satisfied). Shot on 85mm portrait lens, ${styleObj.promptAnchor}.`
+        : `Authentic Cambodian (Khmer) 2D cartoon character design turnaround reference sheet of Kanya, a bright 24-year-old Cambodian female researcher with ponytail hair, warm Southeast Asian skin tone, wearing a pastel yellow blouse and dark pleated skirt. Full-body front view, 3/4 view, and 3 facial expressions (curious, presenting, satisfied). ${styleObj.promptAnchor}.`,
     },
   ];
 
-  if (presenterObj.id === 'duo') {
+  if (isNoChar) {
+    characters = [
+      {
+        name: `រូបភាពគន្លឹះនៃ Topic (${topicText})`,
+        role: 'រូបភាពគំនិតគោល និង Visual Identity នៃប្រធានបទ',
+        appearance: `ផ្តោតលើរូបភាព visual B-roll, ទេសភាព, និងគំនិតសំខាន់ៗនៃ «${topicText}» គ្មានតួអង្គមនុស្ស`,
+        outfit: 'N/A (Topic Visual Concept)',
+        personality: 'ច្បាស់លាស់ ស៊ីជម្រៅ សោភ័ណភាពខ្ពស់ ឆ្លុះបញ្ចាំងពីបរិបទកម្ពុជា',
+        aiCharacterImagePromptEn: `Cinematic conceptual moodboard and key visual elements representing ${topicText}, authentic Cambodian setting, clean aesthetic composition, soft warm lighting, ${styleObj.promptAnchor}.`,
+      },
+      {
+        name: 'ឧបករណ៍ & ឯកសារអនុវត្តជាក់ស្តែង',
+        role: 'សម្ភារៈ ឧបករណ៍ ក្រាហ្វិក និងមធ្យោបាយដោះស្រាយបញ្ហា',
+        appearance: 'ឧបករណ៍ការងារ ឯកសារ កំណត់ត្រា កុំព្យូទ័រ សៀវភៅ ឬសម្ភារៈជាក់ស្តែង',
+        outfit: 'N/A (Practical Tools & Assets)',
+        personality: 'ជាក់ស្តែង ងាយយល់ មានលក្ខណៈវិទ្យាសាស្ត្រ និងការអនុវត្តផ្ទាល់',
+        aiCharacterImagePromptEn: `Detailed close-up still-life arrangement of tools, documents, notebooks, and practical equipment used for ${topicText}, authentic Cambodian desk setting, soft natural window light, ${styleObj.promptAnchor}.`,
+      },
+      {
+        name: 'បរិយាកាស & ទេសភាពកម្ពុជា',
+        role: 'ទីតាំងជាក់ស្តែង ទីក្រុង ភូមិឋាន និងបរិស្ថានរស់នៅ',
+        appearance: 'ទិដ្ឋភាពភ្នំពេញ ផ្សារ ហាង ស្រុកស្រែចម្ការ ផ្លូវថ្នល់ និងស្ថាបត្យកម្មខ្មែរ',
+        outfit: 'N/A (Cambodian Environmental Setting)',
+        personality: 'រស់រវើក ពិតប្រាកដ បង្ហាញពីជីវភាពរស់នៅ និងសង្គមកម្ពុជា',
+        aiCharacterImagePromptEn: `Atmospheric wide-angle scenic establishing shot of authentic Cambodian environment (Phnom Penh riverside, local market, or rural Cambodian landscape) relevant to ${topicText}, golden hour sunlight, ${styleObj.promptAnchor}.`,
+      },
+    ];
+  } else if (presenterObj.id === 'duo') {
     characters = characters.slice(0, 2);
   } else if (presenterObj.id === 'solo') {
-    characters = [characters[0]];
+    characters = [
+      {
+        name: 'សុខា (អ្នកធ្វើបទបង្ហាញទោល / Solo Presenter)',
+        role: 'អ្នកធ្វើបទបង្ហាញទោល ដឹកនាំសាច់រឿង និងពន្យល់ពីដើមដល់ចប់',
+        appearance: 'យុវជនខ្មែរអាយុ ២៦ ឆ្នាំ សក់ខ្លីរៀបរយ ទឹកមុខរួសរាយ រស់រវើក សម្បុរស្រអែមធម្មជាតិ',
+        outfit: 'អាវប៉ូឡូពណ៌ផ្ទៃមេឃស្រាល ខោខូវប៊យពណ៌ទឹកប៊ិចក្រមៅ ស្បែកជើងប៉ាត់តា',
+        personality: 'ស្វាហាប់ ពូកែពន្យល់ មានទំនុកចិត្ត និងរួសរាយរាក់ទាក់',
+        aiCharacterImagePromptEn: isRealHuman
+          ? `Authentic Cambodian (Khmer) photorealistic portrait and reference sheet of Sokha, a friendly 26-year-old real Cambodian solo male presenter with natural Southeast Asian facial features, neat short black hair, warm light-tan skin tone, realistic skin texture and pores, wearing a sky-blue polo shirt and dark navy pants. Full-body front view, 3/4 view, and 3 natural facial expressions (speaking, smiling, enthusiastic). Shot on 85mm portrait lens, ${styleObj.promptAnchor}.`
+          : `Authentic Cambodian (Khmer) 2D cartoon character design turnaround reference sheet of Sokha, a friendly 26-year-old Cambodian solo presenter with natural Southeast Asian facial features, neat short black hair, warm light-tan skin tone, wearing a sky-blue polo shirt and dark navy pants. Full-body front view, 3/4 view, and 3 facial expressions (speaking, smiling, enthusiastic). ${styleObj.promptAnchor}.`,
+      },
+    ];
   }
+
+  const isSolo = presenterObj.id === 'solo';
 
   const storySteps = [
     {
       title: 'ស្វែងយល់ពីឫសគល់ និងមូលហេតុពិត',
-      bridge: `ដើម្បីឆ្លើយតបនឹងសំណួរនេះ ជំហានដំបូងបំផុតគឺការស្វែងយល់ពីឫសគល់ពិតប្រាកដនៃ «${topicText}»។ មូលហេតុចម្បងដែលមនុស្សភាគច្រើនតែងជួបការលំបាក គឺដោយសារការខ្វះវិធីសាស្ត្រវិទ្យាសាស្ត្រ និងការរៀបចំប្រព័ន្ធតាមដានច្បាស់លាស់។`,
+      bridge: `ដើម្បីឆ្លើយតបនឹងសំណួរនេះ ជំហានដំបូងបំផុតគឺការស្វែងយល់ពីឫសគល់ពិតប្រាកដនៃបញ្ហា។ មូលហេតុចម្បងដែលមនុស្សភាគច្រើនតែងជួបការលំបាក គឺដោយសារការខ្វះវិធីសាស្ត្រវិទ្យាសាស្ត្រ និងការរៀបចំប្រព័ន្ធតាមដានច្បាស់លាស់។`,
       action: 'សុខា និងតារាអង្គុយពិភាក្សា យកឯកសារស្រាវជ្រាវ និងកត់ត្រាមូលហេតុចម្បងលើសៀវភៅការងារយ៉ាងយកចិត្តទុកដាក់',
+      actionSolo: 'សុខាអង្គុយនៅតុការងារតែម្នាក់ឯង កំពុងពិនិត្យឯកសារស្រាវជ្រាវ និងកត់ត្រាមូលហេតុចម្បងលើសៀវភៅការងារយ៉ាងផ្ចិតផ្ចង់',
       dialogue: 'តារា៖ «ពិតមែនហើយសុខា! បើយើងមិនយល់ពីឫសគល់បញ្ហាទេ យើងនឹងពិបាកដោះស្រាយណាស់!»',
+      dialogueSolo: 'សុខា៖ «បើយើងមិនយល់ពីឫសគល់នៃបញ្ហានេះទេ យើងនឹងមិនអាចដោះស្រាយវាបានជាដាច់ខាត!»',
     },
     {
       title: 'វិធីសាស្ត្រអនុវត្តជាក់ស្តែងទី ១',
       bridge: `បន្ទាប់ពីយើងបានដឹងពីមូលហេតុច្បាស់លាស់ហើយ វិធីសាស្ត្រជាក់ស្តែងទីមួយដែលត្រូវចាប់ផ្តើម គឺការរៀបចំក្បួនអនុវត្តសាមញ្ញៗដែលអាចធ្វើបានប្រចាំថ្ងៃ។ តាមរយៈការបែងចែកគោលដៅតូចៗ យើងអាចបង្កើតទម្លាប់ថ្មីដោយមិនមានអារម្មណ៍ថាតានតឹងឡើយ។`,
       action: 'កញ្ញាចង្អុលបង្ហាញគំនូសបំព្រួញលើក្តារខៀន ពន្យល់ពីជំហានទីមួយដល់សមាជិកក្រុមដោយទឹកមុខស្វាហាប់',
+      actionSolo: 'សុខាឈរនៅមុខក្តារខៀន ចង្អុលបង្ហាញគំនូសបំព្រួញ និងពន្យល់ពីជំហានទីមួយទៅកាន់អ្នកទស្សនាដោយទឹកមុខស្វាហាប់',
       dialogue: 'កញ្ញា៖ «ជំហានដំបូងនេះងាយស្រួលអនុវត្តណាស់ ហើយចំណាយពេលត្រឹមតែប៉ុន្មាននាទីប៉ុណ្ណោះក្នុងមួយថ្ងៃ!»',
+      dialogueSolo: 'សុខា៖ «ជំហានដំបូងនេះងាយស្រួលអនុវត្តណាស់ ហើយចំណាយពេលត្រឹមតែប៉ុន្មាននាទីប៉ុណ្ណោះក្នុងមួយថ្ងៃ!»',
     },
     {
       title: 'ការសាកល្បងអនុវត្តផ្ទាល់ដៃ & ឧទាហរណ៍ជាក់ស្ដែង',
-      bridge: `ប៉ុន្តែ តើចុះបើជួបឧបសគ្គក្នុងពេលអនុវត្ត? ត្រង់ចំណុចនេះហើយដែលក្រុមយើងបានសាកល្បងចុះអនុវត្តផ្ទាល់ដៃ ជាមួយឧទាហរណ៍ជាក់ស្ដែងក្នុងជីវភាពរស់នៅ ដើម្បីផ្ទៀងផ្ទាត់ប្រសិទ្ធភាព និងបង្ហាញពីដំណោះស្រាយពិតៗ។`,
+      bridge: `ប៉ុន្តែ តើចុះបើជួបឧបសគ្គក្នុងពេលអនុវត្ត? ត្រង់ចំណុចនេះហើយដែលយើងត្រូវសាកល្បងចុះអនុវត្តផ្ទាល់ដៃ ជាមួយឧទាហរណ៍ជាក់ស្ដែងក្នុងជីវភាពរស់នៅ ដើម្បីផ្ទៀងផ្ទាត់ប្រសិទ្ធភាព និងបង្ហាញពីដំណោះស្រាយពិតៗ។`,
       action: 'ក្រុមការងារចុះទៅកាន់ទីតាំងជាក់ស្តែង (ហាងទំនិញ ទីផ្សារ ឬកន្លែងការងារ) កំពុងកាន់ឧបករណ៍ធ្វើតេស្ត និងជជែកជាមួយមនុស្សជុំវិញ',
+      actionSolo: 'សុខាចុះទៅកាន់ទីតាំងជាក់ស្តែង (ហាងទំនិញ ទីផ្សារ ឬកន្លែងការងារ) កំពុងកាន់ឧបករណ៍ធ្វើតេស្តសាកល្បងផ្ទាល់ដៃតែម្នាក់ឯង',
       dialogue: 'សុខា៖ «តោះយើងសាកល្បងវាផ្ទាល់តែម្តង ដើម្បីដឹងថាតើវិធីសាស្ត្រនេះដំណើរការល្អកម្រិតណា!»',
+      dialogueSolo: 'សុខា៖ «តោះយើងសាកល្បងអនុវត្តវាផ្ទាល់តែម្តង ដើម្បីដឹងថាតើវិធីសាស្ត្រនេះដំណើរការល្អកម្រិតណា!»',
     },
     {
       title: 'វិធីសាស្ត្រអនុវត្តជាក់ស្តែងទី ២ & ក្បួនដោះស្រាយ',
       bridge: `តភ្ជាប់ពីជំហានមុននេះ កត្តាសំខាន់ទីពីរដែលមិនអាចមើលរំលងបាន គឺការបង្កើតប្រព័ន្ធតាមដាន និងវិន័យជាប់លាប់។ នៅពេលដែលយើងមានឧបករណ៍ត្រួតពិនិត្យច្បាស់លាស់ យើងនឹងដឹងពីចំណុចខ្វះខាត និងអាចកែតម្រូវបានទាន់ពេលវេលា។`,
       action: 'តារាបង្ហាញអេក្រង់កុំព្យូទ័រយួរដៃដែលមានក្រាហ្វិក និងតារាងទិន្នន័យច្បាស់លាស់ សមាជិកទាំងអស់ផ្ទៀងផ្ទាត់ដោយស្នាមញញឹម',
+      actionSolo: 'សុខាបើកកុំព្យូទ័រយួរដៃ ពិនិត្យមើលតារាងទិន្នន័យ និងក្រាហ្វិកលទ្ធផលដោយស្នាមញញឹមពេញចិត្តតែម្នាក់ឯង',
       dialogue: 'តារា៖ «មើលចុះ! នៅពេលយើងតាមដានទិន្នន័យទៀងទាត់ យើងកាត់បន្ថយកំហុសបានច្រើនមែនទែន!»',
+      dialogueSolo: 'សុខា៖ «មើលចុះ! នៅពេលយើងតាមដានទិន្នន័យទៀងទាត់ យើងកាត់បន្ថយកំហុសបានច្រើនមែនទែន!»',
     },
     {
       title: 'ការជម្នះឧបសគ្គ & កែសម្រួលវិធីសាស្ត្រ',
       bridge: `ក្រៅពីវិធីសាស្ត្រខាងលើ បញ្ហាប្រឈមធំបំផុតដែលមនុស្សជាច្រើនបោះបង់ពាក់កណ្តាលទី គឺកង្វះការលើកទឹកចិត្ត។ ដូច្នេះ គន្លឹះដោះស្រាយគឺការបង្កើតបរិយាកាសគាំទ្រ និងការអបអរសាទរជ័យជម្នះតូចៗជារៀងរាល់សប្តាហ៍។`,
       action: 'សមាជិកក្រុមទាំងអស់អង្គុយជុំវិញតុ លើកកែវទឹកតែជជែកគ្នាដោយរីករាយ និងចែករំលែកអារម្មណ៍វិជ្ជមាន',
+      actionSolo: 'សុខាដើរស្រូបខ្យល់អាកាសបរិសុទ្ធ ញញឹមកក់ក្តៅ លើកទឹកចិត្តខ្លួនឯង និងធ្វើកាយវិការតស៊ូទៅមុខដោយទំនុកចិត្ត',
       dialogue: 'កញ្ញា៖ «ការលើកទឹកចិត្តគ្នាទៅវិញទៅមក ជួយឱ្យយើងមានកម្លាំងចិត្តបន្តទៅមុខឥតឈប់ឈរ!»',
+      dialogueSolo: 'សុខា៖ «ការលើកទឹកចិត្តខ្លួនឯងជាប្រចាំ ជួយឱ្យយើងមានកម្លាំងចិត្តបន្តទៅមុខឥតឈប់ឈរ!»',
     },
     {
       title: 'ការវាស់វែងលទ្ធផល & ភាពរីកចម្រើនជាក់ស្ដែង',
       bridge: `នៅពេលដែលយើងអនុវត្តចំណុចខាងលើនេះបានជោគជ័យ លទ្ធផលវិជ្ជមាននឹងចាប់ផ្តើមលេចចេញជារូបរាងយ៉ាងច្បាស់។ ការផ្លាស់ប្តូរតូចៗប្រចាំថ្ងៃ បានប្រែក្លាយទៅជាសមិទ្ធផលធំធេងដែលជួយលើកកម្ពស់គុណភាពជីវិត និងការងារ។`,
       action: 'សុខាលើករបាយការណ៍លទ្ធផលបង្ហាញក្រុមការងារ គ្រប់គ្នាទះដៃអបអរសាទរ និងញញឹមដោយមោទនភាព',
+      actionSolo: 'សុខាកាន់របាយការណ៍លទ្ធផលសម្រេចបាន ញញឹមដោយមោទនភាព និងលើកមេដៃបញ្ជាក់ពីជោគជ័យទៅកាន់អ្នកទស្សនា',
       dialogue: 'សុខា៖ «លទ្ធផលជាក់ស្តែងបានបញ្ជាក់ហើយថា វិធីសាស្ត្រនេះពិតជាមានប្រសិទ្ធភាពខ្ពស់!»',
+      dialogueSolo: 'សុខា៖ «លទ្ធផលជាក់ស្តែងបានបញ្ជាក់ហើយថា វិធីសាស្ត្រនេះពិតជាមានប្រសិទ្ធភាពខ្ពស់!»',
     },
   ];
 
@@ -1420,38 +2153,88 @@ export function buildOfflineDraftProject(req: GenerationRequest): StoryboardProj
     if (num === 1) {
       section = 'INTRODUCTION';
       sceneTitle = 'សំណួរចាប់ផ្ដើម & បញ្ហាជាក់ស្តែង (Hook)';
-      narrator = `តើអ្នកធ្លាប់ឆ្ងល់ទេថា ហេតុអ្វីបានជាមនុស្សជាច្រើនតែងជួបការលំបាកជាមួយ «${topicText}»? នៅក្នុងវីដេអូនេះ ក្រុមការងារយើងនឹងនាំអ្នកទាំងអស់គ្នាទៅស្វែងយល់ពីឫសគល់នៃបញ្ហា និងវិធីសាស្ត្រអនុវត្តជាក់ស្តែងដែលផ្លាស់ប្តូរលទ្ធផលពិតៗ។`;
-      character = 'សុខា & តារា';
-      action = 'សុខា និងតារាកំពុងដើរយ៉ាងស្វាហាប់តាមផ្លូវក្នុងទីក្រុងភ្នំពេញ ទឹកមុខរស់រវើក ចង្អុលបង្ហាញស្ថានភាពជុំវិញ';
-      dialogue = 'សុខា៖ «តោះតារា! យើងទៅពិនិត្យមើលបញ្ហានេះជាក់ស្តែងទាំងអស់គ្នា!»';
+      narrator = isSolo
+        ? `តើអ្នកធ្លាប់ឆ្ងល់ទេថា ហេតុអ្វីបានជាមនុស្សជាច្រើនតែងជួបការលំបាកជាមួយ «${topicText}»? នៅក្នុងវីដេអូនេះ ខ្ញុំនឹងនាំអ្នកទាំងអស់គ្នាទៅស្វែងយល់ពីឫសគល់នៃបញ្ហា និងវិធីសាស្ត្រអនុវត្តជាក់ស្តែងដែលផ្លាស់ប្តូរលទ្ធផលពិតៗ។`
+        : `តើអ្នកធ្លាប់ឆ្ងល់ទេថា ហេតុអ្វីបានជាមនុស្សជាច្រើនតែងជួបការលំបាកជាមួយ «${topicText}»? នៅក្នុងវីដេអូនេះ ក្រុមការងារយើងនឹងនាំអ្នកទាំងអស់គ្នាទៅស្វែងយល់ពីឫសគល់នៃបញ្ហា និងវិធីសាស្ត្រអនុវត្តជាក់ស្តែងដែលផ្លាស់ប្តូរលទ្ធផលពិតៗ។`;
+      character = isSolo ? 'សុខា (អ្នកធ្វើបទបង្ហាញទោល)' : 'សុខា & តារា';
+      action = isSolo
+        ? 'សុខាដើរយ៉ាងស្វាហាប់តាមផ្លូវក្នុងទីក្រុងភ្នំពេញ ទឹកមុខញញឹមរស់រវើក លើកដៃចង្អុលបង្ហាញស្ថានភាពជុំវិញ និងណែនាំប្រធានបទ'
+        : 'សុខា និងតារាកំពុងដើរយ៉ាងស្វាហាប់តាមផ្លូវក្នុងទីក្រុងភ្នំពេញ ទឹកមុខរស់រវើក ចង្អុលបង្ហាញស្ថានភាពជុំវិញ';
+      dialogue = isSolo
+        ? 'សុខា៖ «តោះអ្នកទាំងអស់គ្នា! យើងទៅស្វែងយល់ពីបញ្ហានេះជាក់ស្តែងជាមួយខ្ញុំ!»'
+        : 'សុខា៖ «តោះតារា! យើងទៅពិនិត្យមើលបញ្ហានេះជាក់ស្តែងទាំងអស់គ្នា!»';
     } else if (num === 2) {
       section = 'INTRODUCTION';
       sceneTitle = 'ផលប៉ះពាល់ & ណែនាំដំណោះស្រាយ';
-      narrator = `ដើម្បីយល់ឱ្យកាន់តែច្បាស់ ប្រសិនបើយើងមិនយកចិត្តទុកដាក់ដោះស្រាយបញ្ហានេះទេ វានឹងជះឥទ្ធិពលអវិជ្ជមានដល់ពេលវេលា និងការរីកចម្រើន។ ដូច្នេះ ក្រុមការងារយើងបានស្រាវជ្រាវ និងចងក្រងនូវដំណោះស្រាយជាប្រព័ន្ធ ដើម្បីចែករំលែកជាមួយអ្នកទាំងអស់គ្នា។`;
-      character = 'កញ្ញា & សុខា';
-      action = 'កញ្ញាកាន់ថេប្លេតបង្ហាញក្រាហ្វិកបញ្ហាដល់សុខា ទាំងពីរនាក់ដើរចូលមកកាន់បន្ទប់ប្រជុំដោយទឹកមុខផ្តោតអារម្មណ៍';
-      dialogue = 'កញ្ញា៖ «បងសុខា មើលទិន្នន័យនេះចុះ! បើយើងមិនកែទម្លាប់នេះទេ បញ្ហានឹងកាន់តែរីកធំឡើង!»';
+      narrator = isSolo
+        ? `ដើម្បីយល់ឱ្យកាន់តែច្បាស់ ប្រសិនបើយើងមិនយកចិត្តទុកដាក់ដោះស្រាយបញ្ហានេះទេ វានឹងជះឥទ្ធិពលអវិជ្ជមានដល់ពេលវេលា និងការរីកចម្រើន។ ដូច្នេះ ខ្ញុំបានស្រាវជ្រាវ និងចងក្រងនូវដំណោះស្រាយជាប្រព័ន្ធ ដើម្បីចែករំលែកជាមួយអ្នកទាំងអស់គ្នា។`
+        : `ដើម្បីយល់ឱ្យកាន់តែច្បាស់ ប្រសិនបើយើងមិនយកចិត្តទុកដាក់ដោះស្រាយបញ្ហានេះទេ វានឹងជះឥទ្ធិពលអវិជ្ជមានដល់ពេលវេលា និងការរីកចម្រើន។ ដូច្នេះ ក្រុមការងារយើងបានស្រាវជ្រាវ និងចងក្រងនូវដំណោះស្រាយជាប្រព័ន្ធ ដើម្បីចែករំលែកជាមួយអ្នកទាំងអស់គ្នា។`;
+      character = isSolo ? 'សុខា (អ្នកធ្វើបទបង្ហាញទោល)' : 'កញ្ញា & សុខា';
+      action = isSolo
+        ? 'សុខាកាន់ថេប្លេតបង្ហាញក្រាហ្វិកបញ្ហា ដើរបណ្តើរមើលបណ្តើរតែម្នាក់ឯងដោយទឹកមុខផ្តោតអារម្មណ៍'
+        : 'កញ្ញាកាន់ថេប្លេតបង្ហាញក្រាហ្វិកបញ្ហាដល់សុខា ទាំងពីរនាក់ដើរចូលមកកាន់បន្ទប់ប្រជុំដោយទឹកមុខផ្តោតអារម្មណ៍';
+      dialogue = isSolo
+        ? 'សុខា៖ «មើលទិន្នន័យនេះចុះ! បើយើងមិនកែទម្លាប់នេះទេ បញ្ហានឹងកាន់តែរីកធំឡើង!»'
+        : 'កញ្ញា៖ «បងសុខា មើលទិន្នន័យនេះចុះ! បើយើងមិនកែទម្លាប់នេះទេ បញ្ហានឹងកាន់តែរីកធំឡើង!»';
     } else if (num === count - 2) {
       section = 'IMPORTANT_LESSONS';
       sceneTitle = 'សង្ខេបមេរៀនសំខាន់ៗ & ក្បួនអនុវត្តមាស';
-      narrator = `សង្ខេបជារួម មេរៀនសំខាន់បំផុតដែលយើងស្រង់ចេញពី «${topicText}» គឺការរួមបញ្ចូលគ្នារវាងការយល់ដឹងស៊ីជម្រៅ និងសកម្មភាពជាក់ស្ដែង។ កុំរង់ចាំឱ្យគ្រប់យ៉ាងល្អឥតខ្ចោះ ទើបចាប់ផ្ដើម—ការចាប់ផ្ដើមនៅថ្ងៃនេះ ជាគ្រឹះនៃជោគជ័យថ្ងៃស្អែក។`;
-      character = 'ក្រុមការងារទាំងមូល (សុខា, តារា, កញ្ញា)';
-      action = 'តួអង្គទាំង ៣ នាក់ប្រជុំជុំវិញតុការងារ កញ្ញាចង្អុលបង្ហាញរបាយការណ៍ តារាសរសេរលើក្តារខៀន សុខាងក់ក្បាលគាំទ្រ';
-      dialogue = 'កញ្ញា៖ «បើយើងអនុវត្តតាមជំហានទាំងនេះ លទ្ធផលនឹងកើនឡើងជាក់ជាមិនខាន!»';
+      narrator = `សង្ខេបជារួម មេរៀនសំខាន់បំផុតដែលយើងស្រង់ចេញពីការអនុវត្តជាក់ស្ដែងនេះ គឺការរួមបញ្ចូលគ្នារវាងការយល់ដឹងស៊ីជម្រៅ និងសកម្មភាពជាក់ស្ដែង។ កុំរង់ចាំឱ្យគ្រប់យ៉ាងល្អឥតខ្ចោះ ទើបចាប់ផ្ដើម—ការចាប់ផ្ដើមនៅថ្ងៃនេះ ជាគ្រឹះនៃជោគជ័យថ្ងៃស្អែក។`;
+      character = isSolo ? 'សុខា (អ្នកធ្វើបទបង្ហាញទោល)' : 'ក្រុមការងារទាំងមូល (សុខា, តារា, កញ្ញា)';
+      action = isSolo
+        ? 'សុខាឈរនៅមុខក្តារខៀន ចង្អុលបង្ហាញរបាយការណ៍សង្ខេបមេរៀនមាស និងងក់ក្បាលដោយទំនុកចិត្ត'
+        : 'តួអង្គទាំង ៣ នាក់ប្រជុំជុំវិញតុការងារ កញ្ញាចង្អុលបង្ហាញរបាយការណ៍ តារាសរសេរលើក្តារខៀន សុខាងក់ក្បាលគាំទ្រ';
+      dialogue = isSolo
+        ? 'សុខា៖ «បើយើងអនុវត្តតាមជំហានទាំងនេះ លទ្ធផលនឹងកើនឡើងជាក់ជាមិនខាន!»'
+        : 'កញ្ញា៖ «បើយើងអនុវត្តតាមជំហានទាំងនេះ លទ្ធផលនឹងកើនឡើងជាក់ជាមិនខាន!»';
     } else if (num === count - 1) {
       section = 'CONCLUSION';
       sceneTitle = 'សារដាស់តឿនចិត្ត & ជំហានបន្ត';
       narrator = `សូមចងចាំថា គ្រប់ការផ្លាស់ប្តូរដ៏អស្ចារ្យ តែងតែចាប់ផ្ដើមពីការសម្រេចចិត្តមួយដ៏ត្រឹមត្រូវ និងការតាំងចិត្តធ្វើឱ្យបានសម្រេច។ មិនថាអ្នកស្ថិតក្នុងស្ថានភាពណាក៏ដោយ អ្នកតែងតែមានលទ្ធភាពបង្កើតលទ្ធផលថ្មីបានជានិច្ច។`;
-      character = 'ក្រុមការងារទាំងមូល';
-      action = 'សមាជិកក្រុមទាំងអស់ឈររួមគ្នាដោយទឹកមុខរីករាយ ញញឹម និងលើកដៃស្វាគមន៍អ្នកទស្សនា ក្រោមពន្លឺថ្ងៃកក់ក្តៅ';
+      character = isSolo ? 'សុខា (អ្នកធ្វើបទបង្ហាញទោល)' : 'ក្រុមការងារទាំងមូល';
+      action = isSolo
+        ? 'សុខាឈរញញឹមកក់ក្តៅក្រោមពន្លឺថ្ងៃ លើកដៃធ្វើកាយវិការជំរុញទឹកចិត្តដល់អ្នកទស្សនា'
+        : 'សមាជិកក្រុមទាំងអស់ឈររួមគ្នាដោយទឹកមុខរីករាយ ញញឹម និងលើកដៃស្វាគមន៍អ្នកទស្សនា ក្រោមពន្លឺថ្ងៃកក់ក្តៅ';
       dialogue = 'សុខា៖ «ជឿជាក់លើខ្លួនឯង ហើយចាប់ផ្តើមអនុវត្តពីថ្ងៃនេះទៅ!»';
     } else if (num === count) {
       section = 'CONCLUSION';
       sceneTitle = 'អញ្ជើញ Like, Share និង Subscribe';
-      narrator = `សូមអរគុណសម្រាប់ការទស្សនា! ប្រសិនបើអ្នកយល់ថាវីដេអូនេះមានប្រយោជន៍ កុំភ្លេចចុច Like, Share និង Subscribe ដើម្បីទទួលបានចំណេះដឹង និងវិធីសាស្ត្រល្អៗថ្មីៗពីក្រុមការងារយើងខ្ញុំជារៀងរាល់សប្តាហ៍!`;
-      character = 'ក្រុមការងារទាំងមូល';
-      action = 'តួអង្គទាំងអស់ញញឹមស្រស់ លើកដៃលា និងចង្អុលទៅប៊ូតុង Subscribe យ៉ាងស្និទ្ធស្នាល';
-      dialogue = 'សុខា & ក្រុមការងារ៖ «កុំភ្លេចចុច Subscribe ជួបគ្នានៅវីដេអូបន្ទាប់!»';
+      narrator = isSolo
+        ? `សូមអរគុណសម្រាប់ការទស្សនា! ប្រសិនបើអ្នកយល់ថាវីដេអូនេះមានប្រយោជន៍ កុំភ្លេចចុច Like, Share និង Subscribe ដើម្បីទទួលបានចំណេះដឹង និងវិធីសាស្ត្រល្អៗថ្មីៗពីខ្ញុំបាទជារៀងរាល់សប្តាហ៍!`
+        : `សូមអរគុណសម្រាប់ការទស្សនា! ប្រសិនបើអ្នកយល់ថាវីដេអូនេះមានប្រយោជន៍ កុំភ្លេចចុច Like, Share និង Subscribe ដើម្បីទទួលបានចំណេះដឹង និងវិធីសាស្ត្រល្អៗថ្មីៗពីក្រុមការងារយើងខ្ញុំជារៀងរាល់សប្តាហ៍!`;
+      character = isSolo ? 'សុខា (អ្នកធ្វើបទបង្ហាញទោល)' : 'ក្រុមការងារទាំងមូល';
+      action = isSolo
+        ? 'សុខាញញឹមស្រស់ លើកដៃលា និងចង្អុលទៅប៊ូតុង Subscribe យ៉ាងស្និទ្ធស្នាល'
+        : 'តួអង្គទាំងអស់ញញឹមស្រស់ លើកដៃលា និងចង្អុលទៅប៊ូតុង Subscribe យ៉ាងស្និទ្ធស្នាល';
+      dialogue = isSolo
+        ? 'សុខា៖ «កុំភ្លេចចុច Subscribe ជួបជាមួយខ្ញុំនៅវីដេអូបន្ទាប់!»'
+        : 'សុខា & ក្រុមការងារ៖ «កុំភ្លេចចុច Subscribe ជួបគ្នានៅវីដេអូបន្ទាប់!»';
+    } else if (isSolo) {
+      character = 'សុខា (អ្នកធ្វើបទបង្ហាញទោល)';
+      action = template.actionSolo || `សុខាកំពុងធ្វើសកម្មភាពតែម្នាក់ឯង ផ្តោតលើ ${sceneTitle}`;
+      dialogue = template.dialogueSolo || `សុខា៖ «ចំណុចនេះមានសារៈសំខាន់ខ្លាំងណាស់ ក្នុងការអនុវត្តជាក់ស្តែង!»`;
+    }
+
+    if (isNoChar) {
+      character = 'គ្មានតួអង្គ (Topic Visuals Only)';
+      dialogue = '';
+      if (num === 1) {
+        action = `ប្លង់រូបភាព B-roll ដំបូង៖ បង្ហាញពីទិដ្ឋភាព និងបញ្ហាជាក់ស្តែងទាក់ទងនឹង «${topicText}»`;
+      } else if (num === count - 1) {
+        action = `ប្លង់រូបភាព B-roll សង្ខេប៖ ទេសភាពកម្ពុជាដ៏ស្រស់បំព្រង និងបរិយាកាសពោរពេញដោយក្តីសង្ឃឹម`;
+      } else if (num === count) {
+        action = `ប្លង់សរុបចុងក្រោយ៖ ក្រាហ្វិកសង្ខេបចំណុចសំខាន់ៗ និងនិមិត្តសញ្ញាអរគុណ Subscribe`;
+      } else {
+        action = `ប្លង់រូបភាព B-roll ឧបករណ៍ និងឯកសារជាក់ស្តែងទាក់ទងនឹង ${sceneTitle}`;
+      }
+    } else {
+      const speaker = isSolo ? 'សុខា' : (num % 2 === 1 ? 'សុខា' : 'កញ្ញា');
+      const cleanNarrator = narrator.replace(/^[«»]+|[«»]+$/g, '').trim();
+      const hasPrefix = /^[\u1780-\u17FF\w\s]+[៖:]/.test(cleanNarrator);
+      if (!hasPrefix) {
+        narrator = `${speaker}៖ «${cleanNarrator}»`;
+      }
+      dialogue = narrator;
     }
 
     return {
@@ -1459,14 +2242,42 @@ export function buildOfflineDraftProject(req: GenerationRequest): StoryboardProj
       section,
       sceneTitle,
       durationSeconds: 8,
-      visualDescription: `ប្លង់សកម្មភាពរស់រវើកបែបខ្មែរ៖ ${action} ក្នុងបរិយាកាសកម្ពុជាពិតប្រាកដ`,
+      visualDescription: isNoChar
+        ? `ប្លង់រូបភាពឯកសារ B-roll គ្មានតួអង្គមនុស្ស៖ បង្ហាញពីទិដ្ឋភាព ឧបករណ៍ ឯកសារ និងបរិយាកាសទាក់ទងនឹង ${sceneTitle} សម្រាប់ប្រធានបទ «${topicText}» ក្នុងបរិបទកម្ពុជាពិតប្រាកដ`
+        : isSolo
+        ? `ប្លង់សកម្មភាពអ្នកធ្វើបទបង្ហាញទោល (Solo Presenter)៖ ${action} ក្នុងបរិយាកាសកម្ពុជាពិតប្រាកដ ដោយគ្មានតួអង្គដទៃឡើយ`
+        : `ប្លង់សកម្មភាពរស់រវើកបែបខ្មែរ៖ ${action} ក្នុងបរិយាកាសកម្ពុជាពិតប្រាកដ`,
       character,
       characterAction: action,
       narratorScriptKh: narrator,
       characterDialogue: dialogue,
       onScreenText: sceneTitle,
-      aiImagePromptEn: `Authentic Cambodian educational storytelling animation scene of ${character}, actively engaged in: ${action}, topic: "${topicText}", vibrant authentic Cambodian setting, expressive body language and teamwork, natural warm cinematic lighting, ${styleObj.promptAnchor}.`,
-      aiVideoPromptEn: `Smooth dynamic 2D animation motion of ${character} actively engaged in: ${action}, topic: "${topicText}". Expressive physical movements in authentic Cambodian setting, smooth camera motion. Silent cinematic action, characters do not speak, no dialogue or lip-sync, optimized for external voiceover overlay in CapCut or video editing software, 16:9 composition, no floating text.`,
+      aiImagePromptEn: isNoChar
+        ? `Cinematic documentary B-roll shot illustrating ${topicText} — ${sceneTitle}, authentic Cambodian setting, detailed environmental and conceptual storytelling, clean composition, warm cinematic lighting, no human characters. ${styleObj.promptAnchor}.`
+        : isSolo
+        ? isRealHuman
+          ? isDialogueSpeech
+            ? `Ultra-photorealistic cinematic 35mm photography of solo real Cambodian presenter Sokha, single person in frame, in an active expressive speaking pose with naturally open mouth delivering dialogue: "${dialogue}", communicative facial expression, engaging hand gestures: ${action}, topic: "${topicText}", genuine Cambodian background, natural human skin texture and pores, solo presenter composition, strictly no other people in frame, beautiful warm golden hour natural lighting, 8k resolution, masterpiece photograph, ${styleObj.promptAnchor}.`
+            : `Ultra-photorealistic cinematic 35mm photography of solo real Cambodian presenter Sokha, single person in frame, actively engaged in: ${action}, topic: "${topicText}", genuine Cambodian background, natural human skin texture and authentic facial expression, solo presenter composition, strictly no other people in frame, beautiful warm golden hour natural lighting, 8k resolution, masterpiece photograph, ${styleObj.promptAnchor}.`
+          : isDialogueSpeech
+          ? `Authentic Cambodian educational storytelling animation scene of solo presenter Sokha, single person in frame, in an active expressive speaking pose with naturally open mouth delivering dialogue: "${dialogue}", expressive communicative facial expression and gestures: ${action}, topic: "${topicText}", vibrant authentic Cambodian setting, expressive body language, solo presenter shot, strictly no other characters in frame, natural warm cinematic lighting, ${styleObj.promptAnchor}.`
+          : `Authentic Cambodian educational storytelling animation scene of solo presenter Sokha, single person in frame, actively engaged in: ${action}, topic: "${topicText}", vibrant authentic Cambodian setting, expressive body language, solo presenter shot, strictly no other characters in frame, natural warm cinematic lighting, ${styleObj.promptAnchor}.`
+        : isRealHuman
+        ? isDialogueSpeech
+          ? `Ultra-photorealistic cinematic 35mm photography of real Cambodian people (${character}), in a lively conversational dialogue scene, characters speaking with open expressive mouths delivering dialogue: "${dialogue}", communicative facial expressions and hand gestures: ${action}, topic: "${topicText}", authentic real Cambodian setting, genuine human expressions and interactions, natural skin texture, soft background bokeh, natural warm cinematic lighting, 8k resolution, ${styleObj.promptAnchor}.`
+          : `Ultra-photorealistic cinematic 35mm photography of real Cambodian people (${character}), actively engaged in: ${action}, topic: "${topicText}", authentic real Cambodian setting, genuine human expressions and interactions, natural skin texture, soft background bokeh, natural warm cinematic lighting, 8k resolution, ${styleObj.promptAnchor}.`
+        : isDialogueSpeech
+        ? `Authentic Cambodian educational storytelling animation scene of ${character}, in a lively conversational dialogue scene, characters speaking with open expressive mouths delivering dialogue: "${dialogue}", communicative facial expressions and gestures: ${action}, topic: "${topicText}", vibrant authentic Cambodian setting, expressive body language and teamwork, natural warm cinematic lighting, ${styleObj.promptAnchor}.`
+        : `Authentic Cambodian educational storytelling animation scene of ${character}, actively engaged in: ${action}, topic: "${topicText}", vibrant authentic Cambodian setting, expressive body language and teamwork, natural warm cinematic lighting, ${styleObj.promptAnchor}.`,
+      aiVideoPromptEn: isNoChar
+        ? `Smooth cinematic camera motion (slow pan, subtle push-in) capturing visual details, equipment, and authentic Cambodian environment illustrating "${topicText} - ${sceneTitle}". Clean documentary B-roll footage, authentic Cambodian setting, 24fps, 16:9 composition, no floating text.`
+        : isSolo
+        ? isRealHuman
+          ? `Cinematic realistic live-action 4K video footage of solo real Cambodian presenter Sokha, single person in frame, actively speaking directly on camera in Khmer with natural speech articulation, engaging facial expressions, and communicative hand gestures while presenting: ${action}, topic: "${topicText}". Authentic Cambodian setting, smooth camera motion, cinematic film look, 24fps, 16:9 composition, no floating text.`
+          : `Smooth dynamic 2D animation motion of solo presenter Sokha, single person in frame, actively speaking on camera in Khmer with natural speech articulation, engaging facial expressions, and communicative gestures while presenting: ${action}, topic: "${topicText}". Authentic Cambodian setting, smooth camera motion, 24fps, 16:9 composition, no floating text.`
+        : isRealHuman
+        ? `Cinematic realistic live-action 4K video footage of real Cambodian characters (${character}), actively speaking and conversing on camera in Khmer with natural mouth movements, genuine conversational expressions, and communicative hand gestures while interacting: ${action}, topic: "${topicText}". Genuine Cambodian setting, smooth cinematic camera motion, 24fps, 16:9 composition, no floating text.`
+        : `Smooth dynamic 2D animation motion of ${character}, actively speaking and conversing on camera in Khmer with natural speech articulation, lively conversational expressions, and communicative gestures while interacting: ${action}, topic: "${topicText}". Authentic Cambodian setting, smooth camera motion, 24fps, 16:9 composition, no floating text.`,
       cameraMovement: num === 1 ? 'Dynamic track shot following characters' : 'Medium two-shot with subtle push-in',
       bgmAndSfx: 'ភ្លេង Documentary ស្រទន់កក់ក្ដៅ + សំឡេងបរិយាកាសធម្មជាតិ',
     };
@@ -1530,23 +2341,12 @@ export function buildOfflineDraftProject(req: GenerationRequest): StoryboardProj
       categoryLabelKh: req.categoryLabelKh,
       targetScenes: count,
       characters,
+      presenterSetup: presenterObj.id,
+      actionDynamic: req.actionDynamic,
       animationStyleLabel: styleObj.labelEn,
       styleAnchor: styleObj.promptAnchor,
     }),
-    musicSuggestions: [
-      {
-        section: 'វីដេអូទាំងមូល',
-        mood: 'Warm Documentary, Educational, Uplifting',
-        tempo: '85–95 BPM',
-        instruments: 'Soft Piano, Acoustic Guitar, Subtle Strings',
-        usageTip: 'រក្សាសំឡេងភ្លេងនៅ -20dB ដើម្បីឱ្យសំឡេងអ្នកនិទានច្បាស់ល្អ។',
-      },
-    ],
-    thumbnail: {
-      headlineKh: topicText,
-      subTextKh: 'មេរៀនអប់រំ 2D Animation',
-      visualConcept: `បង្ហាញក្រុមតួអង្គខ្មែរមានទឹកមុខចាប់អារម្មណ៍ជាមួយទេសភាពកម្ពុជា និងនិមិត្តសញ្ញានៃ «${topicText}» ក្រោមពន្លឺពណ៌មាសកក់ក្ដៅ។`,
-      aiThumbnailPromptEn: `Eye-catching authentic Cambodian YouTube thumbnail for "${topicText}", expressive Cambodian cartoon characters in lively collaboration, pointing at glowing educational visual metaphors with Cambodian sugar palm trees and Phnom Penh skyline in the background, warm amber and teal contrast, ${styleObj.promptAnchor}.`,
-    },
+    musicSuggestions: generateTopicTailoredMusic(topicText, req.categoryId),
+    thumbnail: generateTopicTailoredThumbnail(topicText, styleObj.promptAnchor, isNoChar, characters),
   };
 }

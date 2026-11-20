@@ -1,6 +1,10 @@
 export type StorySection = 'INTRODUCTION' | 'MAIN_STORY' | 'IMPORTANT_LESSONS' | 'CONCLUSION';
 
-export type AnimationStyleId = '2d-cartoon' | '3d-cartoon' | '2d-documentary';
+export type AnimationStyleId =
+  | '2d-cartoon'
+  | '3d-cartoon'
+  | '2d-documentary'
+  | 'photorealistic-real';
 
 export type DurationPresetId =
   | '1-2'
@@ -13,7 +17,7 @@ export type DurationPresetId =
 
 export type AiProviderId = 'ollama' | 'gemini' | 'openrouter' | 'groq' | 'openai';
 
-export type PresenterSetupId = 'group' | 'duo' | 'drama-cast' | 'solo';
+export type PresenterSetupId = 'group' | 'duo' | 'drama-cast' | 'solo' | 'no-characters';
 
 export interface PresenterSetupOption {
   id: PresenterSetupId;
@@ -29,7 +33,9 @@ export type SceneActionDynamicId =
   | 'cinematic-action'
   | 'hands-on-demo'
   | 'dialogue-roleplay'
-  | 'field-documentary';
+  | 'field-documentary'
+  | 'topic-broll'
+  | 'character-dialogue-speech';
 
 export interface SceneActionDynamicOption {
   id: SceneActionDynamicId;
@@ -86,6 +92,7 @@ export interface MusicSuggestion {
   tempo: string;
   instruments: string;
   usageTip: string;
+  aiMusicPromptEn?: string;
 }
 
 export interface ThumbnailPlan {
