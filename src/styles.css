@@ -3262,3 +3262,233 @@ select {
   gap: 10px;
   margin-top: 8px;
 }
+
+
+/* ==========================================================================
+   MODERN 3D UX / UI OVERHAUL & TACTILE DEPTH ENHANCEMENTS
+   ========================================================================== */
+
+:root {
+  --shadow-3d-card: 0 10px 24px -4px rgba(24, 22, 20, 0.07), 0 3px 8px -2px rgba(24, 22, 20, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  --shadow-3d-card-hover: 0 18px 36px -6px rgba(217, 119, 6, 0.14), 0 6px 14px -3px rgba(24, 22, 20, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  --shadow-3d-button: 0 3px 0 #92400e, 0 6px 14px rgba(180, 83, 9, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  --shadow-3d-button-hover: 0 5px 0 #92400e, 0 10px 20px rgba(180, 83, 9, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  --shadow-3d-button-active: 0 1px 0 #92400e, 0 2px 6px rgba(180, 83, 9, 0.25), inset 0 1px 0 rgba(0, 0, 0, 0.1);
+  --glow-amber-3d: 0 0 24px rgba(217, 119, 6, 0.28);
+}
+
+/* 3D Tactile Primary Buttons */
+.btn-primary {
+  background: linear-gradient(180deg, #f59e0b 0%, #d97706 60%, #b45309 100%) !important;
+  color: #fff !important;
+  border: 1px solid #92400e !important;
+  box-shadow: var(--shadow-3d-button) !important;
+  transform: translateY(0);
+  transition: all 0.12s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: linear-gradient(180deg, #fbbf24 0%, #f59e0b 60%, #d97706 100%) !important;
+  box-shadow: var(--shadow-3d-button-hover) !important;
+  transform: translateY(-2px) !important;
+}
+
+.btn-primary:active:not(:disabled) {
+  transform: translateY(2px) !important;
+  box-shadow: var(--shadow-3d-button-active) !important;
+}
+
+/* 3D Tactile Sidebar Create Button */
+.btn-create-new {
+  border: 1px solid #78350f !important;
+  background: linear-gradient(180deg, #f59e0b 0%, #d97706 60%, #b45309 100%) !important;
+  box-shadow: 0 3px 0 #78350f, 0 6px 16px rgba(217, 119, 6, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.35) !important;
+  transform: translateY(0);
+  transition: all 0.12s ease !important;
+}
+
+.btn-create-new:hover {
+  transform: translateY(-2px) !important;
+  background: linear-gradient(180deg, #fbbf24 0%, #f59e0b 60%, #d97706 100%) !important;
+  box-shadow: 0 5px 0 #78350f, 0 10px 22px rgba(217, 119, 6, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.45) !important;
+}
+
+.btn-create-new:active {
+  transform: translateY(2px) !important;
+  box-shadow: 0 1px 0 #78350f, 0 2px 8px rgba(217, 119, 6, 0.25) !important;
+}
+
+/* 3D Visual Cards & Containers */
+.studio-card {
+  border-radius: 18px !important;
+  box-shadow: var(--shadow-3d-card) !important;
+  border: 1px solid rgba(229, 223, 213, 0.95) !important;
+  transition: box-shadow 0.2s ease, transform 0.2s ease !important;
+}
+
+/* 3D Category Cards */
+.category-card {
+  border-radius: 14px !important;
+  box-shadow: 0 4px 12px rgba(24, 22, 20, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.category-card:hover {
+  border-color: var(--cat-accent, var(--amber)) !important;
+  background: #ffffff !important;
+  transform: translateY(-3px) scale(1.01) !important;
+  box-shadow: 0 14px 26px -6px rgba(24, 22, 20, 0.12), 0 0 0 1px var(--cat-accent, var(--amber)) !important;
+}
+
+.category-card.active {
+  border-color: var(--cat-accent, var(--amber)) !important;
+  background: #ffffff !important;
+  box-shadow: 0 8px 22px -4px color-mix(in srgb, var(--cat-accent, #d97706) 32%, transparent), 0 0 0 2px var(--cat-accent, var(--amber)) !important;
+  transform: translateY(-2px) !important;
+}
+
+.category-code {
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+  border-radius: 6px !important;
+}
+
+/* 3D Presenter & Dynamic Action Cards */
+.setup-card-choice {
+  border-radius: 14px !important;
+  box-shadow: 0 4px 12px rgba(24, 22, 20, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.setup-card-choice:hover {
+  border-color: var(--amber) !important;
+  transform: translateY(-3px) scale(1.008) !important;
+  box-shadow: 0 12px 24px -6px rgba(24, 22, 20, 0.1), 0 0 0 1px var(--amber) !important;
+}
+
+.setup-card-choice.active {
+  border-color: var(--amber) !important;
+  background: linear-gradient(135deg, #fffcf6 0%, #fef8ee 100%) !important;
+  box-shadow: 0 8px 22px -4px rgba(217, 119, 6, 0.25), 0 0 0 2px var(--amber) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* 3D Animation & Visual Style Options Grid */
+.style-options-3d-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.style-choice-3d {
+  text-align: left;
+  padding: 15px 16px;
+  border-radius: 14px;
+  border: 1.5px solid var(--border);
+  background: #ffffff;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  box-shadow: 0 4px 14px rgba(24, 22, 20, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.style-choice-3d:hover {
+  border-color: var(--amber);
+  transform: translateY(-3px) scale(1.01);
+  box-shadow: 0 12px 26px -6px rgba(217, 119, 6, 0.16), 0 0 0 1px var(--amber);
+}
+
+.style-choice-3d.active {
+  border: 2px solid var(--amber) !important;
+  background: linear-gradient(135deg, #fffcf6 0%, #fef3c7 100%) !important;
+  box-shadow: 0 8px 22px -4px rgba(217, 119, 6, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+  transform: translateY(-2px);
+}
+
+.style-choice-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 2px;
+}
+
+.style-choice-emoji {
+  font-size: 1.55rem;
+  line-height: 1;
+  filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.18));
+}
+
+.style-badge-3d {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 9px;
+  border-radius: 6px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.style-choice-title {
+  font-size: 0.94rem;
+  font-weight: 700;
+  color: var(--text-main);
+  line-height: 1.4;
+}
+
+.style-choice-desc {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  line-height: 1.45;
+}
+
+/* 3D Step Pills */
+.step-pill {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  font-size: 0.74rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.04em !important;
+  color: #92400e !important;
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%) !important;
+  padding: 5px 13px !important;
+  border-radius: 20px !important;
+  border: 1px solid #fcd34d !important;
+  box-shadow: 0 2px 6px rgba(217, 119, 6, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.7) !important;
+}
+
+/* 3D Storyboard Tab Navigation */
+.studio-tabs {
+  background: #e7e0d3 !important;
+  padding: 5px !important;
+  border-radius: 14px !important;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.08) !important;
+}
+
+.studio-tab.active {
+  background: #ffffff !important;
+  color: var(--amber-dark) !important;
+  font-weight: 700 !important;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* 3D Storyboard Scene Cards */
+.scene-card {
+  border-radius: 16px !important;
+  box-shadow: 0 4px 14px rgba(24, 22, 20, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+  transition: all 0.2s ease !important;
+}
+
+.scene-card:hover {
+  box-shadow: 0 12px 28px -6px rgba(24, 22, 20, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.95) !important;
+  transform: translateY(-2px) !important;
+}

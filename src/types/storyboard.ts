@@ -3,6 +3,7 @@ export type StorySection = 'INTRODUCTION' | 'MAIN_STORY' | 'IMPORTANT_LESSONS' |
 export type AnimationStyleId =
   | '2d-cartoon'
   | '3d-cartoon'
+  | '3d-cinematic-cgi'
   | '2d-documentary'
   | 'photorealistic-real';
 

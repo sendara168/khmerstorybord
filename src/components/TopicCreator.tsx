@@ -912,18 +912,29 @@ export const TopicCreator: React.FC<TopicCreatorProps> = ({
           <div>
             <label className="icon-label">
               <Palette size={15} />
-              <span>ស្ទីលរូបភាព & Animation (Visual & Animation Style)</span>
+              <span>ស្ទីលរូបភាព & Animation (Visual & Animation Style — 3D / 2D / Live-Action)</span>
             </label>
-            <div className="stack-options">
+            <div className="stack-options style-options-3d-grid">
               {ANIMATION_STYLES.map((s) => (
                 <button
                   key={s.id}
                   type="button"
-                  className={`style-choice ${animationStyle === s.id ? 'active' : ''}`}
+                  className={`style-choice style-choice-3d ${animationStyle === s.id ? 'active' : ''}`}
                   onClick={() => setAnimationStyle(s.id)}
                 >
-                  <strong>{s.labelKh}</strong>
-                  <span>{s.labelEn}</span>
+                  <div className="style-choice-top-row">
+                    <span className="style-choice-emoji">{s.icon}</span>
+                    <span
+                      className="style-badge-3d"
+                      style={{
+                        background: s.badgeColor || 'var(--amber)',
+                      }}
+                    >
+                      {s.badge}
+                    </span>
+                  </div>
+                  <strong className="style-choice-title">{s.labelKh}</strong>
+                  <span className="style-choice-desc">{s.labelEn}</span>
                 </button>
               ))}
             </div>

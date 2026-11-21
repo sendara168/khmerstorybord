@@ -158,6 +158,8 @@ export const STYLE_ANCHORS = {
     'Clean 2D cartoon educational illustration, authentic Cambodian (Khmer) characters and Cambodian rural/city scenery (sugar palm trees, rice paddies, wooden stilt houses OR Phnom Penh shophouses, riverside, tuk-tuks), authentic Khmer script on natural shop signboards where relevant, smooth cel-shaded vector style, expressive facial expressions, warm cinematic lighting, consistent character design, 16:9 composition, no floating subtitles or watermarks',
   '3d-cartoon':
     'Stylized 3D Pixar-inspired educational cartoon animation, authentic Cambodian (Khmer) characters and Cambodian rural/city environments, authentic Khmer script on natural storefront signboards where relevant, soft global illumination, warm cinematic lighting, 16:9 composition, no floating subtitles or watermarks',
+  '3d-cinematic-cgi':
+    'Hyper-realistic 3D cinematic CGI animation rendered in Unreal Engine 5, Octane render, ray-traced ambient occlusion, subsurface skin scattering, authentic Cambodian (Khmer) characters and breathtaking Cambodian scenery (Angkorian stone architectures, lush tropical flora, rural sugar palm trees or modern Phnom Penh skyline), volumetric lighting and atmospheric depth, 8k resolution, cinematic composition, consistent 3D character design, 16:9 widescreen, no floating text or subtitles',
   '2d-documentary':
     'Modern 2D editorial documentary illustration, authentic Cambodian (Khmer) people and real Cambodian countryside/urban architecture (Phnom Penh streets, Khmer shophouses, sugar palm rice fields), clean Khmer script on shop/street signs where relevant, textured gouache and clean ink outlines, warm cinematic lighting, consistent character design, 16:9 composition, no watermarks',
   'photorealistic-real':

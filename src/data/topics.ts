@@ -1029,39 +1029,66 @@ export const DURATION_PRESETS: Array<{
   },
 ];
 
-export const ANIMATION_STYLES: Array<{
+export interface AnimationStyleOption {
   id: AnimationStyleId;
   labelKh: string;
   labelEn: string;
+  icon: string;
+  badge: string;
+  badgeColor?: string;
   promptAnchor: string;
-}> = [
-  {
-    id: '2d-cartoon',
-    labelKh: '2D Cartoon បែបខ្មែរ (ដូចគំរូ)',
-    labelEn: '2D Cartoon Cambodian Educational Animation',
-    promptAnchor:
-      'Clean 2D cartoon educational illustration, authentic Cambodian (Khmer) characters and Southeast Asian Cambodian setting (rural sugar palm trees, wooden stilt houses, rice paddies OR Phnom Penh shophouses, riverside, tuk-tuks), authentic Khmer script on natural shop signboards when shops appear, smooth cel-shaded vector style, expressive facial expressions, warm cinematic lighting, consistent character design, 16:9 aspect ratio, no floating subtitles or English watermarks',
-  },
+}
+
+export const ANIMATION_STYLES: AnimationStyleOption[] = [
   {
     id: '3d-cartoon',
-    labelKh: '3D Cartoon បែបខ្មែរ',
-    labelEn: '3D Stylized Cambodian Educational Animation',
+    labelKh: '3D Pixar / Disney Cartoon បែបខ្មែរ',
+    labelEn: 'Stylized 3D Pixar/Disney Animation (Cambodian Setting)',
+    icon: '🧸',
+    badge: '3D PIXAR STYLIZED',
+    badgeColor: '#8b5cf6',
     promptAnchor:
-      'Stylized 3D Pixar-inspired educational cartoon animation, authentic Cambodian (Khmer) characters and Cambodian rural/city scenery (palm trees, stilt houses, Phnom Penh streets and cafés), authentic Khmer script on natural storefront signboards when shops appear, soft global illumination, warm cinematic lighting, 16:9 aspect ratio, no floating subtitles or watermarks',
+      'Stylized 3D Pixar-inspired educational cartoon animation, high-end 3D character models with expressive eyes, authentic Cambodian (Khmer) characters and Cambodian rural/city scenery (palm trees, stilt houses, Phnom Penh streets and cafés), authentic Khmer script on natural storefront signboards when shops appear, soft global illumination, warm cinematic 3D lighting, 16:9 aspect ratio, no floating subtitles or watermarks',
   },
   {
-    id: '2d-documentary',
-    labelKh: '2D Documentary Illustration បែបខ្មែរ',
-    labelEn: '2D Documentary Cambodian Editorial Illustration',
+    id: '3d-cinematic-cgi',
+    labelKh: '3D Cinematic CGI Unreal Engine 5 បែបខ្មែរ',
+    labelEn: 'Hyper-Realistic 3D Cinematic CGI (Unreal Engine 5 / Octane)',
+    icon: '🎮',
+    badge: '3D CGI UNREAL 5',
+    badgeColor: '#0ea5e9',
     promptAnchor:
-      'Modern 2D editorial documentary illustration, authentic Cambodian (Khmer) people and real Cambodian countryside/urban architecture (Phnom Penh riverside, Khmer shophouses, sugar palm rice fields), clean Khmer script on natural street/shop signs where relevant, textured gouache and clean ink outlines, warm atmospheric cinematic lighting, consistent character design, 16:9 aspect ratio, no watermarks',
+      'Hyper-realistic 3D cinematic CGI animation rendered in Unreal Engine 5, Octane render, ray-traced ambient occlusion, subsurface skin scattering, authentic Cambodian (Khmer) characters and breathtaking Cambodian scenery (Angkorian stone architectures, lush tropical flora, rural sugar palm trees or modern Phnom Penh skyline), volumetric lighting and atmospheric depth, 8k resolution, cinematic composition, consistent 3D character design, 16:9 widescreen, no floating text or subtitles',
+  },
+  {
+    id: '2d-cartoon',
+    labelKh: '2D Cartoon បែបខ្មែរ (គំនូរជីវចល)',
+    labelEn: 'Clean 2D Vector Educational Animation',
+    icon: '🎨',
+    badge: '2D VECTOR',
+    badgeColor: '#d97706',
+    promptAnchor:
+      'Clean 2D cartoon educational illustration, authentic Cambodian (Khmer) characters and Southeast Asian Cambodian setting (rural sugar palm trees, wooden stilt houses, rice paddies OR Phnom Penh shophouses, riverside, tuk-tuks), authentic Khmer script on natural shop signboards when shops appear, smooth cel-shaded vector style, expressive facial expressions, warm cinematic lighting, consistent character design, 16:9 aspect ratio, no floating subtitles or English watermarks',
   },
   {
     id: 'photorealistic-real',
     labelKh: 'រូបភាពមនុស្សពិតបែបភាពយន្ត (Photorealistic • Real Human)',
     labelEn: 'Photorealistic Live-Action Style (Real Cambodian Humans • 8K Photography)',
+    icon: '📷',
+    badge: 'REAL HUMAN 8K',
+    badgeColor: '#10b981',
     promptAnchor:
       'Ultra-photorealistic cinematic live-action photography of authentic real Cambodian (Khmer) people, highly detailed natural skin texture, realistic human facial features and pores, authentic everyday Cambodian outfits and real Southeast Asian hairstyles, genuine authentic Cambodian settings (Phnom Penh urban streets, modern cafés, bustling markets, or rural Cambodian landscape with sugar palm trees and stilt houses), authentic Khmer signage on shops, shot on 35mm lens, f/1.8 aperture, soft cinematic background bokeh, natural warm golden hour sunlight, 8k resolution, photorealistic masterpiece, strictly no cartoon, no 3D render, no CGI, no floating watermarks or text',
+  },
+  {
+    id: '2d-documentary',
+    labelKh: '2D Documentary Illustration បែបខ្មែរ',
+    labelEn: '2D Documentary Cambodian Editorial Illustration',
+    icon: '📜',
+    badge: 'EDITORIAL 2D',
+    badgeColor: '#64748b',
+    promptAnchor:
+      'Modern 2D editorial documentary illustration, authentic Cambodian (Khmer) people and real Cambodian countryside/urban architecture (Phnom Penh riverside, Khmer shophouses, sugar palm rice fields), clean Khmer script on natural street/shop signs where relevant, textured gouache and clean ink outlines, warm atmospheric cinematic lighting, consistent character design, 16:9 aspect ratio, no watermarks',
   },
 ];
 
