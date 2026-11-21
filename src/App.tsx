@@ -22,6 +22,14 @@ import { Sidebar } from './components/Sidebar';
 import { TopicCreator } from './components/TopicCreator';
 import { ProjectStudio } from './components/ProjectStudio';
 import { SettingsModal } from './components/SettingsModal';
+import { LoginScreen } from './components/LoginScreen';
+import { ChangeCredentialsModal } from './components/ChangeCredentialsModal';
+import {
+  isAuthenticated,
+  getCurrentUser,
+  logout,
+  type AuthUser,
+} from './api/auth';
 
 const STORAGE_KEY_CONFIG = 'khmer_storyboard_ai_config_v2';
 
@@ -114,10 +122,21 @@ export const App: React.FC = () => {
   const [aiConfig, setAiConfig] = useState<AiProviderConfig>(loadInitialConfig);
   const [settingsOpen, setSettingsOpen] = useState(false);
 
+  const [currentUser, setCurrentUser] = useState<AuthUser | null>(getCurrentUser);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => isAuthenticated());
+  const [changeCredentialsOpen, setChangeCredentialsOpen] = useState(false);
+
   const showToast = useCallback((msg: string) => {
     setToast(msg);
     setTimeout(() => setToast(null), 3200);
   }, []);
+
+  const handleLogout = useCallback(() => {
+    logout();
+    setIsLoggedIn(false);
+    setCurrentUser(null);
+    showToast('បានចាកចេញពីប្រព័ន្ធដោយជោគជ័យ');
+  }, [showToast]);
 
   const refreshProjects = useCallback(async () => {
     try {
@@ -331,6 +350,32 @@ export const App: React.FC = () => {
     Boolean(aiConfig.apiKey.trim()) ||
     (aiConfig.provider === 'gemini' && hasEnvApiKey);
 
+  if (!isLoggedIn) {
+    return (
+      <div className="login-root-container">
+        <LoginScreen
+          onLoginSuccess={(user) => {
+            setIsLoggedIn(true);
+            setCurrentUser(user);
+            showToast(`ស្វាគមន៍ការចូលប្រើប្រាស់ ${user.username}!`);
+          }}
+          onOpenChangeCredentials={() => setChangeCredentialsOpen(true)}
+        />
+
+        <ChangeCredentialsModal
+          isOpen={changeCredentialsOpen}
+          onClose={() => setChangeCredentialsOpen(false)}
+          onSuccess={(user, msg) => {
+            setCurrentUser(user);
+            showToast(msg);
+          }}
+        />
+
+        {toast && <div className="toast-banner">{toast}</div>}
+      </div>
+    );
+  }
+
   return (
     <div className="app-shell">
       <Sidebar
@@ -339,6 +384,7 @@ export const App: React.FC = () => {
         selectedProjectId={currentProject?.id || null}
         provider={aiConfig.provider}
         isAiReady={isAiReady}
+        currentUser={currentUser}
         onSelectCreator={() => {
           setErrorMessage(null);
           setActiveView('creator');
@@ -347,6 +393,8 @@ export const App: React.FC = () => {
         onDeleteProject={handleDeleteProject}
         onImportJson={handleImportJson}
         onOpenSettings={() => setSettingsOpen(true)}
+        onOpenChangeCredentials={() => setChangeCredentialsOpen(true)}
+        onLogout={handleLogout}
       />
 
       <main className="main-canvas">
@@ -387,6 +435,16 @@ export const App: React.FC = () => {
         hasEnvApiKey={hasEnvApiKey}
         onSave={handleSaveSettings}
         onClose={() => setSettingsOpen(false)}
+        onOpenChangeCredentials={() => setChangeCredentialsOpen(true)}
+      />
+
+      <ChangeCredentialsModal
+        isOpen={changeCredentialsOpen}
+        onClose={() => setChangeCredentialsOpen(false)}
+        onSuccess={(user, msg) => {
+          setCurrentUser(user);
+          showToast(msg);
+        }}
       />
 
       {toast && <div className="toast-banner">{toast}</div>}

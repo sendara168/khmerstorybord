@@ -7,6 +7,7 @@ import {
   AlertTriangle,
   RefreshCw,
   Server,
+  KeyRound,
 } from 'lucide-react';
 import { AI_PROVIDER_PRESETS } from '../data/topics';
 import { fetchOllamaModels } from '../api/client';
@@ -18,6 +19,7 @@ interface SettingsModalProps {
   hasEnvApiKey: boolean;
   onSave: (config: AiProviderConfig) => void;
   onClose: () => void;
+  onOpenChangeCredentials?: () => void;
 }
 
 export const SettingsModal: React.FC<SettingsModalProps> = ({
@@ -26,6 +28,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   hasEnvApiKey,
   onSave,
   onClose,
+  onOpenChangeCredentials,
 }) => {
   const [provider, setProvider] = useState<AiProviderId>(config.provider);
   const [apiKey, setApiKey] = useState(config.apiKey);
@@ -335,6 +338,30 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               ))}
             </div>
           </div>
+
+          {onOpenChangeCredentials && (
+            <div className="settings-security-card">
+              <div className="security-card-header">
+                <KeyRound size={16} className="text-amber" />
+                <span style={{ fontWeight: 600 }}>សុវត្ថិភាពគណនី (Account & Security)</span>
+              </div>
+              <p style={{ margin: '6px 0 10px', fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+                អ្នកអាចផ្លាស់ប្តូរ Username និង Password សម្រាប់ Login ចូលប្រើប្រាស់ Khmer Storyboard Studio បានគ្រប់ពេល។
+              </p>
+              <button
+                type="button"
+                className="btn-secondary"
+                style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: '0.85rem' }}
+                onClick={() => {
+                  onClose();
+                  onOpenChangeCredentials();
+                }}
+              >
+                <KeyRound size={14} />
+                <span>ប្តូរ Username & Password ថ្មី</span>
+              </button>
+            </div>
+          )}
         </div>
 
         <div className="modal-footer">

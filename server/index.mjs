@@ -809,6 +809,145 @@ async function generateWithGemini({ apiKey, model, prompt }) {
   return extractJsonFromText(outputText);
 }
 
+const AUTH_FILE = path.join(__dirname, 'auth.json');
+const activeSessions = new Set();
+
+async function getStoredCredentials() {
+  try {
+    const raw = await fs.readFile(AUTH_FILE, 'utf-8');
+    const parsed = JSON.parse(raw);
+    if (parsed && parsed.username && parsed.password) {
+      return parsed;
+    }
+  } catch {
+    // auth.json might not exist yet
+  }
+  const defaultCreds = {
+    username: process.env.AUTH_USERNAME || 'admin',
+    password: process.env.AUTH_PASSWORD || 'password123',
+    updatedAt: new Date().toISOString(),
+  };
+  try {
+    await fs.writeFile(AUTH_FILE, JSON.stringify(defaultCreds, null, 2), 'utf-8');
+  } catch (err) {
+    console.error('[Auth] Failed to initialize auth.json:', err.message);
+  }
+  return defaultCreds;
+}
+
+async function updateStoredCredentials(username, password) {
+  const cleanUser = String(username || '').trim();
+  const cleanPass = String(password || '').trim();
+  if (!cleanUser || !cleanPass) {
+    throw new Error('Username and Password cannot be empty.');
+  }
+  const updated = {
+    username: cleanUser,
+    password: cleanPass,
+    updatedAt: new Date().toISOString(),
+  };
+  await fs.writeFile(AUTH_FILE, JSON.stringify(updated, null, 2), 'utf-8');
+  return updated;
+}
+
+function createSessionToken(username) {
+  const token = `ks_${Buffer.from(username + ':' + Date.now() + ':' + Math.random().toString(36).substring(2)).toString('base64url')}`;
+  activeSessions.add(token);
+  return token;
+}
+
+app.get('/api/auth/status', async (_req, res) => {
+  try {
+    const creds = await getStoredCredentials();
+    res.json({
+      ok: true,
+      requiresAuth: true,
+      defaultUser: creds.username,
+      updatedAt: creds.updatedAt,
+    });
+  } catch (err) {
+    res.status(500).json({ ok: false, error: err.message });
+  }
+});
+
+app.post('/api/auth/login', async (req, res) => {
+  try {
+    const { username, password } = req.body || {};
+    const creds = await getStoredCredentials();
+    const cleanUser = String(username || '').trim();
+    const cleanPass = String(password || '').trim();
+
+    if (
+      cleanUser.toLowerCase() === creds.username.toLowerCase() &&
+      cleanPass === creds.password
+    ) {
+      const token = createSessionToken(creds.username);
+      return res.json({
+        success: true,
+        token,
+        user: { username: creds.username },
+        message: 'Login ជោគជ័យ!',
+      });
+    }
+    return res.status(401).json({
+      success: false,
+      error: 'ឈ្មោះអ្នកប្រើប្រាស់ (Username) ឬពាក្យសម្ងាត់ (Password) មិនត្រឹមត្រូវទេ!',
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.post('/api/auth/update-credentials', async (req, res) => {
+  try {
+    const { currentPassword, newUsername, newPassword } = req.body || {};
+    const creds = await getStoredCredentials();
+
+    if (currentPassword !== undefined && String(currentPassword).trim() !== creds.password) {
+      return res.status(400).json({
+        success: false,
+        error: 'ពាក្យសម្ងាត់ចាស់ (Current Password) មិនត្រឹមត្រូវទេ!',
+      });
+    }
+
+    const cleanUser = String(newUsername || '').trim();
+    const cleanPass = String(newPassword || '').trim();
+
+    if (!cleanUser || cleanUser.length < 3) {
+      return res.status(400).json({
+        success: false,
+        error: 'Username ត្រូវមានយ៉ាងតិច ៣ តួអក្សរ!',
+      });
+    }
+    if (!cleanPass || cleanPass.length < 4) {
+      return res.status(400).json({
+        success: false,
+        error: 'Password ត្រូវមានយ៉ាងតិច ៤ តួអក្សរ!',
+      });
+    }
+
+    const updated = await updateStoredCredentials(cleanUser, cleanPass);
+    const token = createSessionToken(updated.username);
+    res.json({
+      success: true,
+      message: 'បានកែប្រែ Username និង Password ដោយជោគជ័យ!',
+      user: { username: updated.username },
+      token,
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.post('/api/auth/logout', (req, res) => {
+  const authHeader = req.headers.authorization || '';
+  const token = authHeader.replace(/^Bearer\s+/i, '').trim();
+  if (token) {
+    activeSessions.delete(token);
+  }
+  res.json({ success: true, message: 'បានចាកចេញ (Logged out)' });
+});
+
 app.get('/api/health', (_req, res) => {
   res.json({
     ok: true,

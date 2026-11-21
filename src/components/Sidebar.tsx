@@ -8,8 +8,12 @@ import {
   Film,
   BookOpen,
   Clock,
+  User,
+  KeyRound,
+  LogOut,
 } from 'lucide-react';
 import type { AiProviderId, ProjectSummary } from '../types/storyboard';
+import type { AuthUser } from '../api/auth';
 import { formatClock } from '../utils/exporters';
 
 interface SidebarProps {
@@ -18,11 +22,14 @@ interface SidebarProps {
   selectedProjectId: string | null;
   provider: AiProviderId;
   isAiReady: boolean;
+  currentUser?: AuthUser | null;
   onSelectCreator: () => void;
   onSelectProject: (id: string) => void;
   onDeleteProject: (id: string) => void;
   onImportJson: (file: File) => void;
   onOpenSettings: () => void;
+  onOpenChangeCredentials?: () => void;
+  onLogout?: () => void;
 }
 
 const PROVIDER_SHORT: Record<AiProviderId, string> = {
@@ -39,11 +46,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
   selectedProjectId,
   provider,
   isAiReady,
+  currentUser,
   onSelectCreator,
   onSelectProject,
   onDeleteProject,
   onImportJson,
   onOpenSettings,
+  onOpenChangeCredentials,
+  onLogout,
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -143,6 +153,39 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <span>AI: {PROVIDER_SHORT[provider] || provider}</span>
           <span className={`status-dot ${isAiReady ? 'connected' : ''}`} />
         </button>
+
+        {currentUser && (
+          <div className="sidebar-user-card">
+            <div className="sidebar-user-info" title={`User: ${currentUser.username}`}>
+              <div className="sidebar-user-avatar">
+                <User size={13} />
+              </div>
+              <span className="sidebar-username">{currentUser.username}</span>
+            </div>
+            <div className="sidebar-user-actions">
+              {onOpenChangeCredentials && (
+                <button
+                  type="button"
+                  className="btn-user-action"
+                  title="ប្តូរ Username & Password"
+                  onClick={onOpenChangeCredentials}
+                >
+                  <KeyRound size={13} />
+                </button>
+              )}
+              {onLogout && (
+                <button
+                  type="button"
+                  className="btn-user-action btn-logout"
+                  title="ចាកចេញ (Logout)"
+                  onClick={onLogout}
+                >
+                  <LogOut size={13} />
+                </button>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </aside>
   );

@@ -4,4 +4,7 @@ dist/
 *.log
 .DS_Store
 scratch/
+server/auth.json
+*.auth.json
+
 
