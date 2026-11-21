@@ -5,21 +5,17 @@ import {
   Eye,
   EyeOff,
   LogIn,
-  KeyRound,
   ShieldCheck,
-  Sparkles,
   Film,
 } from 'lucide-react';
-import { login, DEFAULT_CREDENTIALS, type AuthUser } from '../api/auth';
+import { login, type AuthUser } from '../api/auth';
 
 interface LoginScreenProps {
   onLoginSuccess: (user: AuthUser) => void;
-  onOpenChangeCredentials?: () => void;
 }
 
 export const LoginScreen: React.FC<LoginScreenProps> = ({
   onLoginSuccess,
-  onOpenChangeCredentials,
 }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -53,12 +49,6 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const handleAutoFillDefault = () => {
-    setUsername(DEFAULT_CREDENTIALS.username);
-    setPassword(DEFAULT_CREDENTIALS.password);
-    setErrorMessage(null);
   };
 
   return (
@@ -146,43 +136,6 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
             )}
           </button>
         </form>
-
-        {/* Default Credential Notice & Auto-Fill */}
-        <div className="login-default-hint">
-          <div className="hint-header">
-            <KeyRound size={15} />
-            <span>ព័ត៌មានគណនីដើម (Default Credentials)</span>
-          </div>
-          <div className="hint-body">
-            <div className="hint-item">
-              <span className="hint-label">Username:</span>
-              <code className="hint-code">{DEFAULT_CREDENTIALS.username}</code>
-            </div>
-            <div className="hint-item">
-              <span className="hint-label">Password:</span>
-              <code className="hint-code">{DEFAULT_CREDENTIALS.password}</code>
-            </div>
-          </div>
-          <div className="hint-actions">
-            <button
-              type="button"
-              className="btn-autofill"
-              onClick={handleAutoFillDefault}
-            >
-              <Sparkles size={14} />
-              <span>បំពេញស្វ័យប្រវត្តិ (Auto-Fill)</span>
-            </button>
-            {onOpenChangeCredentials && (
-              <button
-                type="button"
-                className="btn-link-change"
-                onClick={onOpenChangeCredentials}
-              >
-                <span>ប្តូរ Username / Password ថ្មី</span>
-              </button>
-            )}
-          </div>
-        </div>
       </div>
     </div>
   );

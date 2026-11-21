@@ -359,7 +359,6 @@ export const App: React.FC = () => {
             setCurrentUser(user);
             showToast(`ស្វាគមន៍ការចូលប្រើប្រាស់ ${user.username}!`);
           }}
-          onOpenChangeCredentials={() => setChangeCredentialsOpen(true)}
         />
 
         <ChangeCredentialsModal
